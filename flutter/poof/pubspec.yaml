@@ -31,7 +31,7 @@ dependencies:
   firebase_database: ^7.2.2
   firebase_analytics: ^8.3.2
   firebase_performance: ^0.7.1
-  cloud_functions: ^3.0.2
+  #cloud_functions: ^3.0.2 later use
 
  
 
@@ -43,6 +43,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.9.2"
+  flutter_native_splash: ^1.2.3
+
+flutter_native_splash: 
+  color: "#EC9D75"
+  image: "assets/icons/splash.png"
 
 flutter_icons:
   android: true
