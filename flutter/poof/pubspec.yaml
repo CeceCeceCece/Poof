@@ -52,9 +52,9 @@ flutter_native_splash:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icons/bang_logo.png"
+  image_path: "assets/icons/launcher.png"
   adaptive_icon_background: "#EC9D75"
-  adaptive_icon_foreground: "assets/icons/bang_logo.png"
+  adaptive_icon_foreground: "assets/icons/launcher.png"
   remove_alpha_ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
