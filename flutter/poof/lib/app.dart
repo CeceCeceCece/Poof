@@ -1,3 +1,4 @@
+import 'package:bang/core/colors.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -5,11 +6,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Poof',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      title: 'Bang!',
+      home: Scaffold(
+        backgroundColor: BangColors.background,
       ),
-      home: Scaffold(),
     );
   }
 }

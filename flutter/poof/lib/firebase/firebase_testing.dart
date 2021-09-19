@@ -30,6 +30,7 @@ class FirebaseTests {
     trace.stop();
   }
 
+  // ignore: unused_element
   static void _crashlytics() async {
     await FirebaseCrashlytics.instance
         .recordFlutterError(FlutterErrorDetails(exception: "exception"));
