@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 import 'app.dart';
 import 'core/colors.dart';
 import 'firebase/firebase_testing.dart';
 
 void main() async {
   //FirebaseTests.runTests();
+  await GetStorage.init();
   _setScreenProperties();
   runApp(App());
 }

@@ -33,7 +33,9 @@ dependencies:
   firebase_performance: ^0.7.1
   #cloud_functions: ^3.0.2 later use
 
- 
+  #getx
+  get_storage: ^2.0.3
+  get: ^4.3.8
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
