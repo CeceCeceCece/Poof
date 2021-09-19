@@ -5,15 +5,18 @@ import 'core/colors.dart';
 import 'firebase/firebase_testing.dart';
 
 void main() async {
-  FirebaseTests.runTests();
-  _goFullscreen();
+  //FirebaseTests.runTests();
+  _setScreenProperties();
   runApp(App());
 }
 
-Future<void> _goFullscreen() async {
+Future<void> _setScreenProperties() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemStatusBarContrastEnforced: false,
       statusBarColor: BangColors.background));
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.top]);
+
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
 }
