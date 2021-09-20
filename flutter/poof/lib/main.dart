@@ -7,7 +7,7 @@ import 'services/app_services.dart';
 
 void main() async {
   //FirebaseTests.runTests();
-  await AppServices.init();
+  AppServices.init();
   await GetStorage.init();
   _setScreenProperties();
   runApp(App());

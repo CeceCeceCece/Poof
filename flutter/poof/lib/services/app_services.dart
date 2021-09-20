@@ -1,3 +1,4 @@
+import 'package:bang/services/audio_service.dart';
 import 'package:get/get.dart';
 
 import 'connectivity_service.dart';

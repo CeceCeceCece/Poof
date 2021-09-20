@@ -1,4 +1,5 @@
 import 'package:bang/routes/routes.dart';
+import 'package:bang/services/audio_service.dart';
 import 'package:get/get.dart';
 
 class SplashController extends GetxController {
@@ -14,6 +15,7 @@ class SplashController extends GetxController {
   }
 
   Future<void> _initState() async {
+    AudioService.play(AudioService.dynamite);
     await _splashDuration.delay();
     Get.offAllNamed(Routes.LOGIN);
   }
