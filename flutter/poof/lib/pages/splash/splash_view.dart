@@ -1,3 +1,4 @@
+import 'package:bang/core/animations.dart';
 import 'package:bang/core/colors.dart';
 import 'package:bang/pages/splash/splash_controller.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ class SplashView extends GetView<SplashController> {
     return Scaffold(
       backgroundColor: BangColors.background,
       body: Center(
-        child: Lottie.asset('assets/lottie-boom.json',
+        child: Lottie.asset(BangAnimations.splash,
             repeat: controller.shouldRepeat,
             frameRate: FrameRate(controller.frameRate)),
       ),

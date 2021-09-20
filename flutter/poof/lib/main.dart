@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'app.dart';
 import 'core/colors.dart';
+import 'services/app_services.dart';
 
 void main() async {
   //FirebaseTests.runTests();
+  await AppServices.init();
   await GetStorage.init();
   _setScreenProperties();
   runApp(App());
