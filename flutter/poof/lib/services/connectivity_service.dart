@@ -8,28 +8,31 @@ import 'package:lottie/lottie.dart';
 import 'service_base.dart';
 
 class ConnectivityService extends GetxService implements ServiceBase {
-  late StreamSubscription _internetState;
-  var _result = ConnectivityResult.wifi.obs;
+  late StreamSubscription _internetStateStream;
+  var _internetState = ConnectivityResult.wifi.obs;
   bool _isDialogOpen = false;
   Timer? _noInternetChecker;
+  int _debounceInMillis = 1000;
+  int _offlineStateCheckerInterval = 10; // seconds
 
   @override
   Future<void> init() async {
-    debounce(_result, (ConnectivityResult value) => _openDialogIfNeeded(value),
-        time: Duration(milliseconds: 500));
+    debounce(_internetState,
+        (ConnectivityResult value) => _openDialogIfNeeded(value),
+        time: Duration(milliseconds: _debounceInMillis));
 
-    _result.value = await (Connectivity().checkConnectivity());
+    _internetState.value = await (Connectivity().checkConnectivity());
 
-    _internetState = Connectivity()
+    _internetStateStream = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
-      _result.value = result;
+      _internetState.value = result;
     });
   }
 
   @override
   void onClose() {
-    _internetState.cancel();
+    _internetStateStream.cancel();
     super.onClose();
   }
 
@@ -45,7 +48,7 @@ class ConnectivityService extends GetxService implements ServiceBase {
   }
 
   void _closeDialog() {
-    if (_result() != ConnectivityResult.none) {
+    if (_internetState() != ConnectivityResult.none) {
       _noInternetChecker?.cancel();
       _noInternetChecker = null;
     }
@@ -64,6 +67,7 @@ class ConnectivityService extends GetxService implements ServiceBase {
         .whenComplete(_closeDialog);
     _isDialogOpen = true;
     _noInternetChecker = Timer.periodic(
-        Duration(seconds: 10), (timer) => _openDialogIfNeeded(_result()));
+        Duration(seconds: _offlineStateCheckerInterval),
+        (timer) => _openDialogIfNeeded(_internetState()));
   }
 }
