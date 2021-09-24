@@ -7,7 +7,7 @@ import 'package:lottie/lottie.dart';
 
 import 'service_base.dart';
 
-class ConnectivityService extends GetxService implements ServiceBase {
+class ConnectivityService extends ServiceBase {
   late StreamSubscription _internetStateStream;
   var _internetState = ConnectivityResult.wifi.obs;
   bool _isDialogOpen = false;

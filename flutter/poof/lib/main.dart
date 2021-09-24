@@ -8,9 +8,12 @@ import 'services/app_services.dart';
 
 void main() async {
   //FirebaseTests.runTests();
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppServices.initAudio();
   AppServices.init();
   await GetStorage.init();
   _setScreenProperties();
+  await Future.delayed(Duration(milliseconds: 500));
   runApp(App());
 }
 
