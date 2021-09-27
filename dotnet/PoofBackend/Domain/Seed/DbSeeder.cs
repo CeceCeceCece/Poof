@@ -1,0 +1,83 @@
+﻿using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Domain.Seed
+{
+    public class DbSeeder
+    {
+        public static async Task SeedDatabase(IServiceProvider services, PoofDbContext context, RoleManager<IdentityRole> roleManager, UserManager<Player> userManager)
+        {
+            await TryCreateRolesAsync(roleManager);
+            var users = await TryCreateUsersAsync(context);
+            await AddRoleToUsers(userManager, users);
+        }
+
+        private static async Task TryCreateRolesAsync(RoleManager<IdentityRole> roleManager)
+        {
+            if ((await roleManager.Roles.CountAsync()) > 0)
+            {
+                return;
+            }
+
+            await roleManager.CreateAsync(new IdentityRole("Admin"));
+            await roleManager.CreateAsync(new IdentityRole("User"));
+        }
+        private static async Task<ICollection<Player>> TryCreateUsersAsync(PoofDbContext context)
+        {
+            if ((await context.Users.CountAsync()) > 0)
+            {
+                return new List<Player>();
+            }
+
+            var users = new List<Player>
+            {
+                new Player{ UserName = "manager@veterinary.hu", Email = "manager@veterinary.hu" },
+                new Player{ UserName = "doctor@veterinary.hu", Email = "doctor@veterinary.hu" },
+                new Player{ UserName = "user1@veterinary.hu", Email = "user1@veterinary.hu" },
+                new Player{ UserName = "user2@veterinary.hu", Email = "user2@veterinary.hu" }
+            };
+
+            PasswordHasher<Player> passwordHasher = new PasswordHasher<Player>();
+            foreach (var user in users)
+            {
+                user.PasswordHash = passwordHasher.HashPassword(user, "Aa1234.");
+                user.NormalizedUserName = user.UserName.ToUpper();
+                user.NormalizedEmail = user.Email.ToUpper();
+                user.SecurityStamp = Guid.NewGuid().ToString();
+                user.EmailConfirmed = true;
+            }
+
+            await context.AddRangeAsync(users);
+            await context.SaveChangesAsync();
+            return users;
+        }
+
+        private static async Task AddRoleToUsers(UserManager<Player> userManager, ICollection<Player> users)
+        {
+            if (users.Count == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                if (i < 2)
+                {
+                    await userManager.AddToRoleAsync(users.ElementAt(i), "Admin");
+                }
+                else
+                {
+                    await userManager.AddToRoleAsync(users.ElementAt(i), "User");
+                }
+            }
+        }
+
+    }
+}

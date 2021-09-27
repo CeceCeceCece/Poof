@@ -1,0 +1,15 @@
+E:\Szakdolgozat\BangBackend\Application\bin\Debug\net5.0\Application.deps.json
+E:\Szakdolgozat\BangBackend\Application\bin\Debug\net5.0\Application.dll
+E:\Szakdolgozat\BangBackend\Application\bin\Debug\net5.0\ref\Application.dll
+E:\Szakdolgozat\BangBackend\Application\bin\Debug\net5.0\Application.pdb
+E:\Szakdolgozat\BangBackend\Application\bin\Debug\net5.0\Domain.dll
+E:\Szakdolgozat\BangBackend\Application\bin\Debug\net5.0\Domain.pdb
+E:\Szakdolgozat\BangBackend\Application\obj\Debug\net5.0\Application.csproj.AssemblyReference.cache
+E:\Szakdolgozat\BangBackend\Application\obj\Debug\net5.0\Application.GeneratedMSBuildEditorConfig.editorconfig
+E:\Szakdolgozat\BangBackend\Application\obj\Debug\net5.0\Application.AssemblyInfoInputs.cache
+E:\Szakdolgozat\BangBackend\Application\obj\Debug\net5.0\Application.AssemblyInfo.cs
+E:\Szakdolgozat\BangBackend\Application\obj\Debug\net5.0\Application.csproj.CoreCompileInputs.cache
+E:\Szakdolgozat\BangBackend\Application\obj\Debug\net5.0\Application.csproj.CopyComplete
+E:\Szakdolgozat\BangBackend\Application\obj\Debug\net5.0\Application.dll
+E:\Szakdolgozat\BangBackend\Application\obj\Debug\net5.0\ref\Application.dll
+E:\Szakdolgozat\BangBackend\Application\obj\Debug\net5.0\Application.pdb

@@ -1,0 +1,12 @@
+E:\Szakdolgozat\BangBackend\Domain\bin\Debug\net5.0\Domain.deps.json
+E:\Szakdolgozat\BangBackend\Domain\bin\Debug\net5.0\Domain.dll
+E:\Szakdolgozat\BangBackend\Domain\bin\Debug\net5.0\ref\Domain.dll
+E:\Szakdolgozat\BangBackend\Domain\bin\Debug\net5.0\Domain.pdb
+E:\Szakdolgozat\BangBackend\Domain\obj\Debug\net5.0\Domain.csproj.AssemblyReference.cache
+E:\Szakdolgozat\BangBackend\Domain\obj\Debug\net5.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Szakdolgozat\BangBackend\Domain\obj\Debug\net5.0\Domain.AssemblyInfoInputs.cache
+E:\Szakdolgozat\BangBackend\Domain\obj\Debug\net5.0\Domain.AssemblyInfo.cs
+E:\Szakdolgozat\BangBackend\Domain\obj\Debug\net5.0\Domain.csproj.CoreCompileInputs.cache
+E:\Szakdolgozat\BangBackend\Domain\obj\Debug\net5.0\Domain.dll
+E:\Szakdolgozat\BangBackend\Domain\obj\Debug\net5.0\ref\Domain.dll
+E:\Szakdolgozat\BangBackend\Domain\obj\Debug\net5.0\Domain.pdb
