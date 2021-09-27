@@ -1,3 +1,5 @@
+import 'package:bang/pages/game/game_controller.dart';
+import 'package:bang/pages/game/game_view.dart';
 import 'package:bang/pages/home/home_controller.dart';
 import 'package:bang/pages/home/home_view.dart';
 import 'package:bang/pages/login/login_controller.dart';
@@ -12,7 +14,7 @@ abstract class Routes {
   static const SIGNUP = '/signup';
   static const SETTINGS = '/settings';
   static const HOME = '/home';
-  static const GAME_ROOM = '/gameroom';
+  static const GAME = '/game';
 }
 
 abstract class Pages {
@@ -31,5 +33,9 @@ abstract class Pages {
         name: Routes.HOME,
         page: () => HomeView(),
         binding: BindingsBuilder.put(() => HomeController())),
+    GetPage(
+        name: Routes.GAME,
+        page: () => GameView(),
+        binding: BindingsBuilder.put(() => GameController())),
   ];
 }

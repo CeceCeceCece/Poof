@@ -60,7 +60,7 @@ class ConnectivityService extends ServiceBase {
   }
 
   void _log(ConnectivityResult value) =>
-      print('INTERNET STATE: ${value.toString().split('.')[1]}');
+      log('INTERNET STATE: ${value.toString().split('.')[1]}');
 
   void _openDialog() {
     Get.defaultDialog(
