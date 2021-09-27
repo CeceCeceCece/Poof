@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:bang/services/service_base.dart';
 import 'package:just_audio/just_audio.dart';
@@ -15,6 +16,8 @@ class AudioService extends ServiceBase {
 
   static void stopMusic() => _musicPlayer.stop();
 
+  static void pauseMusic() => _musicPlayer.pause();
+
   static void stopAll() {
     stopMusic();
     _stingerPlayer.stop();
@@ -25,25 +28,65 @@ class AudioService extends ServiceBase {
     _stingerPlayer.setVolume(0);
   }
 
-  static final _trackList = ['dynamite'];
+  static final _trackList = [
+    'bartertown',
+    'chasingvictory',
+    'desperado',
+    'emptyworld',
+    'forvictoryandhonor',
+    'inthistown',
+    'oneshotjones',
+    'outback',
+    'peyotecowboy',
+    'westernapocalypse',
+  ];
+
+  static playMenuSong() => _musicPlayer
+    ..setAudioSource(
+      LoopingAudioSource(
+        count: 200,
+        child: ProgressiveAudioSource(
+          Uri.parse('asset:///assets/music/oneshotjones.mp3'),
+        ),
+      ),
+    )
+    ..play();
+
+  static playBackgroundMusic() {
+    _trackList.shuffle();
+    _musicPlayer.setAudioSource(LoopingAudioSource(
+        count: 200,
+        child: ConcatenatingAudioSource(
+            useLazyPreparation: true,
+            shuffleOrder: DefaultShuffleOrder(),
+            children: _trackList
+                .map((uri) => ProgressiveAudioSource(
+                    Uri.parse('asset:///assets/music/$uri.mp3')))
+                .toList())));
+    _musicPlayer.play();
+  }
 
   @override
   Future<void> init() async {
     await _stingerPlayer.setAsset('assets/sfx/dynamite.mp3');
     _stingerPlayer.play();
-
-    _musicPlayer.setAudioSource(LoopingAudioSource(
-        count: 3,
-        child: ConcatenatingAudioSource(
-            shuffleOrder: DefaultShuffleOrder(),
-            children: _trackList
-                .map((uri) => ClippingAudioSource(
-                    end: Duration(seconds: 2),
-                    child: ProgressiveAudioSource(
-                        Uri.parse('asset:///assets/sfx/$uri.mp3'))))
-                .toList()
-              ..shuffle())));
-
     log('SERVICES: AUDIO_SERVICE INITIALIZED');
+  }
+
+  static void handleLifecycleChange(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        playMusic();
+        break;
+      case AppLifecycleState.inactive:
+        pauseMusic();
+        break;
+      case AppLifecycleState.paused:
+        pauseMusic();
+        break;
+      case AppLifecycleState.detached:
+        stopMusic();
+        break;
+    }
   }
 }

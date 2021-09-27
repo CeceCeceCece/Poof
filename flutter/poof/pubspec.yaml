@@ -83,6 +83,7 @@ flutter:
     - assets/cards/character/
     - assets/cards/role/
     - assets/cards/playable/
+    - assets/music/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

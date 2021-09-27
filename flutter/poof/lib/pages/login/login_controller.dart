@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   @override
   void onInit() {
-    AudioService.playMusic();
+    AudioService.playMenuSong();
+    //AudioService.playBackgroundMusic();
     super.onInit();
   }
 }
