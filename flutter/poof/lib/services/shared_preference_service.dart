@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bang/core/constants.dart';
 import 'package:bang/services/service_base.dart';
 
@@ -13,5 +15,7 @@ class SharedPreferenceService extends ServiceBase {
   @override
   Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
+
+    log('SERVICES: SHARED_PREF INITIALIZED');
   }
 }

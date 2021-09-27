@@ -1,11 +1,13 @@
+import 'dart:developer';
+
 import 'package:bang/services/service_base.dart';
 import 'package:just_audio/just_audio.dart';
 
 class AudioService extends ServiceBase {
   static final _musicPlayer = AudioPlayer();
-  static final _stingPlayer = AudioPlayer();
+  static final _stingerPlayer = AudioPlayer();
 
-  static void sting(String assetName) => _stingPlayer
+  static void sting(String assetName) => _stingerPlayer
     ..setAsset('assets/sfx/$assetName.mp3')
     ..play();
 
@@ -15,20 +17,20 @@ class AudioService extends ServiceBase {
 
   static void stopAll() {
     stopMusic();
-    _stingPlayer.stop();
+    _stingerPlayer.stop();
   }
 
   static void mute() {
     _musicPlayer.setVolume(0);
-    _stingPlayer.setVolume(0);
+    _stingerPlayer.setVolume(0);
   }
 
   static final _trackList = ['dynamite'];
 
   @override
   Future<void> init() async {
-    await _stingPlayer.setAsset('assets/sfx/dynamite.mp3');
-    _stingPlayer.play();
+    await _stingerPlayer.setAsset('assets/sfx/dynamite.mp3');
+    _stingerPlayer.play();
 
     _musicPlayer.setAudioSource(LoopingAudioSource(
         count: 3,
@@ -41,5 +43,7 @@ class AudioService extends ServiceBase {
                         Uri.parse('asset:///assets/sfx/$uri.mp3'))))
                 .toList()
               ..shuffle())));
+
+    log('SERVICES: AUDIO_SERVICE INITIALIZED');
   }
 }

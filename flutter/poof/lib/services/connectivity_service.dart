@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bang/core/animations.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -28,6 +29,8 @@ class ConnectivityService extends ServiceBase {
         .listen((ConnectivityResult result) {
       _internetState.value = result;
     });
+
+    log('SERVICES: CONNECTIVITY_SERVICE INITIALIZED');
   }
 
   @override
