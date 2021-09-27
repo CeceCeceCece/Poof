@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "r1TtWAA2OGjkKlxM5TRsJA+EhVbb3vFpBpREO//R+B6QP8pKTFmKSQSC3W73STWlbjbbmKYgju6Z/0yMorK2kw==",
+  "dgSpecHash": "A3SGcAU4k6699lEGdM/o+QbKZpecbQLQQ2RJ0vSz7H1RejxGuHbsWVi+7U1dXAAYhL5Ll7ZaSBXup/npn+kLdw==",
   "success": true,
-  "projectFilePath": "E:\\Szakdolgozat\\BangBackend\\Application\\Application.csproj",
+  "projectFilePath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\automapper\\10.0.0\\automapper.10.0.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\identitymodel\\4.4.0\\identitymodel.4.4.0.nupkg.sha512",

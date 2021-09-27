@@ -38,20 +38,20 @@ namespace Domain.Seed
 
             var users = new List<Player>
             {
-                new Player{ UserName = "manager@veterinary.hu", Email = "manager@veterinary.hu" },
-                new Player{ UserName = "doctor@veterinary.hu", Email = "doctor@veterinary.hu" },
-                new Player{ UserName = "user1@veterinary.hu", Email = "user1@veterinary.hu" },
-                new Player{ UserName = "user2@veterinary.hu", Email = "user2@veterinary.hu" }
+                new Player{ UserName = "Cece" },
+                new Player{ UserName = "Csabi"},
+                new Player{ UserName = "user1"},
+                new Player{ UserName = "user2"}
             };
 
             PasswordHasher<Player> passwordHasher = new PasswordHasher<Player>();
             foreach (var user in users)
             {
-                user.PasswordHash = passwordHasher.HashPassword(user, "Aa1234.");
+                user.PasswordHash = passwordHasher.HashPassword(user, "admin");
                 user.NormalizedUserName = user.UserName.ToUpper();
-                user.NormalizedEmail = user.Email.ToUpper();
+                //user.NormalizedEmail = user.Email.ToUpper();
                 user.SecurityStamp = Guid.NewGuid().ToString();
-                user.EmailConfirmed = true;
+                user.EmailConfirmed = false;
             }
 
             await context.AddRangeAsync(users);

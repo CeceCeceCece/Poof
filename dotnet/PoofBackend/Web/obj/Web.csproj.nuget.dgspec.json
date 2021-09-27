@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Szakdolgozat\\BangBackend\\Web\\Web.csproj": {}
+    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj": {}
   },
   "projects": {
-    "E:\\Szakdolgozat\\BangBackend\\Application\\Application.csproj": {
+    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Szakdolgozat\\BangBackend\\Application\\Application.csproj",
+        "projectUniqueName": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "E:\\Szakdolgozat\\BangBackend\\Application\\Application.csproj",
+        "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "E:\\Szakdolgozat\\BangBackend\\Application\\obj\\",
+        "outputPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -34,8 +34,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj": {
-                "projectPath": "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj"
+              "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
+                "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj"
               }
             }
           }
@@ -74,14 +74,14 @@
         }
       }
     },
-    "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj": {
+    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj",
+        "projectUniqueName": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj",
+        "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "E:\\Szakdolgozat\\BangBackend\\Domain\\obj\\",
+        "outputPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -148,14 +148,14 @@
         }
       }
     },
-    "E:\\Szakdolgozat\\BangBackend\\Web\\Web.csproj": {
+    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Szakdolgozat\\BangBackend\\Web\\Web.csproj",
+        "projectUniqueName": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj",
         "projectName": "Web",
-        "projectPath": "E:\\Szakdolgozat\\BangBackend\\Web\\Web.csproj",
+        "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "E:\\Szakdolgozat\\BangBackend\\Web\\obj\\",
+        "outputPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -178,11 +178,11 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "E:\\Szakdolgozat\\BangBackend\\Application\\Application.csproj": {
-                "projectPath": "E:\\Szakdolgozat\\BangBackend\\Application\\Application.csproj"
+              "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj": {
+                "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj"
               },
-              "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj": {
-                "projectPath": "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj"
+              "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
+                "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj"
               }
             }
           }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HAqbbtDr76A3wrDceH4jNVzCmLKg5kFWZskRteO/WHP4UzSdY7e5IaqGwQEAik73gd8laQ5AE1dVqg+128tG6g==",
+  "dgSpecHash": "ht7ES+AWJxrQuiFP6oha2XTqRe17xF3g//FGlU+Bq9gaEl2cJL6prlSnchUPziKMEPu/rdzpuaPQa+yui/qR5g==",
   "success": true,
-  "projectFilePath": "E:\\Szakdolgozat\\BangBackend\\Web\\Web.csproj",
+  "projectFilePath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\automapper\\10.0.0\\automapper.10.0.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj": {}
+    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {}
   },
   "projects": {
-    "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj": {
+    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj",
+        "projectUniqueName": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "E:\\Szakdolgozat\\BangBackend\\Domain\\Domain.csproj",
+        "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "E:\\Szakdolgozat\\BangBackend\\Domain\\obj\\",
+        "outputPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
