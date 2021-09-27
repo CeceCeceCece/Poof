@@ -22,7 +22,7 @@ Future<void> _setScreenProperties() async {
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemStatusBarContrastEnforced: false,
-      statusBarColor: BangColors.background));
+      statusBarColor: Colors.transparent));
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.top]);
 
