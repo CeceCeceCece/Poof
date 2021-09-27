@@ -8,7 +8,16 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('home'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text('home'),
+            ElevatedButton(
+              onPressed: () => controller.joinRoom('randomID'),
+              child: Text('Play!'),
+            )
+          ],
+        ),
       ),
     );
   }
