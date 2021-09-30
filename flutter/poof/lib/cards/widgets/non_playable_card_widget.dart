@@ -1,109 +1,58 @@
 import 'dart:math';
 import 'package:bang/cards/model/non_playable_cards/non_playable_card_base.dart';
+import 'package:bang/cards/widgets/controllers/non_playable_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import 'card_widget_helpers.dart';
-
-class NonPlayableCardWidget extends StatefulWidget {
-  final NonPlayableCardBase card;
-  const NonPlayableCardWidget(
-      {Key? key, required this.card, required this.onTapCallback})
-      : super(key: key);
-
-  final void Function() onTapCallback;
-
-  @override
-  _BangCardWidgetState createState() => _BangCardWidgetState();
-}
-
-class _BangCardWidgetState extends State<NonPlayableCardWidget>
-    with TickerProviderStateMixin {
-  bool showBack = false;
-  double downSizeRatio = 0.4;
-  late double height = CardWidgetHelpers.cardHeight * downSizeRatio;
-  late double width = CardWidgetHelpers.cardWidth * downSizeRatio;
-  final _cardFlipDuration = Duration(milliseconds: 300);
-  final _cardFocusingDuration = Duration(milliseconds: 100);
-  bool isElevated = false;
-  double angle = 0;
-
-  void _toggleCardFocus() => setState(() {
-        if (isElevated) {
-          height *= 2 / 3;
-          width *= 2 / 3;
-          isElevated = false;
-        } else {
-          height *= 1.5;
-          width *= 1.5;
-          isElevated = true;
-        }
-      });
-
-  void _flipCard() => setState(() {
-        angle = (angle + pi) % (2 * pi);
-      });
+class NonPlayableCardWidget extends GetView<NonPlayableCardController> {
+  NonPlayableCardWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTapCallback,
-      onLongPressStart: (_) => _toggleCardFocus(),
-      onLongPressEnd: (_) => _toggleCardFocus(),
-      onDoubleTap: _flipCard,
+      onTap: controller.onTapCallback,
+      onLongPressStart: (_) => controller.toggleCardFocus(),
+      onLongPressEnd: (_) => controller.toggleCardFocus(),
+      onDoubleTap: controller.flipCard,
       child: TweenAnimationBuilder(
-        tween: Tween<double>(begin: 0, end: angle),
-        duration: _cardFlipDuration,
+        tween: Tween<double>(begin: 0, end: controller.angle),
+        duration: controller.cardFlipDuration,
         builder: (BuildContext context, double val, __) {
-          _computeShowBack(val);
+          controller.computeShowBack(val);
           return Transform(
             alignment: Alignment.center,
             transform: Matrix4.identity()
               ..setEntry(3, 2, 0.001)
               ..rotateY(val),
-            child: showBack
+            child: controller.showBack
                 ? Material(
                     borderRadius: BorderRadius.circular(10),
-                    elevation: isElevated ? 40 : 0,
+                    elevation: controller.isElevated ? 40 : 0,
                     child: AnimatedContainer(
-                      height: height,
-                      width: width,
-                      duration: _cardFocusingDuration,
-                      child: render(),
+                      height: controller.height,
+                      width: controller.width,
+                      duration: controller.cardFocusingDuration,
+                      child: controller.render(),
                     ),
                   )
                 : Material(
                     borderRadius: BorderRadius.circular(10),
-                    elevation: isElevated ? 40 : 0,
+                    elevation: controller.isElevated ? 40 : 0,
                     child: Transform(
                       alignment: Alignment.center,
                       transform: Matrix4.identity()
                         ..rotateY(
                             pi), // it will flip horizontally the container
                       child: AnimatedContainer(
-                          height: height,
-                          width: width,
-                          duration: _cardFocusingDuration,
-                          child: render(showBack: true)),
+                          height: controller.height,
+                          width: controller.width,
+                          duration: controller.cardFocusingDuration,
+                          child: controller.render(showBack: true)),
                     ),
                   ),
           );
         },
       ),
     );
-  }
-
-  void _computeShowBack(double val) {
-    if (val >= (pi / 2)) {
-      showBack = false;
-    } else {
-      showBack = true;
-    }
-  }
-
-  Widget render({bool showBack = false}) {
-    return !showBack
-        ? CardWidgetHelpers.getAsset(
-            name: widget.card.name, type: widget.card.type)
-        : CardWidgetHelpers.getCardBack(widget.card.type);
   }
 }
