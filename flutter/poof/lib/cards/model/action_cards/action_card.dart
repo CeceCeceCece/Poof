@@ -19,6 +19,6 @@ class ActionCard extends BangCard {
           name: name,
           type: type,
         ) {
-    color = BangColors.actionCardColor;
+    borderColor = BangColors.actionCardColor;
   }
 }

@@ -7,7 +7,7 @@ import 'card_base.dart';
 abstract class BangCard extends CardBase {
   Value value;
   Suit suit;
-  Color color = Colors.white;
+  Color borderColor = Colors.white;
   CardType type;
 
   BangCard(

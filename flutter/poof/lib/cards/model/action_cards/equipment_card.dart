@@ -16,6 +16,6 @@ class EquipmentCard extends BangCard {
           name: name,
           type: type,
         ) {
-    color = BangColors.equipmentCardColor;
+    borderColor = BangColors.equipmentCardColor;
   }
 }

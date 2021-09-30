@@ -29,96 +29,82 @@ class _BangCardWidgetState extends State<BangCardWidget>
   double downSizeRatio = 0.4;
   late double height = CardWidgetHelpers.cardHeight * downSizeRatio;
   late double width = CardWidgetHelpers.cardWidth * downSizeRatio;
-
-  late final AnimationController _controller;
+  final _cardFlipDuration = Duration(milliseconds: 300);
+  final _cardFocusingDuration = Duration(milliseconds: 100);
   bool isElevated = false;
   double angle = 0;
 
-  void _flip() {
-    setState(() {
-      angle = (angle + pi) % (2 * pi);
-    });
-  }
+  void _toggleCardFocus() => setState(() {
+        if (isElevated) {
+          height *= 2 / 3;
+          width *= 2 / 3;
+          isElevated = false;
+        } else {
+          height *= 1.5;
+          width *= 1.5;
+          isElevated = true;
+        }
+      });
 
-  @override
-  void initState() {
-    super.initState();
-    height = CardWidgetHelpers.cardHeight * downSizeRatio;
-    width = CardWidgetHelpers.cardWidth * downSizeRatio;
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  void _flipCard() => setState(() {
+        angle = (angle + pi) % (2 * pi);
+      });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          widget.handCallback();
-          widget.onTapCallback();
+      onTap: widget.onTapCallback,
+      onLongPressStart: (_) => _toggleCardFocus(),
+      onLongPressEnd: (_) => _toggleCardFocus(),
+      onDoubleTap: _flipCard,
+      child: TweenAnimationBuilder(
+        tween: Tween<double>(begin: 0, end: angle),
+        duration: _cardFlipDuration,
+        builder: (BuildContext context, double val, __) {
+          _computeShowBack(val);
+          return Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.identity()
+              ..setEntry(3, 2, 0.001)
+              ..rotateY(val),
+            child: showBack
+                ? Material(
+                    borderRadius: BorderRadius.circular(10),
+                    elevation: isElevated ? 40 : 0,
+                    child: AnimatedContainer(
+                      height: height,
+                      width: width,
+                      duration: _cardFocusingDuration,
+                      child: render(),
+                    ),
+                  )
+                : Material(
+                    borderRadius: BorderRadius.circular(10),
+                    elevation: isElevated ? 40 : 0,
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()
+                        ..rotateY(
+                            pi), // it will flip horizontally the container
+                      child: AnimatedContainer(
+                          height: height,
+                          width: width,
+                          duration: _cardFocusingDuration,
+                          child: render(showBack: true)),
+                    ),
+                  ),
+          );
         },
-        onLongPressStart: (details) {
-          setState(() {
-            height *= 1.5;
-            width *= 1.5;
-            isElevated = true;
-          });
-        },
-        onLongPressEnd: (details) {
-          setState(() {
-            height *= 2 / 3;
-            width *= 2 / 3;
-            isElevated = false;
-          });
-        },
-        onDoubleTap: _flip,
-        child: TweenAnimationBuilder(
-            tween: Tween<double>(begin: 0, end: angle),
-            duration: Duration(milliseconds: 300),
-            builder: (BuildContext context, double val, __) {
-              //here we will change the isBack val so we can change the content of the card
-              if (val >= (pi / 2)) {
-                showBack = false;
-              } else {
-                showBack = true;
-              }
-              return (Transform(
-                //let's make the card flip by it's center
-                alignment: Alignment.center,
-                transform: Matrix4.identity()
-                  ..setEntry(3, 2, 0.001)
-                  ..rotateY(val),
-                child: showBack
-                    ? Material(
-                        borderRadius: BorderRadius.circular(10),
-                        elevation: isElevated ? 40 : 0,
-                        child: AnimatedContainer(
-                            height: height,
-                            width: width,
-                            duration: Duration(milliseconds: 100),
-                            child: render(height, false)))
-                    : Material(
-                        borderRadius: BorderRadius.circular(10),
-                        elevation: isElevated ? 40 : 0,
-                        child: Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.identity()
-                            ..rotateY(
-                                pi), // it will flip horizontally the container
-                          child: AnimatedContainer(
-                              height: height,
-                              width: width,
-                              duration: Duration(milliseconds: 100),
-                              child: render(height, true)),
-                        ),
-                      ),
-              ));
-            }));
+      ),
+    );
+  }
+
+  void _computeShowBack(double val) {
+    if (val >= (pi / 2)) {
+      showBack = false;
+    } else {
+      showBack = true;
+    }
   }
 
   String get _valueString =>
@@ -129,51 +115,54 @@ class _BangCardWidgetState extends State<BangCardWidget>
 
   Color get _suitColor => CardWidgetHelpers.cardSuitColor(widget.card.suit);
 
-  Widget buildLeftCornerData(double height) {
+  Widget _buildLeftCornerData() {
+    var text = Text(
+      _valueString,
+      style: GoogleFonts.specialElite(
+        textStyle: TextStyle(
+            fontSize: height / 13,
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 2.5
+              ..color = Colors.white),
+      ),
+    );
+    var textOutline = Text(_valueString,
+        style: GoogleFonts.specialElite(
+            textStyle: TextStyle(
+                fontSize: height / 13,
+                fontWeight: FontWeight.bold,
+                color: Colors.black)));
+
+    var suit = Text(
+      _suitString,
+      style: TextStyle(
+          fontSize: height / 18,
+          fontWeight: FontWeight.bold,
+          foreground: Paint()
+            ..style = PaintingStyle.fill
+            ..strokeWidth = 3
+            ..color = _suitColor),
+    );
+
     return Padding(
       padding: EdgeInsets.only(top: height / 70),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Stack(
-            children: [
-              Text(
-                _valueString,
-                style: GoogleFonts.specialElite(
-                  textStyle: TextStyle(
-                      fontSize: height / 13,
-                      foreground: Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = 2.5
-                        ..color = Colors.white),
-                ),
-              ),
-              Text(_valueString,
-                  style: GoogleFonts.specialElite(
-                      textStyle: TextStyle(
-                          fontSize: height / 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black))),
-            ],
+            children: [text, textOutline],
           ),
           Padding(
-              padding: EdgeInsets.only(bottom: height / 55),
-              child: Text(
-                _suitString,
-                style: TextStyle(
-                    fontSize: height / 18,
-                    fontWeight: FontWeight.bold,
-                    foreground: Paint()
-                      ..style = PaintingStyle.fill
-                      ..strokeWidth = 3
-                      ..color = _suitColor),
-              )),
+            padding: EdgeInsets.only(bottom: height / 55),
+            child: suit,
+          )
         ],
       ),
     );
   }
 
-  Widget render(double height, bool showBack) {
+  Widget render({bool showBack = false}) {
     return !showBack
         ? Stack(
             children: [
@@ -181,28 +170,28 @@ class _BangCardWidgetState extends State<BangCardWidget>
                   name: widget.card.name, type: widget.card.type),
               Align(
                 alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: height / 50, bottom: height / 300),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(height / 20),
-                        color: widget.card.color),
-                    child: Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            height / 35, height / 160, 0, 0),
-                        child: SizedBox(
-                          width: widget.card.value == Value.Ten
-                              ? height / 6 + 1
-                              : height / 8 + 1,
-                          height: height / 8,
-                          child: buildLeftCornerData(height),
-                        )),
-                  ),
-                ),
+                child: _buildCorner(),
               ),
             ],
           )
         : CardWidgetHelpers.getCardBack(widget.card.type);
   }
+
+  Widget _buildCorner() => Padding(
+        padding: EdgeInsets.only(left: height / 50, bottom: height / 300),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(height / 20),
+              color: widget.card.borderColor),
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(height / 35, height / 160, 0, 0),
+              child: SizedBox(
+                width: widget.card.value == Value.Ten
+                    ? height / 6 + 1
+                    : height / 8 + 1,
+                height: height / 8,
+                child: _buildLeftCornerData(),
+              )),
+        ),
+      );
 }
