@@ -8,14 +8,14 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginController extends GetxController {
-  final usernameC = TextEditingController();
-  final passwordC = TextEditingController();
+  final usernameC = TextEditingController(text: 'Cece');
+  final passwordC = TextEditingController(text: 'admin');
 
   final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
 
   void login() {
-    Get.find<AuthService>().login('Cece', 'admin');
+    Get.find<AuthService>().login(usernameC.text, passwordC.text);
     Get.offAndToNamed(Routes.HOME);
   }
 
