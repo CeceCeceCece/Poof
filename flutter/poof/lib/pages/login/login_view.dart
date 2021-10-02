@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import 'login_controller.dart';
@@ -49,6 +50,12 @@ class LoginView extends GetView<LoginController> {
                       style: ElevatedButton.styleFrom(),
                       child: Text('read QR'),
                     ),
+                    IconButton(
+                        // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+                        icon: FaIcon(FontAwesomeIcons.gamepad),
+                        onPressed: () {
+                          print("Pressed");
+                        }),
                   ],
                 ),
               ),
