@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'card_constants.dart';
 import 'card_base.dart';
 
@@ -21,6 +19,6 @@ abstract class BangCard extends CardBase {
 
   @override
   String toString() {
-    return '$name: ${value.toString()} of ${suit.toString()}';
+    return '$name${value.toString()}of${suit.toString()}';
   }
 }

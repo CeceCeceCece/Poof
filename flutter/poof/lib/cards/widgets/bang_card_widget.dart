@@ -1,15 +1,21 @@
+import 'dart:io';
 import 'dart:math';
+import 'package:share/share.dart';
 
 import 'package:bang/cards/model/bang_card.dart';
 import 'package:bang/cards/model/card_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 import 'card_widget_helpers.dart';
 
 class BangCardWidget extends StatefulWidget {
   final BangCard card;
-  const BangCardWidget(
+  BangCardWidget(
       {Key? key,
       required this.card,
       required this.onTapCallback,
@@ -34,6 +40,8 @@ class _BangCardWidgetState extends State<BangCardWidget>
   bool isElevated = false;
   double angle = 0;
 
+  final ScreenshotController screenshotController = ScreenshotController();
+
   void _toggleCardFocus() => setState(() {
         if (isElevated) {
           height *= 2 / 3;
@@ -57,6 +65,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
       onLongPressStart: (_) => _toggleCardFocus(),
       onLongPressEnd: (_) => _toggleCardFocus(),
       onDoubleTap: _flipCard,
+      onScaleEnd: _screenShot,
       child: TweenAnimationBuilder(
         tween: Tween<double>(begin: 0, end: angle),
         duration: _cardFlipDuration,
@@ -67,32 +76,35 @@ class _BangCardWidgetState extends State<BangCardWidget>
             transform: Matrix4.identity()
               ..setEntry(3, 2, 0.001)
               ..rotateY(val),
-            child: showBack
-                ? Material(
-                    borderRadius: BorderRadius.circular(10),
-                    elevation: isElevated ? 40 : 0,
-                    child: AnimatedContainer(
-                      height: height,
-                      width: width,
-                      duration: _cardFocusingDuration,
-                      child: render(),
-                    ),
-                  )
-                : Material(
-                    borderRadius: BorderRadius.circular(10),
-                    elevation: isElevated ? 40 : 0,
-                    child: Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.identity()
-                        ..rotateY(
-                            pi), // it will flip horizontally the container
+            child: Screenshot(
+              controller: screenshotController,
+              child: showBack
+                  ? Material(
+                      borderRadius: BorderRadius.circular(10),
+                      elevation: isElevated ? 40 : 0,
                       child: AnimatedContainer(
-                          height: height,
-                          width: width,
-                          duration: _cardFocusingDuration,
-                          child: render(showBack: true)),
+                        height: height,
+                        width: width,
+                        duration: _cardFocusingDuration,
+                        child: render(),
+                      ),
+                    )
+                  : Material(
+                      borderRadius: BorderRadius.circular(10),
+                      elevation: isElevated ? 40 : 0,
+                      child: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.identity()
+                          ..rotateY(
+                              pi), // it will flip horizontally the container
+                        child: AnimatedContainer(
+                            height: height,
+                            width: width,
+                            duration: _cardFocusingDuration,
+                            child: render(showBack: true)),
+                      ),
                     ),
-                  ),
+            ),
           );
         },
       ),
@@ -194,4 +206,21 @@ class _BangCardWidgetState extends State<BangCardWidget>
               )),
         ),
       );
+
+  void _screenShot(ScaleEndDetails details) async {
+    screenshotController
+        .capture(pixelRatio: MediaQuery.of(context).devicePixelRatio)
+        .then((image) async {
+      if (image != null) {
+        final directory = await getApplicationDocumentsDirectory();
+        final imagePath =
+            await File('${directory.path}/bang_card.png').create();
+        await imagePath.writeAsBytes(image);
+        await Share.shareFiles([imagePath.path]);
+        ImageGallerySaver.saveImage(image, quality: 100, name: 'bang_card');
+      }
+    }).then((result) {
+      Fluttertoast.showToast(msg: 'captured');
+    });
+  }
 }
