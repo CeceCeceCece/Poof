@@ -32,8 +32,6 @@ class LoginController extends GetxController {
   }
 
   void showQR() {
-    Get.find<AuthService>().getTry();
-
     Get.defaultDialog(
       content: Container(
         width: 250,
