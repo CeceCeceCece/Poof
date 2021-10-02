@@ -1,4 +1,5 @@
 import 'package:animated_icon_button/animated_icon_button.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -69,6 +70,36 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      width: 250.0,
+                      child: DefaultTextStyle(
+                        style: const TextStyle(
+                          fontSize: 35,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 7.0,
+                              color: Colors.white,
+                              offset: Offset(0, 0),
+                            ),
+                          ],
+                        ),
+                        child: AnimatedTextKit(
+                          repeatForever: true,
+                          animatedTexts: [
+                            FlickerAnimatedText('Flicker Frenzy',
+                                textStyle: TextStyle(color: Colors.amber)),
+                            FlickerAnimatedText('Night Vibes On',
+                                textStyle: TextStyle(color: Colors.amber)),
+                            FlickerAnimatedText("C'est La Vie !",
+                                textStyle: TextStyle(color: Colors.amber)),
+                          ],
+                          onTap: () {
+                            print("Tap Event");
+                          },
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
