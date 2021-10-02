@@ -7,8 +7,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceService extends ServiceBase {
   static late SharedPreferences _preferences;
+  static String? _token;
 
-  static String get token => _preferences.getString(Constants.TOKEN) ?? '';
+  static String get token {
+    if (_token == null || _token == '') {
+      _token = _preferences.getString(Constants.TOKEN) ?? '';
+    }
+    return _token!;
+  }
+
   static set token(String token) =>
       _preferences.setString(Constants.TOKEN, token);
 
