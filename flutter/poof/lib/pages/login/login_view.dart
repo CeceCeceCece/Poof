@@ -1,3 +1,4 @@
+import 'package:animated_icon_button/animated_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -56,6 +57,18 @@ class LoginView extends GetView<LoginController> {
                         onPressed: () {
                           print("Pressed");
                         }),
+                    AnimatedIconButton(
+                      onPressed: () => print('all icons pressed'),
+                      icons: [
+                        AnimatedIconItem(
+                          icon: Icon(Icons.mic_off),
+                          onPressed: () => print('add pressed'),
+                        ),
+                        AnimatedIconItem(
+                          icon: Icon(Icons.mic),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

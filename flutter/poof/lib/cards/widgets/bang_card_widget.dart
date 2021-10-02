@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:bang/cards/model/bang_card.dart';
 import 'package:bang/cards/model/card_constants.dart';
