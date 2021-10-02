@@ -39,6 +39,16 @@ class LoginView extends GetView<LoginController> {
                       style: ElevatedButton.styleFrom(),
                       child: Text('Login'),
                     ),
+                    ElevatedButton(
+                      onPressed: controller.showQR,
+                      style: ElevatedButton.styleFrom(),
+                      child: Text('show QR'),
+                    ),
+                    ElevatedButton(
+                      onPressed: controller.readQR,
+                      style: ElevatedButton.styleFrom(),
+                      child: Text('read QR'),
+                    ),
                   ],
                 ),
               ),
