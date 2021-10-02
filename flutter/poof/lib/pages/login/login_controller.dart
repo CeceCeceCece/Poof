@@ -50,12 +50,6 @@ class LoginController extends GetxController {
     );
   }
 
-  @override
-  void onInit() {
-    AudioService.playMenuSong();
-    super.onInit();
-  }
-
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream

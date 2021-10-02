@@ -1,4 +1,5 @@
 import 'package:bang/routes/routes.dart';
+import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/auth_service.dart';
 
 import 'package:get/get.dart';
@@ -20,5 +21,6 @@ class SplashController extends GetxController {
     await _splashDuration.delay();
 
     Get.offAllNamed(route);
+    AudioService.playMenuSong();
   }
 }
