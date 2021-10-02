@@ -1,6 +1,6 @@
-import 'package:bang/core/colors.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
+import 'package:bang/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -11,10 +11,11 @@ class LoginController extends GetxController {
   final usernameC = TextEditingController();
   final passwordC = TextEditingController();
 
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
 
   void login() {
+    Get.find<AuthService>().login('Cece', 'admin');
     Get.offAndToNamed(Routes.HOME);
   }
 
@@ -24,13 +25,15 @@ class LoginController extends GetxController {
       width: 300,
       height: 300,
       child: QRView(
-        key: qrKey,
+        key: _qrKey,
         onQRViewCreated: _onQRViewCreated,
       ),
     ));
   }
 
   void showQR() {
+    Get.find<AuthService>().getTry();
+
     Get.defaultDialog(
       content: Container(
         width: 250,
@@ -72,10 +75,5 @@ class LoginController extends GetxController {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
