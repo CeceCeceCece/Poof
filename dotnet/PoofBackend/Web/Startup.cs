@@ -2,7 +2,9 @@ using Application.Interfaces;
 using Application.Services;
 using Application.SignalR;
 using Domain;
+using Domain.Constants;
 using Domain.Entities;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,8 +39,12 @@ namespace Web
                .AddDefaultTokenProviders()
                .AddEntityFrameworkStores<PoofDbContext>();
 
+            services.AddSignalR();
+
             services.AddSingleton<PoofTracker>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICurrentPlayerService, CurrentPlayerService>();
+            services.AddTransient<IGameService, GameService>();
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
@@ -63,21 +69,36 @@ namespace Web
                    opt.Audience = "poof-api";
                });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.WithOrigins(Configuration.GetSection("AllowedOrigins").Get<string[]>())
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials();
+                });
+            });
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("api-openid", policy => policy.RequireAuthenticatedUser()
                 .RequireClaim("scope", "api-openid")
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme));
 
-                options.AddPolicy("Admin", policy => policy.RequireAuthenticatedUser()
-                .RequireClaim("role", "Admin")
+                options.AddPolicy(PoofRoles.Owner, policy => policy.RequireAuthenticatedUser()
+                .RequireClaim(JwtClaimTypes.Role, PoofRoles.Owner)
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme));
 
-                options.AddPolicy("User", policy => policy.RequireAuthenticatedUser()
-                .RequireClaim("role", "User", "Admin")
+                options.AddPolicy(PoofRoles.Admin, policy => policy.RequireAuthenticatedUser()
+                .RequireClaim(JwtClaimTypes.Role, PoofRoles.Admin, PoofRoles.Owner)
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme));
 
-                options.DefaultPolicy = options.GetPolicy("User");
+                options.AddPolicy(PoofRoles.User, policy => policy.RequireAuthenticatedUser()
+                .RequireClaim(JwtClaimTypes.Role, PoofRoles.User, PoofRoles.Admin, PoofRoles.Owner)
+                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme));
+
+                options.DefaultPolicy = options.GetPolicy(PoofRoles.User);
             });
 
             services.AddControllersWithViews();
@@ -117,7 +138,7 @@ namespace Web
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
             }
-
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
@@ -130,6 +151,7 @@ namespace Web
             {
                 endpoints.MapControllers();
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapHub<PoofHub>("hubs/poof");
             });
         }
     }

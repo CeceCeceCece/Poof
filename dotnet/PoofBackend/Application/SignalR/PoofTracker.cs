@@ -52,5 +52,16 @@ namespace Application.SignalR
             }
             return Task.FromResult(connectedPlayers);
         }
+
+        public Task<List<string>> GetConnections(string userName) 
+        {
+            List<string> connectionIds;
+            lock (ConnectedPlayers) 
+            {
+                connectionIds = ConnectedPlayers.GetValueOrDefault(userName);
+            }
+
+            return Task.FromResult(connectionIds);
+        }
     }
 }

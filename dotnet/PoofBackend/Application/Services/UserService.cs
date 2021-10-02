@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models.DTOs;
+using Domain;
+using Domain.Constants;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -14,15 +16,19 @@ namespace Application.Services
     public class UserService : IUserService
     {
         private readonly UserManager<Player> userManager;
-        public UserService(UserManager<Player> userManager)
+        private readonly PoofDbContext context;
+
+        public UserService(UserManager<Player> userManager, PoofDbContext context)
         {
             this.userManager = userManager;
+            this.context = context;
         }
-        public async Task Register(RegisterDto dto, CancellationToken? cancellationToken)
+        public async Task Register(RegisterDto dto, CancellationToken cancellationToken = default)
         {
-            var user = new Player { UserName = dto.UserName};
-            await userManager.CreateAsync(user, dto.Password);
-            await userManager.AddToRoleAsync(user, "User");
+            var user = new Player {UserName = dto.UserName};
+            var response = await userManager.CreateAsync(user, dto.Password);
+            if (!response.Succeeded) throw new ArgumentException(response.Errors.ToString());
+            await userManager.AddToRoleAsync(user, PoofRoles.User);
         }
     }
 }

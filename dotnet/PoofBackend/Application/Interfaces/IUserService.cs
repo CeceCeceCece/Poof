@@ -10,6 +10,6 @@ namespace Application.Interfaces
 {
     public interface IUserService
     {
-        public Task Register(RegisterDto dto, CancellationToken? cancellationToken);
+        public Task Register(RegisterDto dto, CancellationToken cancellationToken);
     }
 }

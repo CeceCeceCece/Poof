@@ -14,23 +14,29 @@ namespace Web.Controllers
     //[Authorize]
     public class WeatherForecastController : ControllerBase
     {
+        public WeatherForecastController(ICurrentPlayerService playerService)
+        {
+            this.playerService = playerService;
+        }
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
- 
+        private readonly ICurrentPlayerService playerService;
+
+
+        [HttpGet("picim")]
+        public async Task<string> GetHello()
+        {
+            return "Szia Picim Isten Áldjon Meg :)";
+        }
+
+
         [Authorize]
         [HttpGet]
-        public async Task<IEnumerable<WeatherForecast>> Get()
+        public async Task<string> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return playerService.Player.Name + playerService.Player.Id;
         }
         [Authorize(Policy = "Admin")]
         [HttpGet("admin")]

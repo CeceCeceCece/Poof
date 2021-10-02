@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Constants;
+using Domain.Entities;
 using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -30,8 +31,8 @@ namespace Web.Services
             }
 
             context.IssuedClaims.AddRange(roleClaims);
-            //context.IssuedClaims.Add(new Claim(JwtClaimTypes.Name, user.Name));
-            //context.IssuedClaims.Add(new Claim(JwtClaimTypes.Email, user.Email));
+            context.IssuedClaims.Add(new Claim(JwtClaimTypes.Id, user.Id));
+            context.IssuedClaims.Add(new Claim(JwtClaimTypes.Name, user.UserName));
             //context.IssuedClaims.Add(new Claim(JwtClaimTypes.Picture, user.PhotoUrl == null ? "" : user.PhotoUrl));
         }
 

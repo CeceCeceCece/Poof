@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Constants;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,8 +27,9 @@ namespace Domain.Seed
                 return;
             }
 
-            await roleManager.CreateAsync(new IdentityRole("Admin"));
-            await roleManager.CreateAsync(new IdentityRole("User"));
+            await roleManager.CreateAsync(new IdentityRole(PoofRoles.Owner));
+            await roleManager.CreateAsync(new IdentityRole(PoofRoles.Admin));
+            await roleManager.CreateAsync(new IdentityRole(PoofRoles.User));
         }
         private static async Task<ICollection<Player>> TryCreateUsersAsync(PoofDbContext context)
         {
@@ -38,7 +40,7 @@ namespace Domain.Seed
 
             var users = new List<Player>
             {
-                new Player{ UserName = "Cece" },
+                new Player{ UserName = "Cece"},
                 new Player{ UserName = "Csabi"},
                 new Player{ UserName = "user1"},
                 new Player{ UserName = "user2"}
@@ -70,11 +72,11 @@ namespace Domain.Seed
             {
                 if (i < 2)
                 {
-                    await userManager.AddToRoleAsync(users.ElementAt(i), "Admin");
+                    await userManager.AddToRoleAsync(users.ElementAt(i), PoofRoles.Admin);
                 }
                 else
                 {
-                    await userManager.AddToRoleAsync(users.ElementAt(i), "User");
+                    await userManager.AddToRoleAsync(users.ElementAt(i), PoofRoles.User);
                 }
             }
         }

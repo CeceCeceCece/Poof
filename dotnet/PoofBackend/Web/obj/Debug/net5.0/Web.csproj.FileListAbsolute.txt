@@ -226,3 +226,16 @@ E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\obj\Debug\net5.0\Web.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\obj\Debug\net5.0\ref\Web.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\obj\Debug\net5.0\Web.pdb
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\obj\Debug\net5.0\Web.genruntimeconfig.cache
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\System.Text.Encodings.Web.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\System.Text.Json.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Azure.Core.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Azure.Identity.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Azure.Security.KeyVault.Certificates.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Azure.Security.KeyVault.Secrets.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.AspNetCore.Http.Connections.Client.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Azure.SignalR.Common.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Azure.SignalR.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Azure.SignalR.Protocols.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Identity.Client.Extensions.Msal.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Identity.Web.dll
