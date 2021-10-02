@@ -15,6 +15,12 @@ class AuthService extends ServiceBase {
     log('SERVICES: AUTH_SERVICE INITIALIZED');
   }
 
+  static bool get hasValidToken => SharedPreferenceService.token != '';
+
+  static String? get tryGetToken => SharedPreferenceService.token == ''
+      ? null
+      : SharedPreferenceService.token;
+
   void login(String username, String password) async {
     try {
       final body =

@@ -1,4 +1,5 @@
 import 'package:bang/routes/routes.dart';
+import 'package:bang/services/auth_service.dart';
 
 import 'package:get/get.dart';
 
@@ -15,7 +16,9 @@ class SplashController extends GetxController {
   }
 
   Future<void> _initState() async {
+    var route = AuthService.hasValidToken ? Routes.HOME : Routes.LOGIN;
     await _splashDuration.delay();
-    Get.offAllNamed(Routes.LOGIN);
+
+    Get.offAllNamed(route);
   }
 }
