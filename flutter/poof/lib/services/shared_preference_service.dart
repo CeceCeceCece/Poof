@@ -16,8 +16,10 @@ class SharedPreferenceService extends ServiceBase {
     return _token!;
   }
 
-  static set token(String token) =>
-      _preferences.setString(Constants.TOKEN, token);
+  static set token(String token) {
+    _preferences.setString(Constants.TOKEN, token);
+    _token = token;
+  }
 
   @override
   Future<void> init() async {

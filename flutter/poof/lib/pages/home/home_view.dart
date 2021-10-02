@@ -14,6 +14,10 @@ class HomeView extends GetView<HomeController> {
             ElevatedButton(
               onPressed: () => controller.joinRoom('randomID'),
               child: Text('Play!'),
+            ),
+            ElevatedButton(
+              onPressed: () => controller.logout(),
+              child: Text('Logout'),
             )
           ],
         ),
