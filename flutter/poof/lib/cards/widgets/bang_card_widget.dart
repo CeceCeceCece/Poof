@@ -1,14 +1,9 @@
-import 'dart:io';
 import 'dart:math';
-import 'package:share_plus/share_plus.dart';
-
 import 'package:bang/cards/model/bang_card.dart';
 import 'package:bang/cards/model/card_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 import 'card_widget_helpers.dart';
@@ -206,19 +201,11 @@ class _BangCardWidgetState extends State<BangCardWidget>
               )),
         ),
       );
-
   void _screenShot(ScaleEndDetails details) async {
     screenshotController
         .capture(pixelRatio: MediaQuery.of(context).devicePixelRatio)
         .then((image) async {
-      if (image != null) {
-        final directory = await getApplicationDocumentsDirectory();
-        final imagePath =
-            await File('${directory.path}/bang_card.png').create();
-        await imagePath.writeAsBytes(image);
-        await Share.shareFiles([imagePath.path]);
-        ImageGallerySaver.saveImage(image, quality: 100, name: 'bang_card');
-      }
+      CardWidgetHelpers.saveAndShareImage(image);
     }).then((result) {
       Fluttertoast.showToast(msg: 'captured');
     });

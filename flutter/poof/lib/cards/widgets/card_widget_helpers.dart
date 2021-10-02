@@ -1,5 +1,11 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:bang/cards/model/card_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 abstract class CardWidgetHelpers {
   static const double cardHeight = 389;
@@ -87,6 +93,16 @@ abstract class CardWidgetHelpers {
         return '3';
       case Value.Two:
         return '2';
+    }
+  }
+
+  static void saveAndShareImage(Uint8List? image) async {
+    if (image != null) {
+      final directory = await getApplicationDocumentsDirectory();
+      final imagePath = await File('${directory.path}/bang_card.png').create();
+      await imagePath.writeAsBytes(image);
+      await Share.shareFiles([imagePath.path]);
+      ImageGallerySaver.saveImage(image, quality: 100, name: 'bang_card');
     }
   }
 }
