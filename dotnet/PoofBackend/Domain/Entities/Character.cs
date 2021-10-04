@@ -9,8 +9,7 @@ namespace Domain.Entities
 {
     public class Character
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public int LifePoint { get; set; }
         public int MaxLifePoint { get; set; }
