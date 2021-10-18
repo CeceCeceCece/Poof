@@ -39,6 +39,10 @@ class AudioService extends ServiceBase {
     'outback',
     'peyotecowboy',
     'westernapocalypse',
+    'ambush',
+    'outsider',
+    'espionage',
+    'hired'
   ];
 
   static playMenuSong() => _musicPlayer
@@ -46,7 +50,7 @@ class AudioService extends ServiceBase {
       LoopingAudioSource(
         count: 200,
         child: ProgressiveAudioSource(
-          Uri.parse('asset:///assets/music/oneshotjones.mp3'),
+          Uri.parse('asset:///assets/music/tavern.mp3'),
         ),
       ),
     )
