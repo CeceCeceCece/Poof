@@ -1,7 +1,10 @@
 import 'dart:developer';
 import 'dart:math' as Math;
 
+import 'package:bang/cards/model/action_cards/equipment_card.dart';
+import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/services/audio_service.dart';
+import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

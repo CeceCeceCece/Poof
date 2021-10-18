@@ -8,9 +8,17 @@ import 'card_widget_helpers.dart';
 
 class NonPlayableCardWidget extends StatefulWidget {
   final NonPlayableCardBase card;
-  const NonPlayableCardWidget(
-      {Key? key, required this.card, required this.onTapCallback})
-      : super(key: key);
+
+  final double scale;
+
+  final bool showBackPermanently;
+  const NonPlayableCardWidget({
+    Key? key,
+    required this.card,
+    required this.onTapCallback,
+    this.scale = 1.0,
+    this.showBackPermanently = false,
+  }) : super(key: key);
 
   final void Function() onTapCallback;
 
@@ -22,8 +30,10 @@ class _BangCardWidgetState extends State<NonPlayableCardWidget>
     with TickerProviderStateMixin {
   bool showBack = false;
   double downSizeRatio = 0.4;
-  late double height = CardWidgetHelpers.cardHeight * downSizeRatio;
-  late double width = CardWidgetHelpers.cardWidth * downSizeRatio;
+  late double height =
+      CardWidgetHelpers.cardHeight * downSizeRatio * widget.scale;
+  late double width =
+      CardWidgetHelpers.cardWidth * downSizeRatio * widget.scale;
   final _cardFlipDuration = Duration(milliseconds: 300);
   final _cardFocusingDuration = Duration(milliseconds: 100);
   bool isElevated = false;
@@ -111,6 +121,10 @@ class _BangCardWidgetState extends State<NonPlayableCardWidget>
   }
 
   void _computeShowBack(double val) {
+    if (widget.showBackPermanently) {
+      showBack = false;
+      return;
+    }
     if (val >= (pi / 2)) {
       showBack = false;
     } else {

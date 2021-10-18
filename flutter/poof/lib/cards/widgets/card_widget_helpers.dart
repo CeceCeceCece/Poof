@@ -8,8 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 abstract class CardWidgetHelpers {
-  static const double cardHeight = 389;
-  static const double cardWidth = 250;
+  static const sizeScale = 0.85;
+  static double get cardHeight => sizeScale * 389;
+  static double get cardWidth => sizeScale * 250;
 
   static const _basePath = 'assets/cards/';
   static const _imageExtension = '.png';

@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'package:bang/cards/model/bang_card.dart';
-import 'package:bang/cards/model/card_constants.dart';
+import 'package:bang/cards/model/card_constants.dart' as Bang;
+import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -10,14 +12,20 @@ import 'card_widget_helpers.dart';
 
 class BangCardWidget extends StatefulWidget {
   final BangCard card;
-  BangCardWidget(
-      {Key? key,
-      required this.card,
-      required this.onTapCallback,
-      required this.handCallback})
-      : super(key: key);
 
-  final void Function() onTapCallback;
+  final double scale;
+
+  final bool showBackPermanently;
+  BangCardWidget({
+    Key? key,
+    required this.card,
+    required this.onDragSuccessCallback,
+    required this.handCallback,
+    this.scale = 1.0,
+    this.showBackPermanently = false,
+  }) : super(key: key);
+
+  final void Function() onDragSuccessCallback;
   final void Function() handCallback;
 
   @override
@@ -28,8 +36,10 @@ class _BangCardWidgetState extends State<BangCardWidget>
     with TickerProviderStateMixin {
   bool showBack = false;
   double downSizeRatio = 0.4;
-  late double height = CardWidgetHelpers.cardHeight * downSizeRatio;
-  late double width = CardWidgetHelpers.cardWidth * downSizeRatio;
+  late double height =
+      CardWidgetHelpers.cardHeight * downSizeRatio * widget.scale;
+  late double width =
+      CardWidgetHelpers.cardWidth * downSizeRatio * widget.scale;
   final _cardFlipDuration = Duration(milliseconds: 300);
   final _cardFocusingDuration = Duration(milliseconds: 100);
   bool isElevated = false;
@@ -37,17 +47,21 @@ class _BangCardWidgetState extends State<BangCardWidget>
 
   final ScreenshotController screenshotController = ScreenshotController();
 
-  void _toggleCardFocus() => setState(() {
-        if (isElevated) {
-          height *= 2 / 3;
-          width *= 2 / 3;
-          isElevated = false;
-        } else {
-          height *= 1.5;
-          width *= 1.5;
-          isElevated = true;
-        }
-      });
+  void _toggleCardFocus() {
+    setState(() {
+      if (isElevated) {
+        /*height *= 2 / 3;
+        width *= 2 / 3;*/
+        isElevated = false;
+        Get.find<GameService>().highlight(-1);
+      } else {
+        /*height *= 1.5;
+        width *= 1.5;*/
+        isElevated = true;
+        widget.handCallback();
+      }
+    });
+  }
 
   void _flipCard() => setState(() {
         angle = (angle + pi) % (2 * pi);
@@ -56,16 +70,40 @@ class _BangCardWidgetState extends State<BangCardWidget>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTapCallback,
       onLongPressStart: (_) => _toggleCardFocus(),
       onLongPressEnd: (_) => _toggleCardFocus(),
-      onDoubleTap: _flipCard,
+      //onDoubleTap: _flipCard,
       onScaleEnd: _screenShot,
       child: TweenAnimationBuilder(
         tween: Tween<double>(begin: 0, end: angle),
         duration: _cardFlipDuration,
         builder: (BuildContext context, double val, __) {
           _computeShowBack(val);
+          var card = showBack
+              ? Material(
+                  borderRadius: BorderRadius.circular(10),
+                  elevation: isElevated ? 40 : 0,
+                  child: AnimatedContainer(
+                    height: height,
+                    width: width,
+                    duration: _cardFocusingDuration,
+                    child: render(),
+                  ),
+                )
+              : Material(
+                  borderRadius: BorderRadius.circular(10),
+                  elevation: isElevated ? 40 : 0,
+                  child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.identity()
+                      ..rotateY(pi), // it will flip horizontally the container
+                    child: AnimatedContainer(
+                        height: height,
+                        width: width,
+                        duration: _cardFocusingDuration,
+                        child: render(showBack: true)),
+                  ),
+                );
           return Transform(
             alignment: Alignment.center,
             transform: Matrix4.identity()
@@ -73,32 +111,21 @@ class _BangCardWidgetState extends State<BangCardWidget>
               ..rotateY(val),
             child: Screenshot(
               controller: screenshotController,
-              child: showBack
-                  ? Material(
-                      borderRadius: BorderRadius.circular(10),
-                      elevation: isElevated ? 40 : 0,
-                      child: AnimatedContainer(
-                        height: height,
-                        width: width,
-                        duration: _cardFocusingDuration,
-                        child: render(),
-                      ),
-                    )
-                  : Material(
-                      borderRadius: BorderRadius.circular(10),
-                      elevation: isElevated ? 40 : 0,
-                      child: Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.identity()
-                          ..rotateY(
-                              pi), // it will flip horizontally the container
-                        child: AnimatedContainer(
-                            height: height,
-                            width: width,
-                            duration: _cardFocusingDuration,
-                            child: render(showBack: true)),
-                      ),
+              child: Draggable<String>(
+                  onDragCompleted: widget.onDragSuccessCallback,
+                  data: widget.card.toString(),
+                  feedback: Image.asset('assets/icons/aim.png',
+                      width: 50, height: 50),
+                  childWhenDragging: ColorFiltered(
+                    child: AnimatedOpacity(
+                      opacity: 0.8,
+                      child: card,
+                      duration: Duration(milliseconds: 500),
                     ),
+                    colorFilter: ColorFilter.mode(
+                        Colors.red.shade100, BlendMode.modulate),
+                  ),
+                  child: card),
             ),
           );
         },
@@ -107,6 +134,10 @@ class _BangCardWidgetState extends State<BangCardWidget>
   }
 
   void _computeShowBack(double val) {
+    if (widget.showBackPermanently) {
+      showBack = false;
+      return;
+    }
     if (val >= (pi / 2)) {
       showBack = false;
     } else {
@@ -193,7 +224,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
           child: Padding(
               padding: EdgeInsets.fromLTRB(height / 35, height / 160, 0, 0),
               child: SizedBox(
-                width: widget.card.value == Value.Ten
+                width: widget.card.value == Bang.Value.Ten
                     ? height / 6 + 1
                     : height / 8 + 1,
                 height: height / 8,
