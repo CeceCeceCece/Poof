@@ -123,7 +123,6 @@ E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Web.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\ref\Web.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Web.pdb
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Web.Views.dll
-E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Web.Views.pdb
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\AutoMapper.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Humanizer.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\IdentityModel.dll
@@ -213,3 +212,4 @@ E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Azure.Sig
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Identity.Client.Extensions.Msal.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Microsoft.Identity.Web.dll
+E:\Szakdolgozat\Poof\dotnet\PoofBackend\Web\bin\Debug\net5.0\Hellang.Middleware.ProblemDetails.dll

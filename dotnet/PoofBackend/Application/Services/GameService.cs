@@ -19,26 +19,20 @@ namespace Application.Services
         {
             this.context = context;
         }
-        public async Task AddGame(Group group, CancellationToken cancellationToken = default)
+
+        public Task CreateGame(Lobby lobby, CancellationToken cancellationToken)
         {
-            context.Games.Add(group);
-            await context.SaveChangesAsync(cancellationToken);
+            throw new NotImplementedException();
         }
 
-        public async Task<Connection> GetConnection(string conncetionId, CancellationToken cancellationToken = default)
+        public Task<Lobby> GetGame(string groupId, CancellationToken cancellationToken)
         {
-            return await context.Connections.FirstOrDefaultAsync(x => x.ConnectionId == conncetionId, cancellationToken);
+            throw new NotImplementedException();
         }
 
-        public async Task<Group> GetGameGroup(string groupId, CancellationToken cancellationToken = default)
+        public Task<Lobby> RemoveGame(string groupId, CancellationToken cancellationToken)
         {
-            return await context.Games.FirstOrDefaultAsync(x => x.Name == groupId, cancellationToken);
-        }
-
-        public async Task RemoveConnection(Connection connection, CancellationToken cancellationToken = default)
-        {
-            context.Connections.Remove(connection);
-            await context.SaveChangesAsync(cancellationToken);
+            throw new NotImplementedException();
         }
     }
 }

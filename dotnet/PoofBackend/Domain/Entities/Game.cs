@@ -44,5 +44,10 @@ namespace Domain.Entities
 
             return result;
         }
+
+        public List<string> GetAllPlayer()
+        {
+            return Characters.Select(x => x.Id).ToList();
+        }
     }
 }

@@ -1,13 +1,16 @@
+using Application.Exceptions;
 using Application.Interfaces;
 using Application.Services;
 using Application.SignalR;
 using Domain;
 using Domain.Constants;
 using Domain.Entities;
+using Hellang.Middleware.ProblemDetails;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +48,8 @@ namespace Web
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICurrentPlayerService, CurrentPlayerService>();
             services.AddTransient<IGameService, GameService>();
+            services.AddTransient<ILobbyService, LobbyService>();
+            services.AddTransient<IConnectionService, ConnectionService>();
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
@@ -126,6 +131,19 @@ namespace Web
                       new string[] { }
                     }
                   });
+            });
+
+            services.AddProblemDetails(options =>
+            {
+                options.IncludeExceptionDetails = (ctx, ex) => false;
+                options.Map<PoofException>(
+                  (ctx, ex) =>
+                  {
+                      var pd = StatusCodeProblemDetails.Create(StatusCodes.Status500InternalServerError);
+                      pd.Title = ex.Message;
+                      return pd;
+                  }
+               );
             });
         }
 

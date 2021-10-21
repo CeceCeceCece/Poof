@@ -17,7 +17,9 @@ namespace Domain
     {
         public DbSet<Card> Cards{ get; set; }
         public DbSet<RoleCard> RoleCards{ get; set; }
-        public DbSet<Group> Games{ get; set; }
+        public DbSet<Game> Games{ get; set; }
+        public DbSet<Lobby> Lobbies{ get; set; }
+        public DbSet<Message> Messages{ get; set; }
         public DbSet<Connection> Connections{ get; set; }
 
         public PoofDbContext(DbContextOptions options) : base(options)
