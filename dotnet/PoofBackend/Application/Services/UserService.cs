@@ -16,12 +16,10 @@ namespace Application.Services
     public class UserService : IUserService
     {
         private readonly UserManager<Player> userManager;
-        private readonly PoofDbContext context;
 
-        public UserService(UserManager<Player> userManager, PoofDbContext context)
+        public UserService(UserManager<Player> userManager)
         {
             this.userManager = userManager;
-            this.context = context;
         }
         public async Task Register(RegisterDto dto, CancellationToken cancellationToken = default)
         {
