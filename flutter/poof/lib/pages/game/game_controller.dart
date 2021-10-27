@@ -1,12 +1,10 @@
 import 'dart:developer';
 import 'dart:math' as Math;
-
-import 'package:bang/cards/model/action_cards/equipment_card.dart';
-import 'package:bang/cards/model/card_constants.dart' as Bang;
+import 'package:bang/core/constants.dart';
 import 'package:bang/services/audio_service.dart';
-import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:signalr_core/signalr_core.dart';
 
 class GameController extends GetxController {
   var _exitConfirmed = false;
@@ -31,5 +29,31 @@ class GameController extends GetxController {
     _exitConfirmed = true;
     Get.back();
     AudioService.playMenuSong();
+  }
+
+  @override
+  void onInit() {
+    //initWebsocket();
+    super.onInit();
+  }
+
+  Future<void> initWebsocket() async {
+    final connection = HubConnectionBuilder()
+        .withUrl(
+            Constants.BASE_URL + 'HUBNAME', // TODO
+            HttpConnectionOptions(
+              logging: (level, message) => print(message),
+            ))
+        .withAutomaticReconnect()
+        .build();
+    try {
+      await connection.start();
+    } catch (error) {
+      log('$error');
+    }
+
+    connection.on('SendMessage', (message) {
+      log(message.toString());
+    });
   }
 }
