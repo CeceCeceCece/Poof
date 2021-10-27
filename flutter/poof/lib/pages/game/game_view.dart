@@ -7,13 +7,11 @@ import 'package:bang/cards/widgets/bang_card_widget.dart';
 import 'package:bang/cards/widgets/non_playable_card_widget.dart';
 import 'package:bang/core/colors.dart';
 import 'package:bang/pages/game/game_controller.dart';
-import 'package:bang/pages/game/widgets/hand_of_cards.dart';
 import 'package:bang/pages/game/widgets/player_view.dart';
 import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class GameView extends GetView<GameController> {
   @override
@@ -107,7 +105,7 @@ class GameView extends GetView<GameController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),
             Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.bottomCenter,
                 child: PlayerView(
                   characterCard: CharacterCard(
                       background: 'willythekid',

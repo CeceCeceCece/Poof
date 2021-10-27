@@ -15,12 +15,13 @@ abstract class CardWidgetHelpers {
   static const _basePath = 'assets/cards/';
   static const _imageExtension = '.png';
 
-  static Widget getAsset({required String name, required CardType type}) {
+  static Widget getAsset(
+      {required String name, required CardType type, double scale = 1.0}) {
     return Container(
         width: CardWidgetHelpers.cardWidth,
         height: CardWidgetHelpers.cardHeight,
         child: Padding(
-          padding: const EdgeInsets.all(3.0),
+          padding: EdgeInsets.all(3.0 * scale),
           child: Image.asset(
             _basePath + _typeToAssetFolder(type) + name + _imageExtension,
             fit: BoxFit.cover,
@@ -45,8 +46,10 @@ abstract class CardWidgetHelpers {
     }
   }
 
-  static getCardBack(CardType type) => getAsset(
-      name: '${_typeToAssetFolder(type).split('/')[0]}back', type: type);
+  static getCardBack(CardType type, [double scale = 1.0]) => getAsset(
+      name: '${_typeToAssetFolder(type).split('/')[0]}back',
+      type: type,
+      scale: scale);
 
   static String cardSuitToString(Suit suit) {
     switch (suit) {

@@ -1,9 +1,8 @@
-import 'package:bang/cards/widgets/bang_card_widget.dart';
+import 'dart:math';
+
 import 'package:bang/cards/widgets/card_widget_helpers.dart';
 import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
-
 import 'package:get/get.dart';
 
 class Hand extends StatefulWidget {
@@ -30,8 +29,10 @@ class _HandState extends State<Hand> {
     var width = MediaQuery.of(context).size.width *
         (controller.expandedHandView() ? 1.0 : 0.3);
     return GestureDetector(
-      onDoubleTap: () =>
-          controller.expandedHandView.value = !controller.expandedHandView(),
+      onDoubleTap: () {
+        controller.expandedHandView.value = !controller.expandedHandView();
+        controller.expandedEquipmentView.value = false;
+      },
       child: Container(
         child: Center(
           child: Obx(() {
@@ -94,7 +95,7 @@ class _HandState extends State<Hand> {
         bottom: (isExpanded ? 1 : 0.3) *
                 (rotationStep * i + rotationStart).abs() *
                 -0.5 +
-            (isExpanded ? 50 : 30) +
+            (isExpanded ? 65 : 30) +
             extraBottom);
   }
 }

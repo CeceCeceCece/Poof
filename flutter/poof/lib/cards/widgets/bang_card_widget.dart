@@ -81,7 +81,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
           _computeShowBack(val);
           var card = showBack
               ? Material(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10) * widget.scale,
                   elevation: isElevated ? 40 : 0,
                   child: AnimatedContainer(
                     height: height,
@@ -205,21 +205,23 @@ class _BangCardWidgetState extends State<BangCardWidget>
         ? Stack(
             children: [
               CardWidgetHelpers.getAsset(
-                  name: widget.card.name, type: widget.card.type),
+                  name: widget.card.name,
+                  type: widget.card.type,
+                  scale: widget.scale),
               Align(
                 alignment: Alignment.bottomLeft,
                 child: _buildCorner(),
               ),
             ],
           )
-        : CardWidgetHelpers.getCardBack(widget.card.type);
+        : CardWidgetHelpers.getCardBack(widget.card.type, widget.scale);
   }
 
   Widget _buildCorner() => Padding(
         padding: EdgeInsets.only(left: height / 50, bottom: height / 300),
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(height / 20),
+              borderRadius: BorderRadius.circular(height / 20) * widget.scale,
               color: widget.card.borderColor),
           child: Padding(
               padding: EdgeInsets.fromLTRB(height / 35, height / 160, 0, 0),
