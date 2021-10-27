@@ -1,10 +1,8 @@
 import 'package:bang/cards/model/action_cards/equipment_card.dart';
-import 'package:bang/cards/model/non_playable_cards/role_card.dart';
-import 'package:bang/cards/model/action_cards/weapon_card.dart';
 import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
+import 'package:bang/cards/model/non_playable_cards/role_card.dart';
 import 'package:bang/cards/widgets/bang_card_widget.dart';
-import 'package:bang/cards/widgets/non_playable_card_widget.dart';
 import 'package:bang/core/colors.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player_view.dart';
@@ -16,6 +14,8 @@ import 'package:get/get.dart';
 class GameView extends GetView<GameController> {
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: controller.showBackPopupForResult,
       child: Scaffold(
@@ -25,7 +25,7 @@ class GameView extends GetView<GameController> {
             () => Stack(
               alignment: Alignment.center,
               children: [
-                _buildLayout(),
+                ..._buildLayout(height, width),
                 Center(
                     child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -93,104 +93,68 @@ class GameView extends GetView<GameController> {
         decoration: BoxDecoration(color: color ?? Colors.red),
       );
 
-  Widget _buildLayout() {
+  List<Widget> _buildLayout(double height, double width) {
     switch (controller.playerNumber()) {
       case 4:
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Center(child: _ph()),
-            Row(
-              children: [_ph(), _ph()],
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            ),
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: PlayerView(
-                  characterCard: CharacterCard(
-                      background: 'willythekid',
-                      health: 4,
-                      name: 'willythekid'),
-                  roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
-                )),
-          ],
-        );
+        return [
+          Positioned(child: _ph(), top: 20, left: width / 2 - 10),
+          Positioned(child: _ph(), top: height * 0.4 - 10, left: 10),
+          Positioned(child: _ph(), top: height * 0.4 - 10, right: 10),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: PlayerView(
+                characterCard: CharacterCard(
+                    background: 'willythekid', health: 4, name: 'willythekid'),
+                roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
+              )),
+        ];
       case 5:
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Row(
-              children: [_ph(), _ph()],
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-            ),
-            Row(
-              children: [_ph(), _ph()],
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            ),
-            Center(
-              child: BangCardWidget(
-                card: WeaponCard(
-                  range: 3,
-                  background: 'remington',
-                  name: 'remington',
-                  suit: Bang.Suit.Clubs,
-                  value: Bang.Value.Ten,
-                  type: Bang.CardType.Weapon,
-                ),
-                handCallback: () {},
-                onDragSuccessCallback: () {},
-              ),
-            ),
-          ],
-        );
+        return [
+          Positioned(child: _ph(), top: 40, left: width * 0.75 - 10),
+          Positioned(child: _ph(), top: 40, left: width * 0.25 - 10),
+          Positioned(child: _ph(), top: height * 0.45 - 10, left: 10),
+          Positioned(child: _ph(), top: height * 0.45 - 10, right: 10),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: PlayerView(
+                characterCard: CharacterCard(
+                    background: 'willythekid', health: 4, name: 'willythekid'),
+                roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
+              )),
+        ];
       case 6:
-        return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Center(child: _ph()),
-              Row(
-                children: [_ph(), _ph()],
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              ),
-              Row(
-                children: [_ph(), _ph()],
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              ),
-              Center(
-                child: NonPlayableCardWidget(
-                  card: RoleCard(name: 'sheriff', background: 'sheriff'),
-                  onTapCallback: () {},
-                ),
-              ),
-            ]);
+        return [
+          Positioned(child: _ph(), top: height * 0.1, left: width / 2 - 10),
+          Positioned(child: _ph(), top: height * 0.25, left: width * 0.9 - 10),
+          Positioned(child: _ph(), top: height * 0.25, left: width * 0.10 - 10),
+          Positioned(child: _ph(), top: height * 0.5 - 10, left: 10),
+          Positioned(child: _ph(), top: height * 0.5 - 10, right: 10),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: PlayerView(
+                characterCard: CharacterCard(
+                    background: 'willythekid', health: 4, name: 'willythekid'),
+                roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
+              )),
+        ];
       case 7:
-        return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Row(
-                children: [_ph(), _ph()],
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-              ),
-              Row(
-                children: [_ph(), _ph()],
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              ),
-              Row(
-                children: [_ph(), _ph()],
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              ),
-              Center(
-                child: NonPlayableCardWidget(
-                  card: CharacterCard(
-                      background: 'willythekid',
-                      name: 'willythekid',
-                      health: 4),
-                  onTapCallback: () {},
-                ),
-              )
-            ]);
+        return [
+          Positioned(child: _ph(), top: height * 0.1, left: width * 0.3 - 10),
+          Positioned(child: _ph(), top: height * 0.1, left: width * 0.7 - 10),
+          Positioned(child: _ph(), top: height * 0.3, left: width * 0.95 - 10),
+          Positioned(child: _ph(), top: height * 0.3, left: width * 0.05 - 10),
+          Positioned(child: _ph(), top: height * 0.55 - 10, left: 10),
+          Positioned(child: _ph(), top: height * 0.55 - 10, right: 10),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: PlayerView(
+                characterCard: CharacterCard(
+                    background: 'willythekid', health: 4, name: 'willythekid'),
+                roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
+              )),
+        ];
       default:
-        return Text('default');
+        return [Text('default')];
     }
   }
 }
