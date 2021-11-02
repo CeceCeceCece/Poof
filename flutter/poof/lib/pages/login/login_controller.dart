@@ -1,15 +1,16 @@
 import 'package:bang/routes/routes.dart';
-import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginController extends GetxController {
   final usernameC = TextEditingController(text: 'Cece');
   final passwordC = TextEditingController(text: 'admin');
+
+  var isLoginPage = true.obs;
 
   final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
@@ -17,6 +18,22 @@ class LoginController extends GetxController {
   void login() {
     Get.find<AuthService>().login(usernameC.text, passwordC.text);
     Get.offAndToNamed(Routes.HOME);
+  }
+
+  void register() {
+    Get.find<AuthService>().register(usernameC.text, passwordC.text);
+  }
+
+  void goToRegister() {
+    isLoginPage.value = false;
+    usernameC.clear();
+    passwordC.clear();
+  }
+
+  void goToLogin() {
+    isLoginPage.value = true;
+    usernameC.clear();
+    passwordC.clear();
   }
 
   void readQR() {

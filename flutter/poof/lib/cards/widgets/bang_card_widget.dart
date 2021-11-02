@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:bang/cards/model/bang_card.dart';
 import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/services/game_service.dart';
@@ -81,7 +82,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
           _computeShowBack(val);
           var card = showBack
               ? Material(
-                  borderRadius: BorderRadius.circular(10) * widget.scale,
+                  borderRadius: BorderRadius.circular(10 * widget.scale),
                   elevation: isElevated ? 40 : 0,
                   child: AnimatedContainer(
                     height: height,
@@ -91,7 +92,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
                   ),
                 )
               : Material(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10 * widget.scale),
                   elevation: isElevated ? 40 : 0,
                   child: Transform(
                     alignment: Alignment.center,

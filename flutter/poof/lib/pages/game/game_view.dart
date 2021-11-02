@@ -1,12 +1,15 @@
+import 'package:bang/cards/model/action_cards/action_card.dart';
 import 'package:bang/cards/model/action_cards/equipment_card.dart';
 import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/cards/model/non_playable_cards/role_card.dart';
 import 'package:bang/cards/widgets/bang_card_widget.dart';
+import 'package:bang/cards/widgets/non_playable_card_widget.dart';
 import 'package:bang/core/colors.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player_view.dart';
 import 'package:bang/services/game_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -24,8 +27,8 @@ class GameView extends GetView<GameController> {
           child: Obx(
             () => Stack(
               alignment: Alignment.center,
+              fit: StackFit.passthrough,
               children: [
-                ..._buildLayout(height, width),
                 Center(
                     child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -79,6 +82,7 @@ class GameView extends GetView<GameController> {
                         child: Icon(Icons.replay_outlined)),
                   ],
                 ),
+                ..._buildLayout(height, width),
               ],
             ),
           ),
@@ -88,16 +92,74 @@ class GameView extends GetView<GameController> {
   }
 
   Widget _ph([Color? color]) => Container(
-        height: 20,
-        width: 20,
-        decoration: BoxDecoration(color: color ?? Colors.red),
-      );
+      width: 100,
+      height: 100,
+      child: Column(
+        children: [
+          Row(children: [
+            Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                NonPlayableCardWidget(
+                  scale: 0.5,
+                  highlightMultiplier: 1.75,
+                  card: CharacterCard(
+                      background: 'willythekid',
+                      health: 4,
+                      name: 'willythekid'),
+                  onTapCallback: () {},
+                ),
+                Text('❤: 4', style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                BangCardWidget(
+                  scale: 0.5,
+                  showBackPermanently: true,
+                  card: ActionCard(
+                    background: 'stagecoach',
+                    name: 'stagecoach',
+                    suit: Bang.Suit.Clubs,
+                    value: Bang.Value.Nine,
+                    type: Bang.CardType.Action,
+                    range: 0,
+                  ),
+                  handCallback: () {},
+                  onDragSuccessCallback: () {},
+                ),
+                Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 1.5),
+                      shape: BoxShape.circle),
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: Material(
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                ),
+                Text(
+                  '5',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                )
+              ],
+            ),
+          ]),
+        ],
+      ));
 
   List<Widget> _buildLayout(double height, double width) {
     switch (controller.playerNumber()) {
       case 4:
         return [
-          Positioned(child: _ph(), top: 20, left: width / 2 - 10),
+          Positioned(child: _ph(), top: 20, left: width / 2 - 50),
           Positioned(child: _ph(), top: height * 0.4 - 10, left: 10),
           Positioned(child: _ph(), top: height * 0.4 - 10, right: 10),
           Align(
@@ -110,8 +172,8 @@ class GameView extends GetView<GameController> {
         ];
       case 5:
         return [
-          Positioned(child: _ph(), top: 40, left: width * 0.75 - 10),
-          Positioned(child: _ph(), top: 40, left: width * 0.25 - 10),
+          Positioned(child: _ph(), top: 40, left: width * 0.75 + 50),
+          Positioned(child: _ph(), top: 40, left: width * 0.25 - 50),
           Positioned(child: _ph(), top: height * 0.45 - 10, left: 10),
           Positioned(child: _ph(), top: height * 0.45 - 10, right: 10),
           Align(
@@ -124,9 +186,9 @@ class GameView extends GetView<GameController> {
         ];
       case 6:
         return [
-          Positioned(child: _ph(), top: height * 0.1, left: width / 2 - 10),
-          Positioned(child: _ph(), top: height * 0.25, left: width * 0.9 - 10),
-          Positioned(child: _ph(), top: height * 0.25, left: width * 0.10 - 10),
+          Positioned(child: _ph(), top: height * 0.1, left: width / 2 - 50),
+          Positioned(child: _ph(), top: height * 0.25, left: width * 0.9 - 50),
+          Positioned(child: _ph(), top: height * 0.25, left: width * 0.10 + 50),
           Positioned(child: _ph(), top: height * 0.5 - 10, left: 10),
           Positioned(child: _ph(), top: height * 0.5 - 10, right: 10),
           Align(

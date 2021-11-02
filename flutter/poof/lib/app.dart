@@ -5,6 +5,7 @@ import 'package:bang/core/strings.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'routes/routes.dart';
 
 class App extends StatefulWidget {
@@ -38,6 +39,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       title: BangStrings.appname,
       getPages: Pages.routes,
       initialRoute: Pages.initial,
+      theme: ThemeData(
+          backgroundColor: BangColors.background,
+          buttonColor: BangColors.buttonColor),
       home: Scaffold(
         backgroundColor: BangColors.background,
       ),

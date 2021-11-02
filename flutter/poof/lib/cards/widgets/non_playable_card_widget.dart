@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:bang/cards/model/non_playable_cards/non_playable_card_base.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,6 +11,7 @@ class NonPlayableCardWidget extends StatefulWidget {
   final NonPlayableCardBase card;
 
   final double scale;
+  final double highlightMultiplier;
 
   final bool showBackPermanently;
   const NonPlayableCardWidget({
@@ -17,6 +19,7 @@ class NonPlayableCardWidget extends StatefulWidget {
     required this.card,
     required this.onTapCallback,
     this.scale = 1.0,
+    this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
   }) : super(key: key);
 
@@ -43,12 +46,12 @@ class _BangCardWidgetState extends State<NonPlayableCardWidget>
 
   void _toggleCardFocus() => setState(() {
         if (isElevated) {
-          height *= 2 / 3;
-          width *= 2 / 3;
+          height *= 2 / 3 / widget.highlightMultiplier;
+          width *= 2 / 3 / widget.highlightMultiplier;
           isElevated = false;
         } else {
-          height *= 1.5;
-          width *= 1.5;
+          height *= 1.5 * widget.highlightMultiplier;
+          width *= 1.5 * widget.highlightMultiplier;
           isElevated = true;
         }
       });
@@ -89,7 +92,7 @@ class _BangCardWidgetState extends State<NonPlayableCardWidget>
               controller: screenShotController,
               child: showBack
                   ? Material(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10 * widget.scale),
                       elevation: isElevated ? 40 : 0,
                       child: AnimatedContainer(
                         height: height,
@@ -135,7 +138,7 @@ class _BangCardWidgetState extends State<NonPlayableCardWidget>
   Widget render({bool showBack = false}) {
     return !showBack
         ? CardWidgetHelpers.getAsset(
-            name: widget.card.name, type: widget.card.type)
-        : CardWidgetHelpers.getCardBack(widget.card.type);
+            name: widget.card.name, type: widget.card.type, scale: widget.scale)
+        : CardWidgetHelpers.getCardBack(widget.card.type, widget.scale);
   }
 }

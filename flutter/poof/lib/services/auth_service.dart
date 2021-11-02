@@ -36,4 +36,15 @@ class AuthService extends ServiceBase {
       log('$error');
     }
   }
+
+  void register(String username, String password) async {
+    try {
+      final response = await _userProvider.register(username, password);
+      if (response.statusCode == 200) {
+        login(username, password);
+      }
+    } catch (error) {
+      log('$error');
+    }
+  }
 }

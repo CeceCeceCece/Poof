@@ -1,7 +1,4 @@
-import 'package:animated_icon_button/animated_icon_button.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import 'login_controller.dart';
@@ -24,25 +21,54 @@ class LoginView extends GetView<LoginController> {
             child: Center(
               child: Container(
                 width: MediaQuery.of(context).size.width - 60,
-                child: Column(
-                  children: [
-                    SizedBox(height: 150),
-                    Text('BANG!'),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    userField,
-                    SizedBox(
-                      height: 10,
-                    ),
-                    passwordField,
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: controller.login,
-                      style: ElevatedButton.styleFrom(),
-                      child: Text('Login'),
-                    ),
-                    ElevatedButton(
+                child: Obx(
+                  () => controller.isLoginPage()
+                      ? Column(children: [
+                          SizedBox(height: 150),
+                          Text('BANG!'),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          userField,
+                          SizedBox(
+                            height: 10,
+                          ),
+                          passwordField,
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: controller.login,
+                            style: ElevatedButton.styleFrom(),
+                            child: Text('Login'),
+                          ),
+                          ElevatedButton(
+                            onPressed: controller.goToRegister,
+                            style: ElevatedButton.styleFrom(),
+                            child: Text('Register'),
+                          )
+                        ])
+                      : Column(
+                          children: [
+                            SizedBox(height: 150),
+                            Text('BANG! REGISTRATION'),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            userField,
+                            SizedBox(
+                              height: 10,
+                            ),
+                            passwordField,
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: controller.register,
+                              style: ElevatedButton.styleFrom(),
+                              child: Text('Register'),
+                            ),
+                            ElevatedButton(
+                              onPressed: controller.goToLogin,
+                              style: ElevatedButton.styleFrom(),
+                              child: Text('Already have an account?'),
+                              /* ElevatedButton(
                       onPressed: controller.showQR,
                       style: ElevatedButton.styleFrom(),
                       child: Text('show QR'),
@@ -99,8 +125,10 @@ class LoginView extends GetView<LoginController> {
                           },
                         ),
                       ),
-                    )
-                  ],
+                    )*/
+                            ),
+                          ],
+                        ),
                 ),
               ),
             ),
