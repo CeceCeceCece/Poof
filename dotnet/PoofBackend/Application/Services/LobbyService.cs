@@ -1,6 +1,8 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
 using Application.Interfaces;
+using Application.Models.ViewModels;
+using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +18,12 @@ namespace Application.Services
     public class LobbyService : ILobbyService
     {
         private readonly PoofDbContext context;
+        private readonly IMapper mapper;
 
-        public LobbyService(PoofDbContext context)
+        public LobbyService(PoofDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         public async Task CreateLobby(Lobby lobby, CancellationToken cancellationToken = default)
@@ -97,6 +101,16 @@ namespace Application.Services
 
             await context.SaveChangesAsync(cancellationToken);
             return lobby;
+        }
+
+        public async Task<List<LobbyViewModel>> GetAllLobby(CancellationToken cancellationToken = default)
+        {
+            return await mapper.ProjectTo<LobbyViewModel>(context.Lobbies).ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<MessageViewModel>> GetMessages(string name, CancellationToken cancellationToken = default)
+        {
+            return await mapper.ProjectTo<MessageViewModel>(context.Lobbies.Where(x => x.Name == name).Select(x => x.Messages)).ToListAsync(cancellationToken);
         }
     }
 }

@@ -12,7 +12,6 @@ namespace Domain.Entities
         public Lobby()
         {
         }
-
         public Lobby(string name, string vezeto)
         {
             Name = name;

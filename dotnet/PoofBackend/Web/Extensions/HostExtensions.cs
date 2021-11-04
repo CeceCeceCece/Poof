@@ -23,7 +23,6 @@ namespace Veterinary.Api.Extensions
                 //dgfagsg
                 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
                 var context = serviceProvider.GetRequiredService<TContext>();
-                context.Database.Migrate();
             }
 
             return host;

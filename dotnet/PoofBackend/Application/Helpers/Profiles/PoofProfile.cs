@@ -1,4 +1,5 @@
 ﻿using Application.Models.CardLogic;
+using Application.Models.ViewModels;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -13,6 +14,7 @@ namespace Application.Helpers.Profiles
     {
         public PoofProfile()
         {
+            //Card
             CreateMap<Card, BangCardLogic>().ReverseMap();
             CreateMap<Card, BarrelCardLogic>().ReverseMap();
             CreateMap<Card, DynamiteCardLogic>().ReverseMap();
@@ -24,6 +26,12 @@ namespace Application.Helpers.Profiles
             CreateMap<Card, ScopeCardLogic>().ReverseMap();
             CreateMap<Card, VolcanicCardLogic>().ReverseMap();
             CreateMap<Card, WinchesterCardLogic>().ReverseMap();
+
+            //Lobby
+            CreateMap<Lobby, LobbyViewModel>().ReverseMap();
+
+            //Message
+            CreateMap<Message, MessageViewModel>().ReverseMap();
         }
     }
 

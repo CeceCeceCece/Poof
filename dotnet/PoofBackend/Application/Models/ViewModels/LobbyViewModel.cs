@@ -8,6 +8,9 @@ namespace Application.Models.ViewModels
 {
     public class LobbyViewModel
     {
+        public LobbyViewModel()
+        {
+        }
         public LobbyViewModel(string name, string owner)
         {
             Name = name;

@@ -36,3 +36,10 @@ C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.csproj.Cor
 C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.dll
 C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\ref\Application.dll
 C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.pdb
+C:\w\Poof\dotnet\PoofBackend\Application\bin\Debug\net5.0\Application.deps.json
+C:\w\Poof\dotnet\PoofBackend\Application\bin\Debug\net5.0\Application.dll
+C:\w\Poof\dotnet\PoofBackend\Application\bin\Debug\net5.0\ref\Application.dll
+C:\w\Poof\dotnet\PoofBackend\Application\bin\Debug\net5.0\Application.pdb
+C:\w\Poof\dotnet\PoofBackend\Application\bin\Debug\net5.0\Domain.dll
+C:\w\Poof\dotnet\PoofBackend\Application\bin\Debug\net5.0\Domain.pdb
+C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.csproj.CopyComplete
