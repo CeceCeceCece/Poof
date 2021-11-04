@@ -11,5 +11,6 @@ namespace Application.Constants
         public static string CHOOSE_ONE_PLAYER = "Choose one player!";
         public static string CHOOSE_ONE_CARD = "Choose one card!";
         public static string CARD_EQUIPPED = "Card equipped";
+        public static string CARD_PLAYED = "Card palyed";
     }
 }

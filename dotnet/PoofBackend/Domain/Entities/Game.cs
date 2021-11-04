@@ -46,6 +46,11 @@ namespace Domain.Entities
             return result;
         }
 
+        public IEnumerable<GameCard> GetCards(int v)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<string> GetAllPlayer()
         {
             return Characters.Select(x => x.Id).ToList();

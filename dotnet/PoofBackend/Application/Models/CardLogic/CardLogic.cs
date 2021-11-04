@@ -20,6 +20,6 @@ namespace Application.Models.CardLogic
 
         public abstract Option Option(string playerId, Game game);
 
-        public abstract void Activate();
+        public abstract void Activate(string id);
     }
 }

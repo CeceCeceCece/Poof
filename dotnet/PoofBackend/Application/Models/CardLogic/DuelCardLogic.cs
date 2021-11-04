@@ -9,18 +9,16 @@ using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
 {
-    public class VolcanicCardLogic : CardLogic
+    public class DuelCardLogic : CardLogic
     {
         public override Option Option(string playerId, Game game)
         {
-            Activate(null);
-
             return new Option
             {
-                Description = CardMessages.CARD_EQUIPPED,
-                RequireAnswear = false,
+                Description = CardMessages.CHOOSE_ONE_PLAYER,
+                RequireAnswear = true,
                 RequireCards = false,
-                PossibleTargets = null,
+                PossibleTargets = game.GetAllPlayer(),
                 PossibleCards = null
             };
         }

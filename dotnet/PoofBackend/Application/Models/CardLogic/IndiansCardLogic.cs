@@ -9,19 +9,18 @@ using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
 {
-    public class VolcanicCardLogic : CardLogic
+    public class GeneralStoreCardLogic : CardLogic
     {
         public override Option Option(string playerId, Game game)
         {
             Activate(null);
-
             return new Option
             {
-                Description = CardMessages.CARD_EQUIPPED,
+                Description = CardMessages.CARD_PLAYED,
                 RequireAnswear = false,
                 RequireCards = false,
                 PossibleTargets = null,
-                PossibleCards = null
+                PossibleCards = new List<CardViewModel>()
             };
         }
         public override void Activate(string id)

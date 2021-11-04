@@ -32,6 +32,17 @@ namespace Application.Helpers.Mappers
             "Winchester" => mapper.Map<WinchesterCardLogic>(card),
             "Scope" => mapper.Map<ScopeCardLogic>(card),
             "Bang" => mapper.Map<BangCardLogic>(card),
+            "Beer" => mapper.Map<BeerCardLogic>(card),
+            "Cat Balou" => mapper.Map<CatBalouCardLogic>(card),
+            "Stagecoach" => mapper.Map<StagecoachCardLogic>(card),
+            "Duel" => mapper.Map<DuelCardLogic>(card),
+            "Gatling" => mapper.Map<GatlingCardLogic>(card),
+            "General Store" => mapper.Map<GeneralStoreCardLogic>(card),
+            "Indians" => mapper.Map<IndiansCardLogic>(card),
+            "Missed!" => mapper.Map<IndiansCardLogic>(card),
+            "Panic!" => mapper.Map<PanicCardLogic>(card),
+            "Saloon" => mapper.Map<SaloonCardLogic>(card),
+            "Wells Fargo" => mapper.Map<WellsFargoCardLogic>(card),
             _ => throw new PoofException()
         };
     }

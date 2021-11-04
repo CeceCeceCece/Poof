@@ -13,7 +13,7 @@ namespace Application.Models.CardLogic
     {
         public override Option Option(string playerId, Game game)
         {
-            Activate();
+            Activate(null);
 
             return new Option
             {
@@ -24,7 +24,7 @@ namespace Application.Models.CardLogic
                 PossibleCards = null
             };
         }
-        public override void Activate()
+        public override void Activate(string id)
         {
             throw new NotImplementedException();
         }

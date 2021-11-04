@@ -9,18 +9,17 @@ using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
 {
-    public class VolcanicCardLogic : CardLogic
+    public class CatBalouCardLogic : CardLogic
     {
         public override Option Option(string playerId, Game game)
         {
             Activate(null);
-
             return new Option
             {
-                Description = CardMessages.CARD_EQUIPPED,
+                Description = CardMessages.CHOOSE_ONE_PLAYER,
                 RequireAnswear = false,
-                RequireCards = false,
-                PossibleTargets = null,
+                RequireCards = true,
+                PossibleTargets = game.GetAllPlayer(),
                 PossibleCards = null
             };
         }
