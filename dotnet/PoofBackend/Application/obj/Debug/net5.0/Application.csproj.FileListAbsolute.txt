@@ -28,3 +28,11 @@ E:\Szakdolgozat\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\ref\Application.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.pdb
+C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.csproj.AssemblyReference.cache
+C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.AssemblyInfoInputs.cache
+C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.AssemblyInfo.cs
+C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.csproj.CoreCompileInputs.cache
+C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.dll
+C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\ref\Application.dll
+C:\w\Poof\dotnet\PoofBackend\Application\obj\Debug\net5.0\Application.pdb

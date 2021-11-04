@@ -8,11 +8,12 @@ namespace Domain.Entities
 {
     public class Game
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
-        public List<Card> Deck { get; set; } = new List<Card>();
+        public List<GameCard> Deck { get; set; } = new List<GameCard>();
         public List<Character> Characters { get; set; } = new List<Character>();
+        public List<Message> Messages { get; set; } = new List<Message>();
 
         public List<string> Neigbours(string playerId) 
         {

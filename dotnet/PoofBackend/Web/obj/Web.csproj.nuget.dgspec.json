@@ -1,27 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj": {}
+    "C:\\w\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj": {}
   },
   "projects": {
-    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj": {
+    "C:\\w\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\w\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\obj\\",
+        "projectPath": "C:\\w\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\futo.csaba\\.nuget\\packages\\",
+        "outputPath": "C:\\w\\Poof\\dotnet\\PoofBackend\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\futo.csaba\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -34,8 +31,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
-                "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj"
+              "C:\\w\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\w\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj"
               }
             }
           }
@@ -50,6 +47,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[10.1.1, )"
+            },
             "Microsoft.AspNetCore.Identity": {
               "target": "Package",
               "version": "[2.2.0, )"
@@ -70,28 +71,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
+    "C:\\w\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\w\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\obj\\",
+        "projectPath": "C:\\w\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\futo.csaba\\.nuget\\packages\\",
+        "outputPath": "C:\\w\\Poof\\dotnet\\PoofBackend\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\futo.csaba\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -144,28 +142,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj": {
+    "C:\\w\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj",
+        "projectUniqueName": "C:\\w\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj",
         "projectName": "Web",
-        "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Web\\obj\\",
+        "projectPath": "C:\\w\\Poof\\dotnet\\PoofBackend\\Web\\Web.csproj",
+        "packagesPath": "C:\\Users\\futo.csaba\\.nuget\\packages\\",
+        "outputPath": "C:\\w\\Poof\\dotnet\\PoofBackend\\Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\futo.csaba\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -178,11 +173,11 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj": {
-                "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj"
+              "C:\\w\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj": {
+                "projectPath": "C:\\w\\Poof\\dotnet\\PoofBackend\\Application\\Application.csproj"
               },
-              "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
-                "projectPath": "E:\\Szakdolgozat\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj"
+              "C:\\w\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\w\\Poof\\dotnet\\PoofBackend\\Domain\\Domain.csproj"
               }
             }
           }
@@ -197,6 +192,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.1.1, )"
+            },
             "Hellang.Middleware.ProblemDetails": {
               "target": "Package",
               "version": "[6.2.0, )"
@@ -266,7 +265,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

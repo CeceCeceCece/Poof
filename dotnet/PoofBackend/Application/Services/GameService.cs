@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.Constants;
+using Application.Exceptions;
+using Application.Interfaces;
 using Domain;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -25,14 +27,33 @@ namespace Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<Lobby> GetGame(string groupId, CancellationToken cancellationToken)
+        public Task<Game> GetGame(string groupId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return context.Games.Include(x => x.Messages).Include(x => x.Characters).SingleOrDefaultAsync(x => x.Id == groupId, cancellationToken);
         }
 
-        public Task<Lobby> RemoveGame(string groupId, CancellationToken cancellationToken)
+        public async Task<Game> RemoveGame(string groupId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var game = await GetGame(groupId, cancellationToken);
+            context.Messages.RemoveRange(game.Messages);
+            context.Characters.RemoveRange(game.Characters);
+            context.Games.Remove(game);
+            await context.SaveChangesAsync(cancellationToken);
+            return game;
+        }
+
+        public async Task SendMessage(string groupId, string connectionId, Message message, CancellationToken cancellationToken = default)
+        {
+            var game = await GetGame(groupId, cancellationToken);
+            if (game is null)
+                throw new PoofException(GameMessages.JATEK_NEM_LETEZIK);
+
+            var isMemeber = game.Characters.Any(x => x.ConnectionId == connectionId);
+            if (!isMemeber)
+                throw new PoofException(GameMessages.FELHASZNALO_NEM_A_JATEK_RESZE);
+
+            game.Messages.Add(message);
+            await context.SaveChangesAsync(cancellationToken);
         }
     }
 }

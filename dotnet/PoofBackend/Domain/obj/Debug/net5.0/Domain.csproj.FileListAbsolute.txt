@@ -22,3 +22,15 @@ E:\Szakdolgozat\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.csproj.Co
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\ref\Domain.dll
 E:\Szakdolgozat\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.pdb
+C:\w\Poof\dotnet\PoofBackend\Domain\bin\Debug\net5.0\Domain.deps.json
+C:\w\Poof\dotnet\PoofBackend\Domain\bin\Debug\net5.0\Domain.dll
+C:\w\Poof\dotnet\PoofBackend\Domain\bin\Debug\net5.0\ref\Domain.dll
+C:\w\Poof\dotnet\PoofBackend\Domain\bin\Debug\net5.0\Domain.pdb
+C:\w\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.csproj.AssemblyReference.cache
+C:\w\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\w\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.AssemblyInfoInputs.cache
+C:\w\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.AssemblyInfo.cs
+C:\w\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.csproj.CoreCompileInputs.cache
+C:\w\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.dll
+C:\w\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\ref\Domain.dll
+C:\w\Poof\dotnet\PoofBackend\Domain\obj\Debug\net5.0\Domain.pdb

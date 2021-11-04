@@ -11,6 +11,7 @@ namespace Domain.Entities
     {
         public string Id { get; set; }
         public string UserName { get; set; }
+        public string ConnectionId { get; set; }
         public int LifePoint { get; set; }
         public int NumberOfBangs { get; set; }
         public int AimDistance { get; set; }

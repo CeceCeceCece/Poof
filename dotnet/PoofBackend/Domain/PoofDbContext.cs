@@ -16,8 +16,10 @@ namespace Domain
     public class PoofDbContext : IdentityDbContext<Player>
     {
         public DbSet<Card> Cards{ get; set; }
+        public DbSet<GameCard> GameCards { get; set; }
         public DbSet<RoleCard> RoleCards{ get; set; }
         public DbSet<Game> Games{ get; set; }
+        public DbSet<Character> Characters { get; set; }
         public DbSet<Lobby> Lobbies{ get; set; }
         public DbSet<Message> Messages{ get; set; }
         public DbSet<Connection> Connections{ get; set; }

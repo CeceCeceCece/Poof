@@ -1,4 +1,5 @@
 using Application.Exceptions;
+using Application.Helpers.Profiles;
 using Application.Interfaces;
 using Application.Services;
 using Application.SignalR;
@@ -50,6 +51,8 @@ namespace Web
             services.AddTransient<IGameService, GameService>();
             services.AddTransient<ILobbyService, LobbyService>();
             services.AddTransient<IConnectionService, ConnectionService>();
+
+            services.AddAutoMapper(typeof(PoofProfile));
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
