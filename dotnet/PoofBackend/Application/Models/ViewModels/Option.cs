@@ -12,6 +12,7 @@ namespace Application.ViewModels
         public List<string> PossibleTargets{ get; set; }
         public List<CardViewModel> PossibleCards { get; set; }
         public bool? RequireCards { get; set; }
+        public int NumberOfCards { get; set; }
         public bool? RequireAnswear { get; set; }
     }
 }

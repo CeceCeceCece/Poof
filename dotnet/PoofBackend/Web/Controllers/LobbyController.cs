@@ -35,9 +35,9 @@ namespace Web.Controllers
 
         // GET api/<LobbyController>/5
         [HttpGet("{id}/messages")]
-        public List<MessageViewModel> Get(int name)
+        public async Task<List<MessageViewModel>> Get(string name)
         {
-            return mapper.ProjectTo<MessageViewModel>(lobbyService.me);
+            return await lobbyService.GetMessages(name);
         }
 
         // POST api/<LobbyController>
@@ -48,9 +48,17 @@ namespace Web.Controllers
         }
 
         // PUT api/<LobbyController>/5
-        [HttpPut("{id}/messages")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{name}/messages")]
+        public async Task Put(string name, [FromQuery] string value)
         {
+            await lobbyService.SendMessage(name, null, new Message(Guid.NewGuid().ToString(), currentPlayerService.Player.Name, value, DateTime.Now));
+        }
+        
+        // PUT api/<LobbyController>/5
+        [HttpPut("{name}/user")]
+        public async Task PutUser(string name, [FromQuery] string value)
+        {
+            await lobbyService.AddConnection(name, new Connection(Guid.NewGuid().ToString(), currentPlayerService.Player.Name, currentPlayerService.Player.Id));
         }
 
         // DELETE api/<LobbyController>/5

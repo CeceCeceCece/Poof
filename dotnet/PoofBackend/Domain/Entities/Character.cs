@@ -10,7 +10,7 @@ namespace Domain.Entities
     public class Character
     {
         public string Id { get; set; }
-        public string UserName { get; set; }
+        public string Name{ get; set; }
         public string ConnectionId { get; set; }
         public int LifePoint { get; set; }
         public int NumberOfBangs { get; set; }
@@ -22,6 +22,7 @@ namespace Domain.Entities
         public Card Weapon { get; set; }
         public string RoleId { get; set; }
         public RoleCard Role { get; set; }
+        public List<GameCard> Deck{ get; set; } = new List<GameCard>();
         public CharacterType Type { get; set; }
     }
 }
