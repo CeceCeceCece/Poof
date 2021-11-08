@@ -1,6 +1,9 @@
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 
 abstract class Constants {
+  static const MUSIC = 'MUSIC';
+  static const SFX = 'SFX';
+  static const NOTIFICATIONS = 'NOTIFICATIONS';
   static const TOKEN = 'TOKEN';
   static const BASE_URL = "https://poof.azurewebsites.net";
 

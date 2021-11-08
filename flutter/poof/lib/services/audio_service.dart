@@ -2,17 +2,21 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:bang/services/service_base.dart';
+import 'package:bang/services/shared_preference_service.dart';
 import 'package:just_audio/just_audio.dart';
 
 class AudioService extends ServiceBase {
   static final _musicPlayer = AudioPlayer();
   static final _stingerPlayer = AudioPlayer();
 
-  static void sting(String assetName) => _stingerPlayer
-    ..setAsset('assets/sfx/$assetName.mp3')
-    ..play();
+  static void sting(String assetName) => SharedPreferenceService.sfx
+      ? (_stingerPlayer
+        ..setAsset('assets/sfx/$assetName.mp3')
+        ..play())
+      : {};
 
-  static void playMusic() => _musicPlayer.play();
+  static void playMusic() =>
+      SharedPreferenceService.music ? _musicPlayer.play() : {};
 
   static void stopMusic() => _musicPlayer.stop();
 
@@ -45,18 +49,21 @@ class AudioService extends ServiceBase {
     'hired'
   ];
 
-  static playMenuSong() => _musicPlayer
-    ..setAudioSource(
-      LoopingAudioSource(
-        count: 200,
-        child: ProgressiveAudioSource(
-          Uri.parse('asset:///assets/music/tavern.mp3'),
-        ),
-      ),
-    )
-    ..play();
+  static playMenuSong() => SharedPreferenceService.music
+      ? (_musicPlayer
+        ..setAudioSource(
+          LoopingAudioSource(
+            count: 200,
+            child: ProgressiveAudioSource(
+              Uri.parse('asset:///assets/music/tavern.mp3'),
+            ),
+          ),
+        )
+        ..play())
+      : {};
 
   static playBackgroundMusic() {
+    if (!SharedPreferenceService.music) return;
     _trackList.shuffle();
     _musicPlayer.setAudioSource(LoopingAudioSource(
         count: 200,

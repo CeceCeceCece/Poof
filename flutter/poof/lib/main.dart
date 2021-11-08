@@ -20,9 +20,10 @@ void main() async {
 Future<void> _setScreenProperties() async {
   Wakelock.enable();
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  /* SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemStatusBarContrastEnforced: false,
-      statusBarColor: Colors.transparent));
+      statusBarColor: Colors.transparent));*/
+
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
   await SystemChrome.setPreferredOrientations(
