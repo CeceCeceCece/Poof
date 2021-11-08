@@ -21,7 +21,7 @@ namespace Application.Helpers.Mappers
 
         public CardLogic Map(Card card) => card.Name switch
         {
-            "Barrel" => mapper.Map<BangCardLogic>(card),
+            "Barrel" => new BangCardLogic(card),
             "Dynamite" => mapper.Map<DynamiteCardLogic>(card),
             "Jail" => mapper.Map<JailCardLogic>(card),
             "Mustang" => mapper.Map<MustangCardLogic>(card),

@@ -39,9 +39,7 @@ namespace Application.Models.CharacterLogic
         {
             if(string.IsNullOrEmpty(option.UserId) || option.UserId == character.Id) 
             {
-                var cards = game.Deck.GetRange(0,2);
-                game.Deck.RemoveRange(0, 2);
-
+                var cards = game.GetAndRemoveCards(2);
                 character.Deck.AddRange(cards);
             }
             else 

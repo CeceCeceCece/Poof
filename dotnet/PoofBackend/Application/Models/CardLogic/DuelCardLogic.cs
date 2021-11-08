@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
 using System;
@@ -11,6 +12,10 @@ namespace Application.Models.CardLogic
 {
     public class DuelCardLogic : CardLogic
     {
+        public DuelCardLogic(GameCard card) : base(card)
+        {
+        }
+
         public override Option Option(string playerId, Game game)
         {
             return new Option
@@ -22,9 +27,15 @@ namespace Application.Models.CardLogic
                 PossibleCards = null
             };
         }
-        public override void Activate(string id)
+
+        public override void Activate(Game game, OptionDto dto)
         {
             throw new NotImplementedException();
+        }
+
+        public override void Answear(Game game, OptionDto dto)
+        {
+            base.Answear(game, dto);
         }
     }
 }

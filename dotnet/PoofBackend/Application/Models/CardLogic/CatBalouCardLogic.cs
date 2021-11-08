@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
 using System;
@@ -11,21 +12,27 @@ namespace Application.Models.CardLogic
 {
     public class CatBalouCardLogic : CardLogic
     {
+        public CatBalouCardLogic(GameCard card) : base(card)
+        {
+        }
+
         public override Option Option(string playerId, Game game)
         {
-            Activate(null);
             return new Option
             {
-                Description = CardMessages.CHOOSE_ONE_PLAYER,
-                RequireAnswear = false,
+                Description = CardMessages.CHOOSE_ONE_CARD,
+                RequireAnswear = true,
                 RequireCards = true,
                 PossibleTargets = game.GetAllPlayer(),
-                PossibleCards = null
+                PossibleCards = null,
+                NumberOfCards = 1
             };
         }
-        public override void Activate(string id)
+
+        public override void Activate(Game game, OptionDto dto)
         {
-            throw new NotImplementedException();
+            var character = game.GetCharacterById(dto.UserId);
+            character.Map().DropCard(dto.CardIds.First(), game);
         }
     }
 }

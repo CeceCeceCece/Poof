@@ -3,6 +3,7 @@
     public enum GameEvent
     {
         None,
-        Draw
+        Draw,
+        SingleReact
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
 using Application.Interfaces;
+using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain;
 using Domain.Entities;
@@ -32,7 +33,7 @@ namespace Application.Services
 
         public Task<Game> GetGameAsync(string groupId, CancellationToken cancellationToken)
         {
-            return context.Games.Include(x => x.Messages).Include(x => x.Characters).SingleOrDefaultAsync(x => x.Id == groupId, cancellationToken);
+            return context.Games.Include(x => x.Deck).Include(x => x.Messages).Include(x => x.Characters).ThenInclude(x => x.Deck).SingleOrDefaultAsync(x => x.Id == groupId, cancellationToken);
         }
 
         public async Task<Game> RemoveGame(string groupId, CancellationToken cancellationToken)
@@ -71,13 +72,31 @@ namespace Application.Services
             return option;
         }
 
-        private async Task DrawReactAsync(string gameId, CancellationToken cancellationToken)
+        public async Task DrawReactAsync(string gameId, OptionDto dto, CancellationToken cancellationToken)
         {
             var game = await GetGameAsync(gameId, cancellationToken);
             var character = game.Characters.SingleOrDefault(x => x.Id == playerService.Player.Id);
             var logic = character.Map();
 
-            logic.DrawReact(game);
+            logic.DrawReact(game, dto);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<Option> CardOption(string gameId, string cardId, CancellationToken cancellationToken) 
+        {
+            var game = await GetGameAsync(gameId, cancellationToken);
+            var card = game.Deck.SingleOrDefault(x => x.Id == cardId);
+            var logic = card.Map();
+            await context.SaveChangesAsync(cancellationToken);
+            return logic.Option(playerService.Player.Id, game);
+        }
+
+        public async Task CardActivate(string gameId, string cardId, OptionDto dto, CancellationToken cancellationToken)
+        {
+            var game = await GetGameAsync(gameId, cancellationToken);
+            var character = game.Characters.SingleOrDefault(x => x.Id == playerService.Player.Id);
+            var charLogic = character.Map();
+            charLogic.ActivateCard(game, cardId, dto);
             await context.SaveChangesAsync(cancellationToken);
         }
     }

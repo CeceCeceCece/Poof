@@ -11,6 +11,10 @@ namespace Application.Models.CardLogic
 {
     public class PanicCardLogic : CardLogic
     {
+        public PanicCardLogic(GameCard card) : base(card)
+        {
+        }
+
         public override Option Option(string playerId, Game game)
         {
             return new Option

@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
 using System;
@@ -11,9 +12,15 @@ namespace Application.Models.CardLogic
 {
     public class BarrelCardLogic : CardLogic
     {
+        public BarrelCardLogic(GameCard card) : base(card)
+        {
+        }
+
         public override Option Option(string playerId, Game game)
         {
-            Activate(null);
+            var character = game.Characters.SingleOrDefault(x => x.Id == playerId);
+            var logic = character.Map();
+            logic.ActivateCard(game, Card.Id, new OptionDto { UserId = playerId });
 
             return new Option
             {
@@ -24,9 +31,11 @@ namespace Application.Models.CardLogic
                 PossibleCards = null
             };
         }
-        public override void Activate(string id)
+
+        public override void Activate(Game game, OptionDto dto)
         {
-            throw new NotImplementedException();
+            var character = game.GetCharacterById(dto.UserId);
+            character.EquipedCards.Add(Card);
         }
     }
 }

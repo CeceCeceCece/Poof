@@ -10,7 +10,11 @@ using System.Threading.Tasks;
 namespace Application.Models.CardLogic
 {
     public class JailCardLogic : CardLogic
-    { 
+    {
+        public JailCardLogic(GameCard card) : base(card)
+        {
+        }
+
         public override Option Option(string playerId, Game game)
         {
             return new Option

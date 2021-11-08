@@ -25,9 +25,7 @@ namespace Application.Models.CharacterLogic
             if (character is null)
                 throw new PoofException(CharacterMessages.JATEKOS_NEM_A_JATEK_RESZE);
 
-            //TODO ha lapok elfogynak
-            var cards = game.Deck.Take(2);
-            game.Deck.RemoveRange(0,2);
+            var cards = game.GetAndRemoveCards(2);
             character.Deck.AddRange(cards);
             game.Event = GameEvent.None;
 
@@ -48,5 +46,45 @@ namespace Application.Models.CharacterLogic
         }
 
         public virtual void DrawReact(Game game, OptionDto option) { }
+
+        public virtual void ActivateCard(Game game, string cardId, OptionDto option) 
+        {
+            var card = character.Deck.SingleOrDefault(x => x.Id == cardId);
+            if (card is null)
+                throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
+            var logic = card.Map();
+            logic.Activate(game, option);
+            character.Deck.Remove(card);
+        }
+
+        public void IncreaseLifePont(int point)
+        {
+            if (character.LifePoint + point > character.MaxLifePoint)
+                character.LifePoint = character.MaxLifePoint;
+            else
+                character.LifePoint += point;
+        }
+
+        public void DropCard(string cardId, Game game) 
+        {
+            var deckCard = character.Deck.SingleOrDefault(x => x.Id == cardId);
+            if(deckCard is not null) 
+            {
+                character.Deck.Remove(deckCard);
+                game.DiscardPile.Add(deckCard);
+            }
+            else if(character.Weapon.Id == cardId) 
+            {   
+                game.DiscardPile.Add(character.Weapon);
+                character.Weapon = null;
+            }
+            else 
+            {
+                var equipedCard = character.EquipedCards.SingleOrDefault(x => x.Id == cardId) ?? throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
+                equipedCard.Map().Deactivate(character);
+                character.EquipedCards.Remove(equipedCard);
+                game.DiscardPile.Add(equipedCard);
+            }
+        }
     }
 }

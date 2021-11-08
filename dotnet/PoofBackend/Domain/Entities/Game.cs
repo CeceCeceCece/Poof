@@ -15,9 +15,36 @@ namespace Domain.Entities
         public GameEvent Event { get; set; }
         public string CurrentUserId { get; set; }
         public string NextUserId { get; set; }
+        public GameCard NextCard { get; set; }
         public List<GameCard> Deck { get; set; } = new List<GameCard>();
+        public List<GameCard> DiscardPile { get; set; } = new List<GameCard>();
         public List<Character> Characters { get; set; } = new List<Character>();
         public List<Message> Messages { get; set; } = new List<Message>();
+        
+        public List<GameCard> GetCards(int count) 
+        {
+            if(Deck.Count < count) 
+            {
+                var lastCard = DiscardPile.Last();
+                DiscardPile.Remove(lastCard);
+                var rnd = new Random();
+                Deck.AddRange(DiscardPile.OrderBy(item => rnd.Next()).ToList());
+                DiscardPile = new List<GameCard> { lastCard };
+            }
+
+            return Deck.Take(count).ToList();
+        }
+
+        public List<GameCard> GetAndRemoveCards(int count)
+        {
+            var result = GetCards(count);
+            Deck.RemoveRange(0, count);
+            return result;
+        }
+        public Character GetCharacterById(string userId)
+        {
+            return Characters.SingleOrDefault(x => x.Id == userId);
+        }
 
         public List<string> Neigbours(string playerId) 
         {
@@ -48,11 +75,6 @@ namespace Domain.Entities
             }
 
             return result;
-        }
-
-        public IEnumerable<GameCard> GetCards(int v)
-        {
-            throw new NotImplementedException();
         }
 
         public List<string> GetAllPlayer()

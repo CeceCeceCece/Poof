@@ -20,19 +20,16 @@ namespace Application.Models.CharacterLogic
             if (character is null)
                 throw new PoofException(CharacterMessages.JATEKOS_NEM_A_JATEK_RESZE);
 
-            //TODO ha lapok elfogynak
             var secondCard = game.Deck.ElementAt(1);
             IEnumerable<GameCard> cards;
             if (secondCard.Card.Suite == CardSuits.Diamonds || secondCard.Card.Suite == CardSuits.Hearths) 
             {
-                cards = game.Deck.Take(3);
-                game.Deck.RemoveRange(0, 3);
+                cards = game.GetAndRemoveCards(3);
                 character.Deck.AddRange(cards);
             }
             else 
             {
-                cards = game.Deck.Take(2);
-                game.Deck.RemoveRange(0, 2);
+                cards = game.GetCards(2);
                 character.Deck.AddRange(cards);
             }
             game.Event = GameEvent.None;

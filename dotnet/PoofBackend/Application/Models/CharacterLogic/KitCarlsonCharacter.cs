@@ -27,7 +27,7 @@ namespace Application.Models.CharacterLogic
             {
                 Description = CardMessages.CHOOSE_ONE_PLAYER,
                 NumberOfCards = 2,
-                PossibleCards = game.Deck.Take(3)
+                PossibleCards = game.GetCards(3)
                     .Select(x => new CardViewModel 
                     {
                         Id = x.Id,

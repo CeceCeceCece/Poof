@@ -1,5 +1,8 @@
 ﻿using Application.Constants;
+using Application.Exceptions;
+using Application.Models.DTOs;
 using Application.ViewModels;
+using Domain.Constants.Enums;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,6 +14,8 @@ namespace Application.Models.CardLogic
 {
     public class BangCardLogic : CardLogic
     {
+        public BangCardLogic(GameCard card) : base(card){}
+
         public override Option Option(string playerId, Game game)
         {
             return new Option
@@ -22,9 +27,18 @@ namespace Application.Models.CardLogic
                 PossibleCards = null
             };
         }
-        public override void Activate(string id)
+        public override void Activate(Game game, OptionDto dto)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(dto.UserId))
+                throw new PoofException(CharacterMessages.NEM_MEGFELELO_JATEKOS_AZONOSITO);
+
+            var character = game.Characters.SingleOrDefault(x => x.Id == dto.UserId);
+            if (character is null)
+                throw new PoofException(CharacterMessages.JATEKOS_NEM_A_JATEK_RESZE);
+
+            game.Event = GameEvent.SingleReact;
+            game.NextUserId = character.Id;
+            game.NextCard = Card;
         }
     }
 }

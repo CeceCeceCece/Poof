@@ -11,6 +11,10 @@ namespace Application.Models.CardLogic
 {
     public class ScopeCardLogic : CardLogic
     {
+        public ScopeCardLogic(GameCard card) : base(card)
+        {
+        }
+
         public override Option Option(string playerId, Game game)
         {
             Activate(null);
