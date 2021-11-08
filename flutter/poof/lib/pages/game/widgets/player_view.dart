@@ -20,7 +20,7 @@ class PlayerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var health = 5;
+    var health = 2;
     return Obx(
       () => AnimatedContainer(
         duration: Duration(milliseconds: 150),

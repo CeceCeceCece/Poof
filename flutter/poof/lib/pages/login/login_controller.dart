@@ -9,6 +9,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 class LoginController extends GetxController {
   final usernameC = TextEditingController(text: 'Cece');
   final passwordC = TextEditingController(text: 'admin');
+  final confirmPasswordC = TextEditingController(text: 'admin');
 
   var isLoginPage = true.obs;
 
@@ -28,12 +29,14 @@ class LoginController extends GetxController {
     isLoginPage.value = false;
     usernameC.clear();
     passwordC.clear();
+    confirmPasswordC.clear();
   }
 
   void goToLogin() {
     isLoginPage.value = true;
     usernameC.clear();
     passwordC.clear();
+    confirmPasswordC.clear();
   }
 
   void readQR() {
