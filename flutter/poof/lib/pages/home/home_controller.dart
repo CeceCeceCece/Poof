@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/game_service.dart';
@@ -12,9 +14,15 @@ class HomeController extends GetxController {
   final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
 
-  void joinRoom(String roomId) {
+  Rx<String?> roomCodeToJoin = ''.obs;
+
+  void joinRoom([String? roomId]) {
+    var roomID = roomId ?? roomCodeToJoin.value;
+    if (roomID == null) return;
+    log(roomID);
     Get.toNamed(Routes.GAME);
     AudioService.playBackgroundMusic();
+
     Get.put(GameService());
   }
 
@@ -25,23 +33,33 @@ class HomeController extends GetxController {
 
   void readQR() {
     Get.defaultDialog(
+        onCancel: () {
+          controller?.dispose();
+          log('contoller disposed');
+        },
+        onWillPop: () async {
+          controller?.dispose();
+          Get.back();
+          log('contoller disposed');
+          return false;
+        },
         content: Container(
-      width: 300,
-      height: 300,
-      child: QRView(
-        key: _qrKey,
-        onQRViewCreated: _onQRViewCreated,
-      ),
-    ));
+          width: 300,
+          height: 300,
+          child: QRView(
+            key: _qrKey,
+            onQRViewCreated: _onQRViewCreated,
+          ),
+        ));
   }
 
-  void showQR() {
+  void showQR(String data) {
     Get.defaultDialog(
       content: Container(
         width: 250,
         height: 250,
         child: QrImage(
-          data: "QR READ COMPLETED!",
+          data: data,
           version: QrVersions.auto,
           errorCorrectionLevel: QrErrorCorrectLevel.Q,
           size: 100.0,
@@ -63,8 +81,9 @@ class HomeController extends GetxController {
   void _onQRReadSuccessfully(String qrValue) {
     Get.back();
     controller?.dispose();
+    joinRoom(qrValue);
     Fluttertoast.showToast(
-        msg: "QR Read: $qrValue",
+        msg: "Joining to room with code: $qrValue",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
