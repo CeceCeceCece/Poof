@@ -4,6 +4,10 @@ import 'package:bang/pages/home/home_controller.dart';
 import 'package:bang/pages/home/home_view.dart';
 import 'package:bang/pages/home/settings/settings_controller.dart';
 import 'package:bang/pages/home/settings/settings_view.dart';
+import 'package:bang/pages/lobby/lobby_controller.dart';
+import 'package:bang/pages/lobby/lobby_view.dart';
+import 'package:bang/pages/lobby_creation/lobby_creation_controller.dart';
+import 'package:bang/pages/lobby_creation/lobby_creation_view.dart';
 import 'package:bang/pages/login/login_controller.dart';
 import 'package:bang/pages/login/login_view.dart';
 import 'package:bang/pages/profile/profile_controller.dart';
@@ -19,6 +23,8 @@ abstract class Routes {
   static const HOME = '/home';
   static const GAME = '/game';
   static const PROFILE = '/profile';
+  static const LOBBY = '/lobby';
+  static const LOBBY_CREATION = '/lobbycreation';
 }
 
 abstract class Pages {
@@ -49,5 +55,13 @@ abstract class Pages {
         name: Routes.SETTINGS,
         page: () => SettingsView(),
         binding: BindingsBuilder.put(() => SettingsController())),
+    GetPage(
+        name: Routes.LOBBY,
+        page: () => LobbyView(),
+        binding: BindingsBuilder.put(() => LobbyController())),
+    GetPage(
+        name: Routes.LOBBY_CREATION,
+        page: () => LobbyCreationView(),
+        binding: BindingsBuilder.put(() => LobbyCreationController())),
   ];
 }

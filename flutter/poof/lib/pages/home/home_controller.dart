@@ -20,10 +20,10 @@ class HomeController extends GetxController {
     var roomID = roomId ?? roomCodeToJoin.value;
     if (roomID == null) return;
     log(roomID);
-    Get.toNamed(Routes.GAME);
+    var gameService = Get.put(GameService());
+    Get.toNamed(Routes.LOBBY);
+    gameService.roomId = roomID.obs;
     AudioService.playBackgroundMusic();
-
-    Get.put(GameService());
   }
 
   void logout() {

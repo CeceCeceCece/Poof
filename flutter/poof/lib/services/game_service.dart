@@ -162,6 +162,8 @@ class GameService extends ServiceBase {
 
   RxBool expandedEquipmentView = false.obs;
 
+  Rx<String?> roomId = null.obs;
+
   RxList handWidgets = [].obs;
   @override
   void onInit() {
