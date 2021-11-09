@@ -6,6 +6,7 @@ class BangColors {
   static const actionCardColor = Color(0xffd1aa63);
   static const buttonColor = Colors.brown;
   static const buttonShadowColor = Color(0xff753422);
+  static const darkBrown = Color(0xff4E3B42);
   static const buttonGradientColors = [
     Color(0xffD79771),
     Colors.brown,

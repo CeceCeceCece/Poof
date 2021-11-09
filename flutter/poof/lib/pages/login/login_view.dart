@@ -1,6 +1,6 @@
 import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/cards/widgets/input_field.dart';
-import 'package:bang/core/colors.dart';
+import 'package:bang/core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,9 +12,16 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Form(
-        key: _formKey,
+      key: _formKey,
+      child: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(
+                  Constants.backgroundPath,
+                ),
+                fit: BoxFit.fitHeight)),
         child: Scaffold(
-          backgroundColor: BangColors.background,
+          backgroundColor: Colors.transparent,
           body: SingleChildScrollView(
             child: Center(
               child: Container(
@@ -27,17 +34,19 @@ class LoginView extends GetView<LoginController> {
                       return false;
                     },
                     child: controller.isLoginPage()
-                        ? _buildLogin()
-                        : _buildRegistration(),
+                        ? _buildLogin(context)
+                        : _buildRegistration(context),
                   );
                 }),
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
-  Column _buildRegistration() {
+  Column _buildRegistration(BuildContext context) {
     var confirmPasswordField = BangInputField(
       controller: controller.confirmPasswordC,
       hint: 'Jelszó újra',
@@ -88,10 +97,13 @@ class LoginView extends GetView<LoginController> {
     );
     return Column(
       children: [
-        SizedBox(height: 150),
-        Text('Bang Regisztráció'),
-        SizedBox(
-          height: 60,
+        Container(
+          width: 225,
+          height: 225,
+          child: Image.asset(
+            'assets/icons/bang_logo.png',
+            fit: BoxFit.fill,
+          ),
         ),
         usernameField,
         SizedBox(
@@ -114,14 +126,18 @@ class LoginView extends GetView<LoginController> {
         ),
         SizedBox(height: 20),
         BangButton(
-          onPressed: controller.goToLogin,
+          onPressed: () {
+            _formKey.currentState?.reset();
+            controller.goToLogin();
+            FocusScope.of(context).unfocus();
+          },
           text: 'Már van fiókom...',
         ),
       ],
     );
   }
 
-  Widget _buildLogin() {
+  Widget _buildLogin(BuildContext context) {
     var passwordField = BangInputField(
       controller: controller.passwordC,
       hint: 'Jelszó',
@@ -139,17 +155,20 @@ class LoginView extends GetView<LoginController> {
     );
 
     return Column(children: [
-      SizedBox(height: 150),
-      Text('BANG'),
-      SizedBox(
-        height: 60,
+      Container(
+        width: 225,
+        height: 225,
+        child: Image.asset(
+          'assets/icons/bang_logo.png',
+          fit: BoxFit.fill,
+        ),
       ),
       usernameField,
       SizedBox(
         height: 10,
       ),
       passwordField,
-      SizedBox(height: 20),
+      SizedBox(height: 80),
       BangButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) controller.login();
@@ -158,7 +177,12 @@ class LoginView extends GetView<LoginController> {
       ),
       SizedBox(height: 20),
       BangButton(
-        onPressed: controller.goToRegister,
+        onPressed: () {
+          _formKey.currentState?.reset();
+          controller.goToRegister();
+
+          FocusScope.of(context).unfocus();
+        },
         text: 'Még nincs fiókom',
       ),
     ]);

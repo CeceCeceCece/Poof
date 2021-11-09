@@ -11,6 +11,7 @@ class BangInputField extends StatefulWidget {
   final void Function(String) onChanged;
   final String? Function(String?) validator;
   final VoidCallback? onSubmit;
+  final bool autofocus;
 
   final focusNode = FocusNode();
 
@@ -19,6 +20,7 @@ class BangInputField extends StatefulWidget {
   BangInputField(
       {required this.hint,
       this.controller,
+      this.autofocus = false,
       this.isPassword = false,
       this.color = Colors.white,
       this.hintColor = BangColors.hintColor,
@@ -38,13 +40,17 @@ class _BangInputFieldState extends State<BangInputField> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Container(
-        height: 50,
+        height: 48,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(32.0), color: Colors.white),
         //child:
       ),
       TextFormField(
+        cursorColor: BangColors.buttonGradientColors.first,
+        showCursor: true,
+        cursorRadius: Radius.zero,
         validator: widget.validator,
+        autofocus: widget.autofocus,
         autovalidateMode: AutovalidateMode.disabled,
         controller: widget.controller,
         obscureText: widget.isPassword,
@@ -62,17 +68,17 @@ class _BangInputFieldState extends State<BangInputField> {
             focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(32.0),
                 borderSide:
-                    BorderSide(color: BangColors.buttonShadowColor, width: 2)),
+                    BorderSide(color: BangColors.buttonShadowColor, width: 3)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(32.0),
                 borderSide: BorderSide(
-                    color: BangColors.buttonGradientColors.first, width: 2)),
+                    color: BangColors.buttonGradientColors.first, width: 3)),
             errorStyle:
                 TextStyle(color: BangColors.buttonShadowColor, fontSize: 14),
             errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(32.0),
                 borderSide:
-                    BorderSide(color: BangColors.buttonShadowColor, width: 2)),
+                    BorderSide(color: BangColors.buttonShadowColor, width: 3)),
             contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
             hintText: widget.hint,
             hintStyle: TextStyle(color: BangColors.hintColor),

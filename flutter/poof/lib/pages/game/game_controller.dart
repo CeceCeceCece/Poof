@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:math' as Math;
 
+import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/core/constants.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,20 @@ class GameController extends GetxController {
 
   Future<bool> showBackPopupForResult() async {
     await Get.defaultDialog<bool>(
-      title: 'Really?!',
+      title: 'Megerősítés szükséges',
       onWillPop: () => Future.value(true),
       onConfirm: _exit,
-      content: Text('Do you really wish to exit this game?'),
+      confirm: BangButton(
+        text: 'Értem, kilépek!',
+        onPressed: _exit,
+        height: 35,
+        width: 105,
+        isNormal: false,
+      ),
+      content: Text(
+        'Biztosan ki akarsz lépni a játékból?\n\nTöbbszöri kilépés szankciókat vonhat maga után!',
+        textAlign: TextAlign.center,
+      ),
     );
     return Future.value(_exitConfirmed);
   }

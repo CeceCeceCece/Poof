@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/core/animations.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
@@ -64,9 +65,17 @@ class ConnectivityService extends ServiceBase {
 
   void _openDialog() {
     Get.defaultDialog(
+            cancel: BangButton(
+              width: 60,
+              height: 35,
+              text: 'Ok',
+              isNormal: false,
+              onPressed: Get.back,
+            ),
+            title: 'Nincs internet',
             onCancel: _closeDialog,
             content: Lottie.asset(BangAnimations.noInternet,
-                height: 300, width: 300))
+                height: 200, width: 250))
         .whenComplete(_closeDialog);
     _isDialogOpen = true;
     _noInternetChecker = Timer.periodic(

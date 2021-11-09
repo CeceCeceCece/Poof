@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class HomeController extends GetxController {
   final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
@@ -53,25 +52,6 @@ class HomeController extends GetxController {
         ));
   }
 
-  void showQR(String data) {
-    Get.defaultDialog(
-      content: Container(
-        width: 250,
-        height: 250,
-        child: QrImage(
-          data: data,
-          version: QrVersions.auto,
-          errorCorrectionLevel: QrErrorCorrectLevel.Q,
-          size: 100.0,
-          embeddedImage: AssetImage(
-            'assets/icons/bang_logo.png',
-          ),
-          embeddedImageStyle: QrEmbeddedImageStyle(size: Size(30, 30)),
-        ),
-      ),
-    );
-  }
-
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream
@@ -90,5 +70,10 @@ class HomeController extends GetxController {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  void createGame() {
+    Get.put(GameService());
+    Get.toNamed(Routes.LOBBY);
   }
 }

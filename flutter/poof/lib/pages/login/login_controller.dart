@@ -28,6 +28,7 @@ class LoginController extends GetxController {
 
   void goToLogin() {
     isLoginPage.value = true;
+
     usernameC.clear();
     passwordC.clear();
     confirmPasswordC.clear();
