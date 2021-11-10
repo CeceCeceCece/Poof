@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
 using System;
@@ -17,6 +18,9 @@ namespace Application.Models.CardLogic
 
         public override Option Option(string playerId, Game game)
         {
+            var character = game.GetCharacterById(playerId);
+            character.Map().ActivateCard(game, Card.Id, new OptionDto { UserId = playerId });
+
             return new Option
             {
                 Description = CardMessages.CARD_PLAYED,
@@ -26,9 +30,10 @@ namespace Application.Models.CardLogic
                 PossibleCards = new List<CardViewModel>()
             };
         }
-        public override void Activate(string id)
+        public override void Activate(Game game, OptionDto dto)
         {
-            throw new NotImplementedException();
+            var character = game.GetCurrentCharacter();
+            character.Deck.AddRange(game.GetAndRemoveCards(3));
         }
     }
 }

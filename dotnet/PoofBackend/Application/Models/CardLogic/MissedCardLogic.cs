@@ -1,4 +1,6 @@
 ﻿using Application.Constants;
+using Application.Exceptions;
+using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
 using System;
@@ -19,16 +21,17 @@ namespace Application.Models.CardLogic
         {
             return new Option
             {
-                Description = CardMessages.CARD_PLAYED,
+                Description = CardMessages.KARTYA_NEM_KIJATSZATO,
                 RequireAnswear = false,
                 RequireCards = false,
                 PossibleTargets = null,
                 PossibleCards = null
             };
         }
-        public override void Activate(string id)
+
+        public override void Activate(Game game, OptionDto dto)
         {
-            throw new NotImplementedException();
+            throw new PoofException(CardMessages.KARTYA_NEM_KIJATSZATO);
         }
     }
 }

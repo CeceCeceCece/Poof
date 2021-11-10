@@ -46,7 +46,72 @@ namespace Domain.Entities
             return Characters.SingleOrDefault(x => x.Id == userId);
         }
 
-        public List<string> Neigbours(string playerId) 
+        public Character GetCurrentCharacter()
+        {
+            return GetCharacterById(CurrentUserId);
+        }
+
+        public void SetAllReact(string currentUserId)
+        {
+            var index = Characters.IndexOf(Characters.SingleOrDefault(x => x.Id == currentUserId));
+            if (index + 1 >= Characters.Count)
+            {
+                index = 0;
+            }
+            else 
+            {
+                index++;
+            }
+
+            NextUserId = Characters.ElementAt(index).Id;
+            Event = GameEvent.AllReact;
+        }
+
+        public void AllReactNext() 
+        {
+            var index = Characters.IndexOf(Characters.SingleOrDefault(x => x.Id == NextUserId));
+            if (index + 1 >= Characters.Count)
+            {
+                index = 0;
+            }
+            else
+            {
+                index++;
+            }
+
+            var userId = Characters.ElementAt(index).Id;
+            if(userId == CurrentUserId) 
+            {
+                EndReaction();
+            }
+            else 
+            {
+                NextUserId = userId;
+            }
+        }
+
+        public void EndReaction() 
+        {
+            Event = GameEvent.None;
+            NextUserId = null;
+            if(NextCard is not null) 
+            {
+                DiscardPile.Add(NextCard);
+                NextCard = null;
+            }
+        }
+
+        public Character GetReactionCharacter() => Event switch
+        {
+            GameEvent.AllReact => GetCharacterById(NextUserId),
+            GameEvent.CallerReact => GetCharacterById(CurrentUserId),
+            GameEvent.SingleReact => GetCharacterById(NextUserId),
+            GameEvent.Draw => GetCharacterById(CurrentUserId),
+            GameEvent.None => GetCharacterById(CurrentUserId),
+            _ => null
+        };
+
+    public List<string> Neigbours(string playerId) 
         {
             var playerCharacter = Characters.Where(x => x.Id == playerId).SingleOrDefault();
 

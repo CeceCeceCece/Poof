@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
+using Application.SignalR;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
@@ -13,7 +14,7 @@ namespace Application.Models.CharacterLogic
 {
     public class BlackJackCharacter : CharacterLogic
     {
-        public BlackJackCharacter(Character character) : base(character) {}
+        public BlackJackCharacter(Character character, PoofGameHub hub) : base(character,hub) {}
 
         public virtual Option Draw(Game game)
         {

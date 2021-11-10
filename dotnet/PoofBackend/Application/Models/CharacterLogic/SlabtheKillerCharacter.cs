@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.SignalR;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Application.Models.CharacterLogic
 {
     public class SlabtheKillerCharacter : CharacterLogic
     {
-        public SlabtheKillerCharacter(Character character) : base(character) { }
+        public SlabtheKillerCharacter(Character character, PoofGameHub hub) : base(character, hub) { }
 
     }
 }

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
 {
-    public class GeneralStoreCardLogic : CardLogic
+    public class IndiansCardLogic : CardLogic
     {
-        public GeneralStoreCardLogic(GameCard card) : base(card)
+        public IndiansCardLogic(GameCard card) : base(card)
         {
         }
 

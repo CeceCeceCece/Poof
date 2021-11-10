@@ -2,6 +2,7 @@
 using Application.Exceptions;
 using Application.Models;
 using Application.Models.CharacterLogic;
+using Application.SignalR;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,24 +14,24 @@ namespace Domain.Entities
 {
     public static class CharacterLogicExtensions
     {
-        public static CharacterLogic Map(this Character character) => character.Name switch
+        public static CharacterLogic Map(this Character character, PoofGameHub hub) => character.Name switch
         {
-            "Bart Cassidy" => new BartCassidyCharacter(character),
-            "Black Jack" => new BlackJackCharacter(character),
-            "Calamity Janet" => new CalamityJanetCharacter(character),
-            "El Gringo" => new ElGringoCharacter(character),
-            "Jesse Jones" => new JesseJonesCharacter(character),
-            "Jourdonnais" => new JourdonnaisCharacter(character),
-            "Kit Carlson" => new KitCarlsonCharacter(character),
-            "Lucky Duke" => new LuckyDukeCharacter(character),
-            "Paul Regret" => new PaulRegretCharacter(character),
-            "Pedro Ramirez" => new PedroRamirezCharacter(character),
-            "Rose Doolan" => new RoseDoolanCharacter(character),
-            "Sid Ketchum" => new SidKetchumCharacter(character),
-            "Slab the Killer" => new SlabtheKillerCharacter(character),
-            "Suzy Lafayette" => new SuzyLafayetteCharacter(character),
-            "Vulture Sam" => new VultureSamCharacter(character),
-            "Willy the Kid" => new WillytheKidCharacter(character),
+            "Bart Cassidy" => new BartCassidyCharacter(character, hub),
+            "Black Jack" => new BlackJackCharacter(character, hub),
+            "Calamity Janet" => new CalamityJanetCharacter(character, hub),
+            "El Gringo" => new ElGringoCharacter(character, hub),
+            "Jesse Jones" => new JesseJonesCharacter(character, hub),
+            "Jourdonnais" => new JourdonnaisCharacter(character, hub),
+            "Kit Carlson" => new KitCarlsonCharacter(character, hub),
+            "Lucky Duke" => new LuckyDukeCharacter(character, hub),
+            "Paul Regret" => new PaulRegretCharacter(character, hub),
+            "Pedro Ramirez" => new PedroRamirezCharacter(character, hub),
+            "Rose Doolan" => new RoseDoolanCharacter(character, hub),
+            "Sid Ketchum" => new SidKetchumCharacter(character, hub),
+            "Slab the Killer" => new SlabtheKillerCharacter(character, hub),
+            "Suzy Lafayette" => new SuzyLafayetteCharacter(character, hub),
+            "Vulture Sam" => new VultureSamCharacter(character, hub),
+            "Willy the Kid" => new WillytheKidCharacter(character, hub),
             _ => throw new PoofException(CharacterMessages.ILYEN_KARAKTER_NEM_LETEZIK)
         };
     }

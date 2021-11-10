@@ -12,5 +12,6 @@ namespace Application.Constants
         public static string CHOOSE_ONE_CARD = "Choose one card!";
         public static string CARD_EQUIPPED = "Card equipped";
         public static string CARD_PLAYED = "Card palyed";
+        public static string KARTYA_NEM_KIJATSZATO = "Kártya nem kijátszható.";
     }
 }

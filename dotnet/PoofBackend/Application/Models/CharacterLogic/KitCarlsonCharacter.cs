@@ -1,6 +1,7 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
 using Application.Models.DTOs;
+using Application.SignalR;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
@@ -14,7 +15,7 @@ namespace Application.Models.CharacterLogic
 {
     public class KitCarlsonCharacter : CharacterLogic
     {
-        public KitCarlsonCharacter(Character character) : base(character) { }
+        public KitCarlsonCharacter(Character character, PoofGameHub hub) : base(character, hub) { }
 
         public override Option Draw(Game game)
         {

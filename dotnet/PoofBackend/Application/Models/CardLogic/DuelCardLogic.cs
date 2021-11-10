@@ -1,6 +1,8 @@
 ﻿using Application.Constants;
+using Application.Exceptions;
 using Application.Models.DTOs;
 using Application.ViewModels;
+using Domain.Constants.Enums;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -30,12 +32,19 @@ namespace Application.Models.CardLogic
 
         public override void Activate(Game game, OptionDto dto)
         {
-            throw new NotImplementedException();
+            if (!game.Characters.Any(x => x.Id == dto.UserId))
+                throw new PoofException(GameMessages.FELHASZNALO_NEM_A_JATEK_RESZE);
+
+            game.Event = GameEvent.SingleReact;
+            game.NextUserId = dto.UserId;
+            game.NextCard = Card;
+
+            //Értesítés
         }
 
         public override void Answear(Game game, OptionDto dto)
         {
-            base.Answear(game, dto);
+            
         }
     }
 }

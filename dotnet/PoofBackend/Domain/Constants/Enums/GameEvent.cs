@@ -4,6 +4,8 @@
     {
         None,
         Draw,
-        SingleReact
+        SingleReact,
+        CallerReact,
+        AllReact
     }
 }

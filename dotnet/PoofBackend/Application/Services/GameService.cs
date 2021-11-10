@@ -2,6 +2,7 @@
 using Application.Exceptions;
 using Application.Interfaces;
 using Application.Models.DTOs;
+using Application.SignalR;
 using Application.ViewModels;
 using Domain;
 using Domain.Entities;
@@ -26,6 +27,8 @@ namespace Application.Services
             this.playerService = playerService;
         }
 
+        public PoofGameHub Hub { get; set; }
+
         public Task CreateGame(Lobby lobby, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -46,13 +49,13 @@ namespace Application.Services
             return game;
         }
 
-        public async Task SendMessage(string groupId, string connectionId, Message message, CancellationToken cancellationToken = default)
+        public async Task SendMessage(string gameId, Message message, CancellationToken cancellationToken = default)
         {
-            var game = await GetGameAsync(groupId, cancellationToken);
+            var game = await context.Games.Include(x => x.Messages).SingleOrDefaultAsync(x => x.Id == gameId);
             if (game is null)
                 throw new PoofException(GameMessages.JATEK_NEM_LETEZIK);
 
-            var isMemeber = game.Characters.Any(x => x.ConnectionId == connectionId);
+            var isMemeber = game.Characters.Any(x => x.Id == playerService.Player.Id);
             if (!isMemeber)
                 throw new PoofException(GameMessages.FELHASZNALO_NEM_A_JATEK_RESZE);
 
@@ -64,7 +67,7 @@ namespace Application.Services
         {
             var game = await GetGameAsync(gameId, cancellationToken);
             var character = game.Characters.SingleOrDefault(x => x.Id == playerService.Player.Id);
-            var logic = character.Map();
+            var logic = character.Map(Hub);
 
             var option = logic.Draw(game);
             await context.SaveChangesAsync(cancellationToken);
@@ -76,7 +79,7 @@ namespace Application.Services
         {
             var game = await GetGameAsync(gameId, cancellationToken);
             var character = game.Characters.SingleOrDefault(x => x.Id == playerService.Player.Id);
-            var logic = character.Map();
+            var logic = character.Map(Hub);
 
             logic.DrawReact(game, dto);
             await context.SaveChangesAsync(cancellationToken);
@@ -95,7 +98,7 @@ namespace Application.Services
         {
             var game = await GetGameAsync(gameId, cancellationToken);
             var character = game.Characters.SingleOrDefault(x => x.Id == playerService.Player.Id);
-            var charLogic = character.Map();
+            var charLogic = character.Map(Hub);
             charLogic.ActivateCard(game, cardId, dto);
             await context.SaveChangesAsync(cancellationToken);
         }
