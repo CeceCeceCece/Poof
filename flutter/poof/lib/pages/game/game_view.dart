@@ -51,31 +51,17 @@ class GameView extends GetView<GameController> {
                             );
                           }),
                       SizedBox(width: 20),
-                      Draggable<String>(
-                        data: 'siker',
-                        feedback: BangCardWidget(
-                            card: EquipmentCard(
-                                background: 'barrel',
-                                name: 'barrel',
-                                value: Bang.Value.Ten,
-                                type: Bang.CardType.Equipment,
-                                suit: Bang.Suit.Diamonds),
-                            showBackPermanently: true,
-                            scale: 0.8,
-                            onDragSuccessCallback: () {},
-                            handCallback: () {}),
-                        child: BangCardWidget(
-                            card: EquipmentCard(
-                                background: 'barrel',
-                                name: 'barrel',
-                                value: Bang.Value.Ten,
-                                type: Bang.CardType.Equipment,
-                                suit: Bang.Suit.Diamonds),
-                            showBackPermanently: true,
-                            scale: 0.8,
-                            onDragSuccessCallback: () {},
-                            handCallback: () {}),
-                      ),
+                      BangCardWidget(
+                          card: EquipmentCard(
+                              background: 'barrel',
+                              name: 'barrel',
+                              value: Bang.Value.Ten,
+                              type: Bang.CardType.Equipment,
+                              suit: Bang.Suit.Diamonds),
+                          showBackPermanently: true,
+                          canBeFocused: false,
+                          scale: 0.8,
+                          handCallback: () {}),
                     ],
                   )),
                   Column(
@@ -135,7 +121,6 @@ class GameView extends GetView<GameController> {
                     range: 0,
                   ),
                   handCallback: () {},
-                  onDragSuccessCallback: () {},
                 ),
                 Container(
                   height: 30,

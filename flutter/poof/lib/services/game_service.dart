@@ -164,7 +164,7 @@ class GameService extends ServiceBase {
 
   Rx<String?> roomId = null.obs;
 
-  RxList handWidgets = [].obs;
+  RxList handWidgets = <BangCardWidget>[].obs;
   @override
   void onInit() {
     handWidgets = [
@@ -172,6 +172,7 @@ class GameService extends ServiceBase {
         BangCardWidget(
           scale: 0.85,
           card: hand[i],
+          canBeDragged: true,
           onDragSuccessCallback: () => removeCard(i),
           handCallback: () => highlight(i),
         ),

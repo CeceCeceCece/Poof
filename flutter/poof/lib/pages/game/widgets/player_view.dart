@@ -48,8 +48,6 @@ class PlayerView extends StatelessWidget {
                                                   child: BangCardWidget(
                                                       card: card,
                                                       scale: 0.6,
-                                                      onDragSuccessCallback:
-                                                          () {},
                                                       handCallback: () {}),
                                                 ))
                                             .toList(),
@@ -102,10 +100,11 @@ class PlayerView extends StatelessWidget {
                                     child: Transform.rotate(
                                       angle: pi / 2,
                                       child: NonPlayableCardWidget(
-                                          scale: 0.9,
-                                          showBackPermanently: true,
-                                          card: characterCard,
-                                          onTapCallback: () {}),
+                                        scale: 0.9,
+                                        showBackPermanently: true,
+                                        card: characterCard,
+                                        canBeFocused: false,
+                                      ),
                                     ),
                                   ),
                                   /*Row(
@@ -184,8 +183,6 @@ class PlayerView extends StatelessWidget {
                                                     child: BangCardWidget(
                                                         card: card,
                                                         scale: 0.6,
-                                                        onDragSuccessCallback:
-                                                            () {},
                                                         handCallback: () {}),
                                                   ))
                                               .toList(),
@@ -197,8 +194,6 @@ class PlayerView extends StatelessWidget {
                                                     child: BangCardWidget(
                                                         card: card,
                                                         scale: 0.6,
-                                                        onDragSuccessCallback:
-                                                            () {},
                                                         handCallback: () {}),
                                                   ))
                                               .toList(),

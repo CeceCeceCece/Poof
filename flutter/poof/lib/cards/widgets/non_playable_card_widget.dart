@@ -12,18 +12,20 @@ class NonPlayableCardWidget extends StatefulWidget {
 
   final double scale;
   final double highlightMultiplier;
+  final bool canBeFocused;
 
   final bool showBackPermanently;
   const NonPlayableCardWidget({
     Key? key,
     required this.card,
-    required this.onTapCallback,
+    this.canBeFocused = true,
+    this.onTapCallback,
     this.scale = 1.0,
     this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
   }) : super(key: key);
 
-  final void Function() onTapCallback;
+  final void Function()? onTapCallback;
 
   @override
   _BangCardWidgetState createState() => _BangCardWidgetState();
@@ -74,10 +76,10 @@ class _BangCardWidgetState extends State<NonPlayableCardWidget>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTapCallback,
-      onLongPressStart: (_) => _toggleCardFocus(),
-      onLongPressEnd: (_) => _toggleCardFocus(),
-      onScaleEnd: _screenShot,
-      onDoubleTap: _flipCard,
+      onLongPressStart: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
+      onLongPressEnd: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
+      // onScaleEnd: _screenShot,
+      //onDoubleTap: _flipCard,
       child: TweenAnimationBuilder(
         tween: Tween<double>(begin: 0, end: angle),
         duration: _cardFlipDuration,

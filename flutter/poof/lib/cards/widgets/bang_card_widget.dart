@@ -15,18 +15,22 @@ class BangCardWidget extends StatefulWidget {
   final BangCard card;
 
   final double scale;
+  final bool canBeFocused;
+  final bool canBeDragged;
 
   final bool showBackPermanently;
   BangCardWidget({
     Key? key,
     required this.card,
-    required this.onDragSuccessCallback,
+    this.canBeDragged = false,
+    this.canBeFocused = true,
+    this.onDragSuccessCallback,
     required this.handCallback,
     this.scale = 1.0,
     this.showBackPermanently = false,
   }) : super(key: key);
 
-  final void Function() onDragSuccessCallback;
+  final void Function()? onDragSuccessCallback;
   final void Function() handCallback;
 
   @override
@@ -74,7 +78,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
       onLongPressStart: (_) => _toggleCardFocus(),
       onLongPressEnd: (_) => _toggleCardFocus(),
       //onDoubleTap: _flipCard,
-      onScaleEnd: _screenShot,
+      //onScaleEnd: _screenShot,
       child: TweenAnimationBuilder(
         tween: Tween<double>(begin: 0, end: angle),
         duration: _cardFlipDuration,
@@ -111,23 +115,29 @@ class _BangCardWidgetState extends State<BangCardWidget>
               ..setEntry(3, 2, 0.001)
               ..rotateY(val),
             child: Screenshot(
-              controller: screenshotController,
-              child: Draggable<String>(
-                  onDragCompleted: widget.onDragSuccessCallback,
-                  data: widget.card.toString(),
-                  feedback: Image.asset('assets/icons/aim.png',
-                      width: 50, height: 50),
-                  childWhenDragging: ColorFiltered(
-                    child: AnimatedOpacity(
-                      opacity: 0.8,
-                      child: card,
-                      duration: Duration(milliseconds: 500),
-                    ),
-                    colorFilter: ColorFilter.mode(
-                        Colors.red.shade100, BlendMode.modulate),
-                  ),
-                  child: card),
-            ),
+                controller: screenshotController,
+                child: widget.canBeDragged
+                    ? Draggable<String>(
+                        onDragCompleted: widget.onDragSuccessCallback,
+                        onDragEnd: (DraggableDetails details) =>
+                            !details.wasAccepted
+                                ? Fluttertoast.showToast(
+                                    msg: 'Ez nem egy valid célpont!')
+                                : {},
+                        data: widget.card.toString(),
+                        feedback: Image.asset('assets/icons/aim.png',
+                            width: 50, height: 50),
+                        childWhenDragging: ColorFiltered(
+                          child: AnimatedOpacity(
+                            opacity: 0.8,
+                            child: card,
+                            duration: Duration(milliseconds: 500),
+                          ),
+                          colorFilter: ColorFilter.mode(
+                              Colors.red.shade100, BlendMode.modulate),
+                        ),
+                        child: card)
+                    : card),
           );
         },
       ),
