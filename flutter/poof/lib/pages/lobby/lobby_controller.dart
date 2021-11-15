@@ -1,4 +1,5 @@
 import 'package:bang/routes/routes.dart';
+import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -182,5 +183,10 @@ class LobbyController extends GetxController {
             ));
 
     playerWidgetList = widgetList.obs;
+  }
+
+  void back() {
+    Get.back();
+    AudioService.playMenuSong();
   }
 }

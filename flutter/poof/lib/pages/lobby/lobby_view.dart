@@ -7,61 +7,67 @@ import 'package:get/get.dart';
 class LobbyView extends GetView<LobbyController> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(
-                Constants.backgroundPath,
-              ),
-              fit: BoxFit.fitHeight)),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: Obx(
-            () => Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Spacer(),
-                Text('LOBBY: ${controller.roomID}'),
-                Text('PLAYERS: ${controller.playerList().length}/7'),
-                SizedBox(height: 50),
-                BangButton(
-                  text: 'Enter game',
-                  onPressed: controller.join,
+    return WillPopScope(
+      onWillPop: () async {
+        controller.back();
+        return true;
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(
+                  Constants.backgroundPath,
                 ),
-                Container(
-                  padding: EdgeInsets.only(top: 20),
-                  height: 7 * 50,
-                  child: ListView(
-                    children: controller.playerWidgetList,
-                    physics: NeverScrollableScrollPhysics(),
+                fit: BoxFit.fitHeight)),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: Obx(
+              () => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(),
+                  Text('LOBBY: ${controller.roomID}'),
+                  Text('PLAYERS: ${controller.playerList().length}/7'),
+                  SizedBox(height: 50),
+                  BangButton(
+                    text: 'Enter game',
+                    onPressed: controller.join,
                   ),
-                ),
-                SizedBox(height: 20),
-                BangButton(
-                  onPressed: controller.showQR,
-                  text: 'Show QR code!',
-                ),
-                SizedBox(height: 20),
-                BangButton(
-                  text: 'Add players',
-                  onPressed: () => controller.addPlayers(['players']),
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: BangButton(
-                        width: 70,
-                        height: 40,
-                        onPressed: Get.back,
-                        text: 'Kilépés',
-                      ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    height: 7 * 50,
+                    child: ListView(
+                      children: controller.playerWidgetList,
+                      physics: NeverScrollableScrollPhysics(),
                     ),
                   ),
-                )
-              ],
+                  SizedBox(height: 20),
+                  BangButton(
+                    onPressed: controller.showQR,
+                    text: 'Show QR code!',
+                  ),
+                  SizedBox(height: 20),
+                  BangButton(
+                    text: 'Add players',
+                    onPressed: () => controller.addPlayers(['players']),
+                  ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: BangButton(
+                          width: 70,
+                          height: 40,
+                          onPressed: controller.back,
+                          text: 'Kilépés',
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
