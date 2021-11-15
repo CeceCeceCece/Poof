@@ -35,11 +35,11 @@ class LobbyController extends GetxController {
   }
 
   var playerList = [
-    'Kisfaszu123',
-    'B1GD1CK',
+    'asfsagags',
+    'asgagagdfhh',
     'Ferike',
-    'Puhap0cs',
-    'Xdfdd',
+    'safffff',
+    'ddddddd',
     'EGYNAGYONHOSSZÚNEVŰFELHASZNÁLÓXDDDDDDDDDD',
     'HGKJGKUJZGK'
   ].obs;
