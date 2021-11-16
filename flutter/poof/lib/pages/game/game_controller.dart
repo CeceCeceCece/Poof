@@ -67,8 +67,9 @@ class GameController extends GetxController {
       log('$error');
     }
 
-    connection.on('SendMessage', (message) {
-      log(message.toString());
-    });
+    connection.on(
+        'LobbyCreated', (setHealthDto) => log(setHealthDto.toString()));
+
+    connection.invoke('sendMessage', args: ['Üzenet', 'Lobby neve']);
   }
 }

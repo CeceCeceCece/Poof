@@ -17,6 +17,7 @@ class PlayerView extends StatelessWidget {
   final pixelPerHealth = (CardWidgetHelpers.cardHeight * 0.4 - 2 * 8) / 5;
   PlayerView({required this.characterCard, required this.roleCard});
   final service = Get.find<GameService>();
+  final random = Random();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class PlayerView extends StatelessWidget {
     return Obx(
       () => AnimatedContainer(
         duration: Duration(milliseconds: 150),
-        height: service.expandedHandView() ? 310 : 230,
+        height: service.expandedHandView() ? 370 : 310,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -36,36 +37,51 @@ class PlayerView extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 10, right: 10),
                             child: Stack(
                               children: [
-                                Positioned(
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ...service.temporaryEffectList
-                                            .map((card) => Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 3, right: 3),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      ...service.temporaryEffectList
+                                          .map(
+                                            (card) => Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 3, right: 3),
+                                              child: Transform.rotate(
+                                                angle: (pi / 180) *
+                                                    (random.nextInt(7) - 3),
+                                                child: Positioned(
                                                   child: BangCardWidget(
-                                                      card: card,
-                                                      scale: 0.6,
-                                                      handCallback: () {}),
-                                                ))
-                                            .toList(),
-                                        Spacer(),
-                                        ...service.equipmentList
-                                            .map((card) => Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 3, right: 3),
+                                                    card: card,
+                                                    scale: 0.55,
+                                                    extraScaleAtHighlight: true,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                      Spacer(),
+                                      SizedBox(height: 140, width: 1),
+                                      ...service.equipmentList
+                                          .map(
+                                            (card) => Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 3, right: 3),
+                                              child: Transform.rotate(
+                                                angle: (pi / 180) *
+                                                    (random.nextInt(7) - 3),
+                                                child: Positioned(
                                                   child: BangCardWidget(
-                                                      card: card,
-                                                      scale: 0.6,
-                                                      onDragSuccessCallback:
-                                                          () {},
-                                                      handCallback: () {}),
-                                                ))
-                                            .toList(),
-                                      ]),
-                                ),
+                                                    card: card,
+                                                    scale: 0.55,
+                                                    extraScaleAtHighlight: true,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ]),
                               ],
                             ),
                           ),
@@ -74,9 +90,10 @@ class PlayerView extends StatelessWidget {
                     : Container())
                 : Container(),
             Container(
+              color: Colors.red,
               height: service.expandedHandView()
-                  ? 290
-                  : (service.expandedEquipmentView() ? 150 : 230),
+                  ? 350
+                  : (service.expandedEquipmentView() ? 150 : 310),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -111,19 +128,20 @@ class PlayerView extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [*/
                                   Positioned(
-                                      bottom: 20,
-                                      child: NonPlayableCardWidget(
-                                          scale: 0.95,
-                                          card: characterCard,
-                                          onTapCallback: () {})),
+                                    bottom: 20,
+                                    child: NonPlayableCardWidget(
+                                      scale: 0.95,
+                                      card: characterCard,
+                                    ),
+                                  ),
                                   Positioned(
-                                      bottom: 20,
-                                      left: 10,
-                                      child: NonPlayableCardWidget(
-                                        card: roleCard,
-                                        scale: 0.95,
-                                        onTapCallback: () {},
-                                      )),
+                                    bottom: 20,
+                                    left: 10,
+                                    child: NonPlayableCardWidget(
+                                      card: roleCard,
+                                      scale: 0.95,
+                                    ),
+                                  ),
                                   Positioned(
                                       bottom: 15,
                                       left: 10,
@@ -169,37 +187,58 @@ class PlayerView extends StatelessWidget {
                             ? Container(
                                 padding:
                                     const EdgeInsets.only(left: 10, right: 10),
-                                child: Stack(
+                                child: /* Stack(
                                   overflow: Overflow.visible,
-                                  children: [
+                                  children: [*/
                                     Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
-                                          ...service.temporaryEffectList
-                                              .map((card) => Container(
-                                                    padding: EdgeInsets.only(
-                                                        left: 3, right: 3),
-                                                    child: BangCardWidget(
-                                                        card: card,
-                                                        scale: 0.6,
-                                                        handCallback: () {}),
-                                                  ))
-                                              .toList(),
-                                          Spacer(),
-                                          ...service.equipmentList
-                                              .map((card) => Container(
-                                                    padding: EdgeInsets.only(
-                                                        left: 3, right: 3),
-                                                    child: BangCardWidget(
-                                                        card: card,
-                                                        scale: 0.6,
-                                                        handCallback: () {}),
-                                                  ))
-                                              .toList(),
-                                        ]),
-                                  ],
-                                ),
+                                      ...service.temporaryEffectList
+                                          .map(
+                                            (card) => Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 3, right: 3),
+                                              child: Transform.rotate(
+                                                angle: (pi / 180) *
+                                                    (random.nextInt(7) - 3),
+                                                child: Positioned(
+                                                  child: BangCardWidget(
+                                                    card: card,
+                                                    scale: 0.55,
+                                                    extraScaleAtHighlight: true,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                      Spacer(),
+                                      SizedBox(height: 140, width: 1),
+                                      ...service.equipmentList
+                                          .map(
+                                            (card) => Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 3, right: 3),
+                                              child: Transform.rotate(
+                                                angle: (pi / 180) *
+                                                    (random.nextInt(7) - 3),
+                                                child: Positioned(
+                                                  child: BangCardWidget(
+                                                    card: card,
+                                                    extraScaleAtHighlight: true,
+                                                    scale: 0.55,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ]),
+                                //  ],
+                                // ),
                               )
                             : Container(),
                         Hand(),

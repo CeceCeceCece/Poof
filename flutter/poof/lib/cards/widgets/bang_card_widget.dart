@@ -17,6 +17,8 @@ class BangCardWidget extends StatefulWidget {
   final double scale;
   final bool canBeFocused;
   final bool canBeDragged;
+  final bool extraScaleAtHighlight;
+  late final bool isInsideHand;
 
   final bool showBackPermanently;
   BangCardWidget({
@@ -25,13 +27,16 @@ class BangCardWidget extends StatefulWidget {
     this.canBeDragged = false,
     this.canBeFocused = true,
     this.onDragSuccessCallback,
-    required this.handCallback,
+    this.handCallback,
     this.scale = 1.0,
+    this.extraScaleAtHighlight = false,
     this.showBackPermanently = false,
-  }) : super(key: key);
+  }) : super(key: key) {
+    this.isInsideHand = handCallback != null;
+  }
 
   final void Function()? onDragSuccessCallback;
-  final void Function() handCallback;
+  final void Function()? handCallback;
 
   @override
   _BangCardWidgetState createState() => _BangCardWidgetState();
@@ -55,15 +60,27 @@ class _BangCardWidgetState extends State<BangCardWidget>
   void _toggleCardFocus() {
     setState(() {
       if (isElevated) {
-        /*height *= 2 / 3;
-        width *= 2 / 3;*/
-        isElevated = false;
+        if (!widget.isInsideHand) {
+          height *= 2 / 3;
+          width *= 2 / 3;
+          if (widget.extraScaleAtHighlight) {
+            height *= 5 / 6.3;
+            width *= 5 / 6.3;
+          }
+        }
         Get.find<GameService>().highlight(-1);
+        isElevated = false;
       } else {
-        /*height *= 1.5;
-        width *= 1.5;*/
+        if (!widget.isInsideHand) {
+          height *= 1.5;
+          width *= 1.5;
+          if (widget.extraScaleAtHighlight) {
+            height *= 6.3 / 5;
+            width *= 6.3 / 5;
+          }
+        }
+        widget.handCallback?.call();
         isElevated = true;
-        widget.handCallback();
       }
     });
   }
@@ -75,8 +92,8 @@ class _BangCardWidgetState extends State<BangCardWidget>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPressStart: (_) => _toggleCardFocus(),
-      onLongPressEnd: (_) => _toggleCardFocus(),
+      onLongPressStart: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
+      onLongPressEnd: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
       //onDoubleTap: _flipCard,
       //onScaleEnd: _screenShot,
       child: TweenAnimationBuilder(
