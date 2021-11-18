@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
@@ -16,23 +17,26 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Option Option(string playerId, Game game)
+        public override Task OptionAsync(BaseCharacterLogic character)
         {
-            return new Option
-            {
-                Description = CardMessages.CHOOSE_ONE_CARD,
-                RequireAnswear = true,
-                RequireCards = true,
-                PossibleTargets = game.GetAllPlayer(),
-                PossibleCards = null,
-                NumberOfCards = 1
-            };
+            return Task.CompletedTask;
+            //TODO: értasíteni hogy küldjön egy kártyát.
+            //return new Option
+            //{
+            //    Description = CardMessages.CHOOSE_ONE_CARD,
+            //    RequireAnswear = true,
+            //    RequireCards = true,
+            //    PossibleTargets = game.GetAllPlayer(),
+            //    PossibleCards = null,
+            //    NumberOfCards = 1
+            //};
         }
 
-        public override void Activate(Game game, OptionDto dto)
+        public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            var character = game.GetCharacterById(dto.UserId);
-            character.Map().DropCard(dto.CardIds.First(), game);
+            var target = character.Character.Game.GetCharacterById(dto.UserId).Map(character.Hub);
+            await target.DropCardAsync(dto.CardIds.First());
+            await character.DropCardAsync(Card.Id);
         }
     }
 }

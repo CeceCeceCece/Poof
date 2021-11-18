@@ -1,5 +1,4 @@
 using Application.Exceptions;
-using Application.Helpers.Mappers;
 using Application.Helpers.Profiles;
 using Application.Interfaces;
 using Application.Services;
@@ -47,7 +46,6 @@ namespace Web
             services.AddSignalR();
 
             services.AddSingleton<PoofTracker>();
-            services.AddTransient<CardMapper>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICurrentPlayerService, CurrentPlayerService>();
             services.AddTransient<IGameService, GameService>();

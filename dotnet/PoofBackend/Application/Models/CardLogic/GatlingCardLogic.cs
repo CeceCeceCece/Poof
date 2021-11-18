@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Constants.Enums;
@@ -17,46 +18,41 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Option Option(string playerId, Game game)
+        public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            var character = game.Characters.SingleOrDefault(x => x.Id == playerId);
-            var logic = character.Map();
-            logic.ActivateCard(game, Card.Id, new OptionDto { UserId = playerId });
-
-            return new Option
-            {
-                Description = CardMessages.CARD_PLAYED,
-                RequireAnswear = false,
-                RequireCards = false,
-                PossibleTargets = null,
-                PossibleCards = null
-            };
+            await character.ActivateCardAsync(Card.Id, null);
+            //return new Option
+            //{
+            //    Description = CardMessages.CARD_PLAYED,
+            //    RequireAnswear = false,
+            //    RequireCards = false,
+            //    PossibleTargets = null,
+            //    PossibleCards = null
+            //};
         }
 
-        public override void Activate(Game game, OptionDto dto)
+        public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            game.NextCard = Card;
-            game.SetAllReact(dto.UserId);
+            await character.Character.Game.SetAllReactAsync(character.Character.Id, character.Hub, Card);
         }
 
-        public override void Answear(Game game, OptionDto dto)
+        public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            if(dto.CardIds is null || dto.CardIds.Count == 0) 
+            var target = character.Character.Game.GetReactionCharacter().Map(character.Hub);
+
+            if (dto.CardIds is null || dto.CardIds.Count == 0)
             {
-                var character = game.GetReactionCharacter();
-                character.Map().DecreaseLifepoint(1);
+                await target.DecreaseLifepointAsync(1);
             }
-            else 
+            else
             {
-                var character = game.GetReactionCharacter();
-                var hasCard = character.Map().TryHasCard(dto.CardIds.First(), "Bang!");
-                if (!hasCard) 
+                var hasCard = await target.TryHasCardAsync(dto.CardIds.First(), "Bang!");
+                if (!hasCard)
                 {
-                    character.Map().DecreaseLifepoint(1);
+                    await target.DecreaseLifepointAsync(1);
                 }
             }
-            game.AllReactNext();
-
+            await character.Character.Game.AllReactNextAsync(character.Hub);
         }
     }
 }

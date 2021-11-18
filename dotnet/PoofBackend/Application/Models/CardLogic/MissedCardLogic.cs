@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
+using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
@@ -17,19 +18,21 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Option Option(string playerId, Game game)
+        public override Task OptionAsync(BaseCharacterLogic character)
         {
-            return new Option
-            {
-                Description = CardMessages.KARTYA_NEM_KIJATSZATO,
-                RequireAnswear = false,
-                RequireCards = false,
-                PossibleTargets = null,
-                PossibleCards = null
-            };
+            return Task.CompletedTask;
+            //Semmi nem torténjen
+            //return new Option
+            //{
+            //    Description = CardMessages.KARTYA_NEM_KIJATSZATO,
+            //    RequireAnswear = false,
+            //    RequireCards = false,
+            //    PossibleTargets = null,
+            //    PossibleCards = null
+            //};
         }
 
-        public override void Activate(Game game, OptionDto dto)
+        public override Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
             throw new PoofException(CardMessages.KARTYA_NEM_KIJATSZATO);
         }

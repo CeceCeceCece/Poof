@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Models.CharacterLogic
 {
-    public class JourdonnaisCharacter : CharacterLogic
+    public class JourdonnaisCharacter : BaseCharacterLogic
     {
         public JourdonnaisCharacter(Character character, PoofGameHub hub) : base(character, hub) { }
 

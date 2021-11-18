@@ -13,47 +13,45 @@ using System.Threading.Tasks;
 
 namespace Application.Models.CharacterLogic
 {
-    public class KitCarlsonCharacter : CharacterLogic
+    public class KitCarlsonCharacter : BaseCharacterLogic
     {
         public KitCarlsonCharacter(Character character, PoofGameHub hub) : base(character, hub) { }
 
-        public override Option Draw(Game game)
+        public override Task DrawAsync()
         {
-            if (character is null)
-                throw new PoofException(CharacterMessages.JATEKOS_NEM_A_JATEK_RESZE);
+            Character.Game.Event = GameEvent.Draw;
+            return Task.CompletedTask;   
+            //Hub értesítés hogy mit kell tenni.
 
-            game.Event = GameEvent.Draw;
-
-            return new Option
-            {
-                Description = CardMessages.CHOOSE_ONE_PLAYER,
-                NumberOfCards = 2,
-                PossibleCards = game.GetCards(3)
-                    .Select(x => new CardViewModel 
-                    {
-                        Id = x.Id,
-                        Name = x.Card.Name
-                    })
-                    .ToList(),
-                PossibleTargets = null,
-                RequireAnswear = true,
-                RequireCards = true,
-            };
+            //return new Option
+            //{
+            //    Description = CardMessages.CHOOSE_ONE_PLAYER,
+            //    NumberOfCards = 2,
+            //    PossibleCards = game.GetCards(3)
+            //        .Select(x => new CardViewModel
+            //        {
+            //            Id = x.Id,
+            //            Name = x.Card.Name
+            //        })
+            //        .ToList(),
+            //    PossibleTargets = null,
+            //    RequireAnswear = true,
+            //    RequireCards = true,
+            //};
         }
 
-        public override void DrawReact(Game game, OptionDto option)
+        public override async Task DrawReactAsync(OptionDto option)
         {
             if (option.CardIds.Count != 2)
                 throw new PoofException(CharacterMessages.NEM_MEGFELELO_HUZAS);
 
-            var cards = game.Deck.Where(x => option.CardIds.Contains(x.Id)).ToList();
-            foreach (var card in cards)
+            List<GameCard> cards = new List<GameCard>();
+            foreach (var cardId in option.CardIds)
             {
-                game.Deck.Remove(card);
+                cards.Add(Character.Game.GetCard(cardId));
             }
-            game.Event = GameEvent.None;
-
-            character.Deck.AddRange(cards);
+            await DrawAsync(cards);
+            await Character.Game.EndReactionAsync(Hub);
         }
     }
 }

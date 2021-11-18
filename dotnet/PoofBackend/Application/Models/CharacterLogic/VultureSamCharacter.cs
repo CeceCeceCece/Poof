@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Models.CharacterLogic
 {
-    public class VultureSamCharacter : CharacterLogic
+    public class VultureSamCharacter : BaseCharacterLogic
     {
         public VultureSamCharacter(Character character, PoofGameHub hub) : base(character, hub) { }
     }

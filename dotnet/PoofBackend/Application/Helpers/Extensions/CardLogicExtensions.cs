@@ -11,7 +11,7 @@ namespace Domain.Entities
 {
     public static class CardLogicExtensions
     {
-        public static CardLogic Map(this GameCard card) => card.Card.Name switch
+        public static CardLogic Map(this GameCard card) => card.Name switch
         {
             "Barrel" => new BarrelCardLogic(card),
             "Dynamite" => new DynamiteCardLogic(card),

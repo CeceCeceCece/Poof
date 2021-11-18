@@ -14,7 +14,8 @@ namespace Domain.Entities
         public string ConnectionId { get; set; }
         public int MaxLifePoint { get; set; }
         public int LifePoint { get; set; }
-        public int NumberOfBangs { get; set; }
+        public BangState BangState { get; set; }
+        public int WeaponDistance { get; set; }
         public int AimDistance { get; set; }
         public int DistanceFromOthers { get; set; }
         public Game Game{ get; set; }

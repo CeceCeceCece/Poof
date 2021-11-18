@@ -44,6 +44,8 @@ namespace Application.Services
             var game = await GetGameAsync(groupId, cancellationToken);
             context.Messages.RemoveRange(game.Messages);
             context.Characters.RemoveRange(game.Characters);
+            context.GameCards.RemoveRange(game.Deck);
+            context.GameCards.RemoveRange(game.DiscardPile);
             context.Games.Remove(game);
             await context.SaveChangesAsync(cancellationToken);
             return game;
@@ -61,45 +63,41 @@ namespace Application.Services
 
             game.Messages.Add(message);
             await context.SaveChangesAsync(cancellationToken);
+
+            //TODO: hub ertesítés az üzenetről
         }
 
-        private async Task<Option> DrawAsync(string gameId, CancellationToken cancellationToken) 
+        private async Task DrawAsync(string gameId, CancellationToken cancellationToken) 
         {
             var game = await GetGameAsync(gameId, cancellationToken);
-            var character = game.Characters.SingleOrDefault(x => x.Id == playerService.Player.Id);
-            var logic = character.Map(Hub);
-
-            var option = logic.Draw(game);
+            await game.GetCharacterById(playerService.Player.Id).Map(Hub).DrawAsync();
             await context.SaveChangesAsync(cancellationToken);
-
-            return option;
         }
 
         public async Task DrawReactAsync(string gameId, OptionDto dto, CancellationToken cancellationToken)
         {
             var game = await GetGameAsync(gameId, cancellationToken);
-            var character = game.Characters.SingleOrDefault(x => x.Id == playerService.Player.Id);
-            var logic = character.Map(Hub);
-
-            logic.DrawReact(game, dto);
+            await game.GetCharacterById(playerService.Player.Id).Map(Hub).DrawReactAsync(dto);
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<Option> CardOption(string gameId, string cardId, CancellationToken cancellationToken) 
+        public async Task CardOptionAsync(string gameId, string cardId, CancellationToken cancellationToken) 
         {
             var game = await GetGameAsync(gameId, cancellationToken);
-            var card = game.Deck.SingleOrDefault(x => x.Id == cardId);
-            var logic = card.Map();
-            await context.SaveChangesAsync(cancellationToken);
-            return logic.Option(playerService.Player.Id, game);
+            await game.GetCharacterById(playerService.Player.Id).Map(Hub).CardOptionAsync(cardId);
         }
 
-        public async Task CardActivate(string gameId, string cardId, OptionDto dto, CancellationToken cancellationToken)
+        public async Task CardActivateAsync(string gameId, string cardId, OptionDto dto, CancellationToken cancellationToken)
         {
             var game = await GetGameAsync(gameId, cancellationToken);
-            var character = game.Characters.SingleOrDefault(x => x.Id == playerService.Player.Id);
-            var charLogic = character.Map(Hub);
-            charLogic.ActivateCard(game, cardId, dto);
+            await game.GetCharacterById(playerService.Player.Id).Map(Hub).ActivateCardAsync(cardId, dto);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task CardAnswearAsync(string gameId, OptionDto dto, CancellationToken cancellationToken)
+        {
+            var game = await GetGameAsync(gameId, cancellationToken);
+            await game.GetCharacterById(playerService.Player.Id).Map(Hub).AnswearCardAsync(dto);
             await context.SaveChangesAsync(cancellationToken);
         }
     }

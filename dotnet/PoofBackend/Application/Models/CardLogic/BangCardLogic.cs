@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
+using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Constants.Enums;
@@ -16,29 +17,48 @@ namespace Application.Models.CardLogic
     {
         public BangCardLogic(GameCard card) : base(card){}
 
-        public override Option Option(string playerId, Game game)
+        public override Task OptionAsync(BaseCharacterLogic character)
         {
-            return new Option
+            var option = new Option
             {
                 Description = CardMessages.CHOOSE_ONE_PLAYER,
                 RequireAnswear = true,
                 RequireCards = false,
-                PossibleTargets = game.Neigbours(playerId),
+                PossibleTargets = character.GetNeighbours(),
                 PossibleCards = null
             };
+            //TODO: hub
+            return Task.CompletedTask;
         }
-        public override void Activate(Game game, OptionDto dto)
+
+        public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
             if (string.IsNullOrEmpty(dto.UserId))
                 throw new PoofException(CharacterMessages.NEM_MEGFELELO_JATEKOS_AZONOSITO);
 
-            var character = game.Characters.SingleOrDefault(x => x.Id == dto.UserId);
-            if (character is null)
-                throw new PoofException(CharacterMessages.JATEKOS_NEM_A_JATEK_RESZE);
+            var targetCharacter = character.Character.Game.GetCharacterById(dto.UserId);
 
-            game.Event = GameEvent.SingleReact;
-            game.NextUserId = character.Id;
-            game.NextCard = Card;
+            await character.Character.Game.SetSingleReactAsync(Card, targetCharacter.Id, character.Hub);
+            await character.LeaveCardAsync(Card.Id);
+            //await character.DropCardAsync(Card.Id);
+            //TODO: hub ertesites
+
+        }
+        public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
+        {
+            var target = character.Character.Game.GetReactionCharacter().Map(character.Hub);
+
+            if (dto.CardIds is null || dto.CardIds.Count == 0)
+            {
+                await target.DecreaseLifepointAsync(1);
+            }
+            else 
+            {
+                if (!await target.TryHasCardAsync(dto.CardIds.First(), "Missed!"))
+                    throw new PoofException(CardMessages.BANG_ANSWEAR_ERROR);
+            }
+            await character.Character.Game.EndReactionAsync(character.Hub);
+            //TODO: hu ertesítés a sikerről
         }
     }
 }

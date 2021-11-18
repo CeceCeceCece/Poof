@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
+using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Constants.Enums;
@@ -18,33 +19,40 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Option Option(string playerId, Game game)
+        public override Task OptionAsync(BaseCharacterLogic character)
         {
-            return new Option
+            return Task.CompletedTask;
+            //return new Option
+            //{
+            //    Description = CardMessages.CHOOSE_ONE_PLAYER,
+            //    RequireAnswear = true,
+            //    RequireCards = false,
+            //    PossibleTargets = game.GetAllPlayer(),
+            //    PossibleCards = null
+            //};
+        }
+
+        public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
+        {
+            if (string.IsNullOrEmpty(dto.UserId))
+                throw new PoofException(CharacterMessages.NEM_MEGFELELO_JATEKOS_AZONOSITO);
+            var target = character.Character.Game.GetCharacterById(dto.UserId);
+
+            await character.Character.Game.SetSingleReactAsync(Card, dto.UserId, character.Hub);
+        }
+
+        public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
+        {
+            var target = character.Character.Game.GetReactionCharacter().Map(character.Hub);
+            if (dto.UserId != null && await target.TryHasCardAsync(dto.CardIds.First(), "Bang!"))
             {
-                Description = CardMessages.CHOOSE_ONE_PLAYER,
-                RequireAnswear = true,
-                RequireCards = false,
-                PossibleTargets = game.GetAllPlayer(),
-                PossibleCards = null
-            };
-        }
-
-        public override void Activate(Game game, OptionDto dto)
-        {
-            if (!game.Characters.Any(x => x.Id == dto.UserId))
-                throw new PoofException(GameMessages.FELHASZNALO_NEM_A_JATEK_RESZE);
-
-            game.Event = GameEvent.SingleReact;
-            game.NextUserId = dto.UserId;
-            game.NextCard = Card;
-
-            //Értesítés
-        }
-
-        public override void Answear(Game game, OptionDto dto)
-        {
-            
+                await character.Character.Game.CallerSingleReactAsync(character.Hub);
+            }
+            else
+            {
+                await character.Character.Game.GetReactionCharacter().Map(character.Hub).DecreaseLifepointAsync(1);
+                await character.Character.Game.EndReactionAsync(character.Hub);
+            }
         }
     }
 }

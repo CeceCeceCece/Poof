@@ -13,55 +13,46 @@ using System.Threading.Tasks;
 
 namespace Application.Models.CharacterLogic
 {
-    public class JesseJonesCharacter : CharacterLogic
+    public class JesseJonesCharacter : BaseCharacterLogic
     {
 
         public JesseJonesCharacter(Character character, PoofGameHub hub) : base(character, hub) { }
 
-        public override Option Draw(Game game)
+        public override Task DrawAsync()
         {
-            if (character is null)
-                throw new PoofException(CharacterMessages.JATEKOS_NEM_A_JATEK_RESZE);
+            Character.Game.Event = GameEvent.Draw;
+            return Task.CompletedTask;
+            //HUB draw event és válaszolni kell
 
-            game.Event = GameEvent.Draw;
-
-            return new Option
-            {
-                Description = CardMessages.CHOOSE_ONE_PLAYER,
-                NumberOfCards = 0,
-                PossibleCards = null,
-                PossibleTargets = game.GetAllPlayer(),
-                RequireAnswear = true,
-                RequireCards = false
-            };
+            //return new Option
+            //{
+            //    Description = CardMessages.CHOOSE_ONE_PLAYER,
+            //    NumberOfCards = 0,
+            //    PossibleCards = null,
+            //    PossibleTargets = game.GetAllPlayer(),
+            //    RequireAnswear = true,
+            //    RequireCards = false
+            //};
         }
 
-        public override void DrawReact(Game game, OptionDto option) 
+        public override async Task DrawReactAsync(OptionDto option)
         {
-            if(string.IsNullOrEmpty(option.UserId) || option.UserId == character.Id) 
+            if (string.IsNullOrEmpty(option.UserId) || option.UserId == Character.Id)
             {
-                var cards = game.GetAndRemoveCards(2);
-                character.Deck.AddRange(cards);
+                var cards = Character.Game.GetAndRemoveCards(2);
+                await DrawAsync(cards);
             }
-            else 
+            else
             {
-                var target = game.Characters.SingleOrDefault(x => x.Id == option.UserId);
-                if (target is null)
-                    throw new PoofException(CharacterMessages.JATEKOS_NEM_A_JATEK_RESZE);
+                var card = await Character.Game.GetCharacterById(option.UserId).Map(Hub).LeaveCardRandomAsync();
 
-                var random = new Random();
-                var value = random.Next(target.Deck.Count);
-                var card = target.Deck.ElementAt(value);
-                target.Deck.RemoveAt(value);
+                var cards = Character.Game.GetAndRemoveCards(1);
+                cards.Add(card);
 
-                var secondCard = game.Deck.First();
-                game.Deck.Remove(secondCard);
-
-                character.Deck.Add(card);
-                character.Deck.Add(secondCard);
+                await DrawAsync(cards);
             }
 
-            game.Event = GameEvent.None;
+            await Character.Game.EndReactionAsync(Hub);
         }
     }
 }

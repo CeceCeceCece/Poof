@@ -1,4 +1,6 @@
 ﻿using Application.Constants;
+using Application.Exceptions;
+using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
@@ -16,25 +18,25 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Option Option(string playerId, Game game)
+        public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            var character = game.GetCharacterById(playerId);
-            character.Map().ActivateCard(game, Card.Id, new OptionDto { UserId = playerId });
-
-            return new Option
-            {
-                Description = CardMessages.CARD_PLAYED,
-                RequireAnswear = false,
-                RequireCards = false,
-                PossibleTargets = null,
-                PossibleCards = null
-            };
+            await character.ActivateCardAsync(Card.Id, null);
         }
 
-        public override void Activate(Game game, OptionDto dto)
+        public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            var character = game.GetCurrentCharacter();
-            character.Deck.AddRange(game.GetAndRemoveCards(3));
+            await character.Character.Game.SetAllReactAsync(character.Character.Id, character.Hub, Card, true);
+            //HUB miből lehet választani.
+        }
+
+        public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
+        {
+            if (dto.CardIds is null && dto.CardIds.Count == 0)
+                throw new PoofException(CardMessages.GENERAL_STORE_ANSWEAR_ERROR);
+
+            await character.GetCardFromGameAsync(dto.CardIds.First());
+            await character.Character.Game.AllReactNextAsync(character.Hub);
+            //HUB miből választhat
         }
     }
 }

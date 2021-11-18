@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
+using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
@@ -17,30 +18,29 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Option Option(string playerId, Game game)
+        public override Task OptionAsync(BaseCharacterLogic character)
         {
-            return new Option
-            {
-                Description = CardMessages.CHOOSE_ONE_PLAYER,
-                RequireAnswear = true,
-                RequireCards = false,
-                PossibleTargets = game.GetAllPlayer(),
-                PossibleCards = null
-            };
+            //TODO hub értesítés.
+            return Task.CompletedTask;
+            //return new Option
+            //{
+            //    Description = CardMessages.CHOOSE_ONE_PLAYER,
+            //    RequireAnswear = true,
+            //    RequireCards = false,
+            //    PossibleTargets = game.GetAllPlayer(),
+            //    PossibleCards = null
+            //};
         }
 
-        public override void Activate(Game game, OptionDto dto)
+        public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            var character = game.GetCharacterById(dto.UserId);
-            if (character is null)
-                throw new PoofException(GameMessages.FELHASZNALO_NEM_A_JATEK_RESZE);
-
-            character.EquipedCards.Add(Card);
+            var target = character.Character.Game.GetCharacterById(dto.UserId).Map(character.Hub);
+            await target.EquipeCardAsync(Card);
         }
-
-        public override void OnActive()
+        public override Task OnActiveAsync(BaseCharacterLogic character)
         {
-            //TODO: Kör végénél
+            //TODO kör vége.
+            return base.OnActiveAsync(character);
         }
     }
 }

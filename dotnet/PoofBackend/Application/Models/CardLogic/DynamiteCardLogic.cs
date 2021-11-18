@@ -1,6 +1,8 @@
 ﻿using Application.Constants;
+using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
+using Domain.Constants.Enums;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,25 +18,41 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Option Option(string playerId, Game game)
+        public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            var character = game.Characters.SingleOrDefault(x => x.Id == playerId);
-            var logic = character.Map();
-            logic.ActivateCard(game, Card.Id, new OptionDto { UserId = playerId });
+            await character.ActivateCardAsync(Card.Id, null);
 
-            return new Option
-            {
-                Description = CardMessages.CARD_EQUIPPED,
-                RequireAnswear = false,
-                RequireCards = false,
-                PossibleTargets = null,
-                PossibleCards = null
-            };
+            //TODO: hub
+            //return new Option
+            //{
+            //    Description = CardMessages.CARD_EQUIPPED,
+            //    RequireAnswear = false,
+            //    RequireCards = false,
+            //    PossibleTargets = null,
+            //    PossibleCards = null
+            //};
         }
-        public override void Activate(Game game, OptionDto dto)
+
+        public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            var character = game.GetCharacterById(dto.UserId);
-            character.EquipedCards.Add(Card);
+            await character.EquipeCardAsync(Card.Id);
+        }
+
+        public override async Task OnActiveAsync(BaseCharacterLogic character)
+        {
+            if (character.Character.Game.Event != GameEvent.Draw)
+                return;
+
+            List<CardValues> values = new List<CardValues> { CardValues.Two, CardValues.Three, CardValues.Four, CardValues.Five, CardValues.Six, CardValues.Seven, CardValues.Eight, CardValues.Nine };
+            if (await character.Character.Game.CheckNextCardAsync(CardSuits.Spades, values, character.Hub)) 
+            {
+                await character.DecreaseLifepointAsync(3);
+            }
+            else 
+            {
+                character.Character.Game.GetNextCharacter().Deck.Add(Card);
+            }
+            await character.DropCardAsync(Card.Id);
         }
     }
 }

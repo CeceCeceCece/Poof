@@ -2,6 +2,7 @@
 using Application.Exceptions;
 using Application.Models;
 using Application.Models.CharacterLogic;
+using Application.Models.CharacterLogics;
 using Application.SignalR;
 using Domain.Entities;
 using System;
@@ -14,7 +15,7 @@ namespace Domain.Entities
 {
     public static class CharacterLogicExtensions
     {
-        public static CharacterLogic Map(this Character character, PoofGameHub hub) => character.Name switch
+        public static BaseCharacterLogic Map(this Character character, PoofGameHub hub) => character.Name switch
         {
             "Bart Cassidy" => new BartCassidyCharacter(character, hub),
             "Black Jack" => new BlackJackCharacter(character, hub),

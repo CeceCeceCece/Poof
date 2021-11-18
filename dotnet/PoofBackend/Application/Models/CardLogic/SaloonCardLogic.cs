@@ -1,4 +1,6 @@
 ﻿using Application.Constants;
+using Application.Models.CharacterLogic;
+using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
 using System;
@@ -15,21 +17,18 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Option Option(string playerId, Game game)
+        public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            Activate(null);
-            return new Option
-            {
-                Description = CardMessages.CARD_PLAYED,
-                RequireAnswear = false,
-                RequireCards = false,
-                PossibleTargets = null,
-                PossibleCards = null
-            };
+            await character.ActivateCardAsync(Card.Id, null);
         }
-        public override void Activate(string id)
+
+        public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            throw new NotImplementedException();
+            foreach(var target in character.Character.Game.Characters) 
+            {
+                await target.Map(character.Hub).DecreaseLifepointAsync(1);
+            }
+            await character .DropCardAsync(Card.Id);
         }
     }
 }

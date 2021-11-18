@@ -13,50 +13,47 @@ using System.Threading.Tasks;
 
 namespace Application.Models.CharacterLogic
 {
-    public class PedroRamirezCharacter : CharacterLogic
+    public class PedroRamirezCharacter : BaseCharacterLogic
     {
         public PedroRamirezCharacter(Character character, PoofGameHub hub) : base(character, hub) { }
 
-        public override Option Draw(Game game)
+        public override async Task DrawAsync()
         {
-            if (game.DiscardPile.Count <= 0)
+            if (Character.Game.DiscardPile.Count <= 0)
             {
-                return base.Draw(game);
+                await base.DrawAsync();
             }
+            Character.Game.Event = GameEvent.Draw;
 
-            if (character is null)
-                throw new PoofException(CharacterMessages.JATEKOS_NEM_A_JATEK_RESZE);
+            //HUB
 
-            game.Event = GameEvent.Draw;
-
-            return new Option
-            {
-                Description = CharacterMessages.A_PAKLIBOL_VAGY_AZ_ELDOBOTT_LAPOK_KOZUL,
-                NumberOfCards = 0,
-                PossibleCards = null,
-                PossibleTargets = new List<string> { character.Id },
-                RequireAnswear = true,
-                RequireCards = false,
-            };
+            //return new Option
+            //{
+            //    Description = CharacterMessages.A_PAKLIBOL_VAGY_AZ_ELDOBOTT_LAPOK_KOZUL,
+            //    NumberOfCards = 0,
+            //    PossibleCards = null,
+            //    PossibleTargets = new List<string> { Character.Id },
+            //    RequireAnswear = true,
+            //    RequireCards = false,
+            //};
         }
 
-        public override void DrawReact(Game game, OptionDto option)
+        public override async Task DrawReactAsync(OptionDto option)
         {
-            List<GameCard> cards = new List<GameCard>();
-            if (option.UserId == null) 
+            if (string.IsNullOrEmpty(option.UserId)) 
             {
-                cards.AddRange(game.Deck.Take(2));
-                game.Deck.RemoveRange(0, 2);
+                await base.DrawAsync();
             }
             else 
             {
-                cards.AddRange(game.GetAndRemoveCards(1));
-                var discardCard = game.DiscardPile.Last();
-                cards.Add(discardCard);
-                game.DiscardPile.Remove(discardCard);
+                var cards = Character.Game.GetAndRemoveCards(1);
+                var card = Character.Game.DiscardPile.Last();
+                Character.Game.DiscardPile.Remove(card);
+                cards.Add(card);
+                await DrawAsync(cards);
+
+                //HUB az eldobott lapok tetején új lap az alsó
             }
-            character.Deck.AddRange(cards);
-            game.Event = GameEvent.None;
         }
     }
 }
