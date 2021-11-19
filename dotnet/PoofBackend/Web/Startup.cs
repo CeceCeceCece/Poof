@@ -173,6 +173,7 @@ namespace Web
                 endpoints.MapControllers();
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapHub<PoofHub>("hubs/poof");
+                endpoints.MapHub<PoofGameHub>("hubs/poofgame");
             });
         }
     }

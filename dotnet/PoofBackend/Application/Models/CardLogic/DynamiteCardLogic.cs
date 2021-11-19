@@ -52,7 +52,7 @@ namespace Application.Models.CardLogic
             else 
             {
                 await character.Character.Game.GetNextCharacter().Map(character.Hub).EquipeCardAsync(Card);
-                await character.DeEquipeCard(Card.Id);
+                await character.UnequipeCard(Card.Id);
             }
         }
     }

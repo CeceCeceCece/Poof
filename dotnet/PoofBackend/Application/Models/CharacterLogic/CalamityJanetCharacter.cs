@@ -53,7 +53,7 @@ namespace Application.Models.CharacterLogic
             {
             
             }
-            ///TODO implementálás
+            //TODO implementálás
         }
 
         public override async Task CheckAnswearCardAsync(OptionDto dto)
