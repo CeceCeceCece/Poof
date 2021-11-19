@@ -25,13 +25,15 @@ namespace Application.Models.CardLogic
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
             await character.Character.Game.SetAllReactAsync(character.Character.Id, character.Hub, Card);
+            await character.LeaveCardAsync(Card.Id);
             //Hub értesítés hogy reagáljon bang-al.
         }
         public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            if(dto.CardIds is null || dto.CardIds.Count <= 0 || !await character.TryHasCardAsync(dto.CardIds.First(), "Bang!")) 
+            var target = character.Character.Game.GetReactionCharacter().Map(character.Hub);
+            if(dto.CardIds is null || dto.CardIds.Count <= 0 || !await target.TryHasCardAsync(dto.CardIds.First(), "Bang!")) 
             {
-                await character.DecreaseLifepointAsync(1);
+                await target.DecreaseLifepointAsync(1);
             }
             await character.Character.Game.AllReactNextAsync(character.Hub);
         }

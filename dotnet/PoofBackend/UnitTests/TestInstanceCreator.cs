@@ -70,16 +70,16 @@ namespace UnitTests
             };
         }
 
-        public GameCard GetCard(string name) 
+        public GameCard GetCard(string name, CardSuits suit = CardSuits.Clubs, CardType type = CardType.Action, CardValues value = CardValues.Ace) 
         {
             return new GameCard(Guid.NewGuid().ToString(), new Card
             {
                 Id = Guid.NewGuid().ToString(),
                 Description = "",
                 Name = name,
-                Suite = CardSuits.Clubs,
-                Type = CardType.Action,
-                Value = CardValues.Ace
+                Suite = suit,
+                Type = type,
+                Value = value
             },
             name
             );

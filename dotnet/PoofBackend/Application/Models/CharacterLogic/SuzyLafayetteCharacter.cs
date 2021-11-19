@@ -23,9 +23,9 @@ namespace Application.Models.CharacterLogic
             }
         }
 
-        public override async Task<GameCard> LeaveCardAsync(string cardId)
+        public override async Task<GameCard> LeaveCardAsync(string cardId, bool inEquiped = false)
         {
-            var card = await base.LeaveCardAsync(cardId);
+            var card = await base.LeaveCardAsync(cardId, inEquiped);
             if (Character.Deck.Count <= 0)
             {
                 await DrawAsync(Character.Game.GetAndRemoveCards(1));

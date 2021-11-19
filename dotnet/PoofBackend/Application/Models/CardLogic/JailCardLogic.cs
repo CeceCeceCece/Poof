@@ -36,6 +36,7 @@ namespace Application.Models.CardLogic
         {
             var target = character.Character.Game.GetCharacterById(dto.UserId).Map(character.Hub);
             await target.EquipeCardAsync(Card);
+            await character.LeaveCardAsync(Card.Id);
         }
         public override Task OnActiveAsync(BaseCharacterLogic character)
         {

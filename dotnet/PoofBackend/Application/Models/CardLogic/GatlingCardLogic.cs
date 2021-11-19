@@ -34,6 +34,7 @@ namespace Application.Models.CardLogic
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
             await character.Character.Game.SetAllReactAsync(character.Character.Id, character.Hub, Card);
+            await character.LeaveCardAsync(Card.Id);
         }
 
         public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
@@ -46,7 +47,7 @@ namespace Application.Models.CardLogic
             }
             else
             {
-                var hasCard = await target.TryHasCardAsync(dto.CardIds.First(), "Bang!");
+                var hasCard = await target.TryHasCardAsync(dto.CardIds.First(), "Missed!");
                 if (!hasCard)
                 {
                     await target.DecreaseLifepointAsync(1);

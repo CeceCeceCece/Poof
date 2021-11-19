@@ -57,6 +57,7 @@ namespace Domain.Entities
             //TODO hub ertesítés hogy mit húztunk az adott eseményre.
             var firstCard = game.Deck.ElementAt(0);
             game.Deck.Remove(firstCard);
+            game.DiscardPile.Add(firstCard);
             if (firstCard.Card.Suite == suit && (values is null || values.Contains(firstCard.Card.Value)))
                 return Task.FromResult(true);
             return Task.FromResult(false);
@@ -130,7 +131,7 @@ namespace Domain.Entities
 
         public static async Task AllReactNextAsync(this Game game, PoofGameHub hub)
         {
-            var index = game.Characters.IndexOf(game.Characters.SingleOrDefault(x => x.Id == game.NextUserId));
+            var index = game.Characters.IndexOf(game.GetCharacterById(game.NextUserId));
             if (index + 1 >= game.Characters.Count)
             {
                 index = 0;

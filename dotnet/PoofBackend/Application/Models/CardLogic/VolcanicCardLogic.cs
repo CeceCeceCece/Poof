@@ -23,13 +23,12 @@ namespace Application.Models.CardLogic
             await character.ActivateCardAsync(Card.Id, null);
         }
 
-        public override Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
+        public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            character.EquipeCardAsync(Card);
+            await character.EquipeWeaponAsync(Card.Id);
             character.Character.WeaponDistance = 1;
             if (character.Character.BangState != BangState.All)
                 character.Character.BangState = BangState.WeaponAll;
-            return Task.CompletedTask;
         }
 
         public override Task DeactivateAsync(BaseCharacterLogic character)

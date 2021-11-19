@@ -24,7 +24,7 @@ namespace Application.Models.CardLogic
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            await character.EquipeCardAsync(Card);
+            await character.EquipeCardAsync(Card.Id);
             character.Character.DistanceFromOthers += 1;
         }
 

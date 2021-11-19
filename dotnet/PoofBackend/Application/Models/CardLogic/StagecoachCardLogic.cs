@@ -24,7 +24,7 @@ namespace Application.Models.CardLogic
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            var cards = character.Character.Game.GetAndRemoveCards(3);
+            var cards = character.Character.Game.GetAndRemoveCards(2);
             await character.DrawAsync(cards);
             await character.DropCardAsync(Card.Id);
         }

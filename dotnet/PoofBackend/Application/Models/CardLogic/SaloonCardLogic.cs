@@ -26,9 +26,9 @@ namespace Application.Models.CardLogic
         {
             foreach(var target in character.Character.Game.Characters) 
             {
-                await target.Map(character.Hub).DecreaseLifepointAsync(1);
+                await target.Map(character.Hub).IncreaseLifePontAsync(1);
             }
-            await character .DropCardAsync(Card.Id);
+            await character.DropCardAsync(Card.Id);
         }
     }
 }

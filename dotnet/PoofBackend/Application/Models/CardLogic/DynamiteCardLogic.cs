@@ -47,12 +47,13 @@ namespace Application.Models.CardLogic
             if (await character.Character.Game.CheckNextCardAsync(CardSuits.Spades, values, character.Hub)) 
             {
                 await character.DecreaseLifepointAsync(3);
+                await character.DropCardAsync(Card.Id);
             }
             else 
             {
-                character.Character.Game.GetNextCharacter().Deck.Add(Card);
+                await character.Character.Game.GetNextCharacter().Map(character.Hub).EquipeCardAsync(Card);
+                await character.DeEquipeCard(Card.Id);
             }
-            await character.DropCardAsync(Card.Id);
         }
     }
 }
