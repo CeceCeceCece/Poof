@@ -20,6 +20,17 @@ namespace Application.Models.CardLogic
         public override async Task OptionAsync(BaseCharacterLogic character)
         {
             await character.ActivateCardAsync(Card.Id, null);
+
+            var option = new OptionViewModel
+            {
+                Description = CardMessages.INDIANS_OPTION,
+                RequireAnswear = false,
+                RequireCards = false,
+                PossibleTargets = null,
+                PossibleCards = null
+            };
+
+            await character.ShowOptionAsync(option);
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
@@ -27,6 +38,7 @@ namespace Application.Models.CardLogic
             await character.Character.Game.SetAllReactAsync(character.Character.Id, character.Hub, Card);
             await character.LeaveCardAsync(Card.Id);
             //Hub értesítés hogy reagáljon bang-al.
+
         }
         public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
         {

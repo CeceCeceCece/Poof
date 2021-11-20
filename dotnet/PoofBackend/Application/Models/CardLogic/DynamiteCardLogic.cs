@@ -22,15 +22,16 @@ namespace Application.Models.CardLogic
         {
             await character.ActivateCardAsync(Card.Id, null);
 
-            //TODO: hub
-            //return new Option
-            //{
-            //    Description = CardMessages.CARD_EQUIPPED,
-            //    RequireAnswear = false,
-            //    RequireCards = false,
-            //    PossibleTargets = null,
-            //    PossibleCards = null
-            //};
+            var option = new OptionViewModel
+            {
+                Description = CardMessages.DYNAMITE_OPTION,
+                RequireAnswear = false,
+                RequireCards = false,
+                PossibleTargets = null,
+                PossibleCards = null
+            };
+
+            await character.ShowOptionAsync(option);
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)

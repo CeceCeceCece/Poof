@@ -21,14 +21,17 @@ namespace Application.Models.CardLogic
         public override async Task OptionAsync(BaseCharacterLogic character)
         {
             await character.ActivateCardAsync(Card.Id, null);
-            //return new Option
-            //{
-            //    Description = CardMessages.CARD_PLAYED,
-            //    RequireAnswear = false,
-            //    RequireCards = false,
-            //    PossibleTargets = null,
-            //    PossibleCards = null
-            //};
+            var option = new OptionViewModel
+            {
+                Description = CardMessages.GATLING_OPTION,
+                RequireAnswear = false,
+                RequireCards = false,
+                PossibleTargets = null,
+                PossibleCards = null,
+                NumberOfCards = 0
+            };
+
+            await character.ShowOptionAsync(option);
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)

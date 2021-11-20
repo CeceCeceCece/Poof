@@ -14,15 +14,23 @@ namespace Application.SignalR.ClientInterfaces
         public Task SetDeck(List<CardViewModel> cards);
         //Egy játékos felszerelt kártyáit állítja be
         public Task SetEquipedDeck(List<CardViewModel> cards);
-        //Egy játékos fegyverét állítja be, lehet null
-        public Task SetWeapon(string characterId, CardViewModel weapon);
         //A kijátszott kártyák paklijának tetején lévő kártyát állítja be
         public Task SetDiscardPile(CardViewModel card);
         //Megadja egy játéko életerejét, mindkinek szól és a megfelelő id-ju játékos életerejét átálítja mindenki.
+
+        //Group
+        public Task SetWeapon(string characterId, CardViewModel weapon); //lehet null
         public Task SetLifePoint(LifePointViewModel pointModel);
-        public Task CardDroped(CardIdViewModel card);
+        public Task CardsDroped(List<CardIdViewModel> card);
         public Task CardUnequiped(CardIdViewModel card);
         public Task CardEquiped(string characterId, CardViewModel card);
         public Task CardsAdded(List<CardIdViewModel> cards);
+        public Task ShowCard(CardViewModel card);
+        public Task SetGameEvent(GameEventViewModel gameEvent); // lehet null a kártya pl húzásnál.
+
+        //Client
+        public Task CardsReceieved(List<CardViewModel> cards);
+        public Task ShowOption(OptionViewModel option);
+
     }
 }

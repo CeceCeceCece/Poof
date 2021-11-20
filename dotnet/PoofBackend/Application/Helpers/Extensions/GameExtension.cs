@@ -2,12 +2,11 @@
 using Application.Exceptions;
 using Application.Models.DTOs;
 using Application.SignalR;
+using Application.ViewModels;
 using Domain.Constants.Enums;
-using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Entities 
@@ -52,15 +51,19 @@ namespace Domain.Entities
             return card;
         }
 
-        public static Task<bool> CheckNextCardAsync(this Game game, CardSuits suit, List<CardValues> values, PoofGameHub hub)
+        public static async Task<bool> CheckNextCardAsync(this Game game, CardSuits suit, List<CardValues> values, PoofGameHub hub)
         {
-            //TODO hub ertesítés hogy mit húztunk az adott eseményre.
             var firstCard = game.Deck.ElementAt(0);
             game.Deck.Remove(firstCard);
             game.DiscardPile.Add(firstCard);
+
+            //Értesítés hogy milyen kártyát húztunk. (pl, Dinamit vagy börtön)
+            if (hub is not null)
+                await hub.Clients.Group(game.Name).ShowCard(new CardViewModel(firstCard.Id, firstCard.Card.Name, firstCard.Card.Type, firstCard.Card.Suite, firstCard.Card.Value));
+
             if (firstCard.Card.Suite == suit && (values is null || values.Contains(firstCard.Card.Value)))
-                return Task.FromResult(true);
-            return Task.FromResult(false);
+                return true;
+            return false;
         }
 
         public static List<GameCard> GetAndRemoveCards(this Game game, int count)
@@ -80,30 +83,26 @@ namespace Domain.Entities
             await game.GetCurrentCharacter().Map(hub).CheckAnswearCardAsync(dto);
         }
 
-        public static Task SetSingleReactAsync(this Game game, GameCard card, string userId, PoofGameHub hub)
+        public static async Task SetSingleReactAsync(this Game game, GameCard card, string userId, PoofGameHub hub)
         {
-            //TODO: hub react
             game.Event = GameEvent.SingleReact;
             game.NextCard = card;
             game.NextUserId = userId;
-            return Task.CompletedTask;
+
+            //Értesíteni hogy válaszolni kell
+            if(hub is not null)
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, userId, card == null ? null : new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value)));
         }
 
-        public static Task CallerSingleReactAsync(this Game game, PoofGameHub hub)
+        public static async Task CallerSingleReactAsync(this Game game, PoofGameHub hub)
         {
-            //TODO: hub react
             game.Event = game.Event == GameEvent.CallerReact ? GameEvent.SingleReact : GameEvent.CallerReact;
-            return Task.CompletedTask;
+            //Értesíteni hogy válaszolni kell
+            if (hub is not null)
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, game.Event == GameEvent.CallerReact ? game.CurrentUserId : game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
         }
 
-        public static Task CallerSingleReactLostAsync(this Game game)
-        {
-            //TODO: hub react
-            game.Event = game.Event == GameEvent.CallerReact ? GameEvent.SingleReact : GameEvent.CallerReact;
-            return Task.CompletedTask;
-        }
-
-        public static Task SetAllReactAsync(this Game game, string currentUserId, PoofGameHub hub, GameCard card, bool currentStart = false)
+        public static async Task SetAllReactAsync(this Game game, string currentUserId, PoofGameHub hub, GameCard card, bool currentStart = false)
         {
             //hub
             if (currentStart) 
@@ -126,7 +125,10 @@ namespace Domain.Entities
             }
             game.Event = GameEvent.AllReact;
             game.NextCard = card;
-            return Task.CompletedTask;
+
+            //Értesíteni hogy válaszolni kell
+            if (hub is not null)
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
         }
 
         public static async Task AllReactNextAsync(this Game game, PoofGameHub hub)
@@ -149,10 +151,14 @@ namespace Domain.Entities
             else
             {
                 game.NextUserId = userId;
+
+                //Értesíteni hogy válaszolni kell
+                if (hub is not null)
+                    await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
             }
         }
 
-        public static Task EndReactionAsync(this Game game, PoofGameHub hub)
+        public static async Task EndReactionAsync(this Game game, PoofGameHub hub)
         {
             game.Event = GameEvent.None;
             game.NextUserId = null;
@@ -161,7 +167,10 @@ namespace Domain.Entities
                 game.DiscardPile.Add(game.NextCard);
                 game.NextCard = null;
             }
-            return Task.CompletedTask;
+
+            //Értesíteni hogy válaszolni kell
+            if (hub is not null)
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, null, null));
         }
 
         public static Character GetReactionCharacter(this Game game) => game.Event switch
@@ -216,6 +225,17 @@ namespace Domain.Entities
         public static List<string> GetAllPlayer(this Game game)
         {
             return game.Characters.Select(x => x.Id).ToList();
+        }
+
+        public static List<string> GetOtherCharacters(this Game game)
+        {
+            return game.Characters.Where(x => x.Id != game.CurrentUserId).Select(x => x.Id).ToList();
+        }
+
+        public static async Task ShowRactOptionAsync(this Game game, OptionViewModel option, PoofGameHub hub)
+        {
+            if(hub != null)
+                await hub.Clients.Client(game.GetReactionCharacter().ConnectionId).ShowOption(option);
         }
     }
 }

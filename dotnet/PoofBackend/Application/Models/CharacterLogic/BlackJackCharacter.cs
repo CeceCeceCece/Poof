@@ -19,13 +19,16 @@ namespace Application.Models.CharacterLogic
         public virtual async Task Draw(Game game)
         {
             var cards = Character.Game.GetAndRemoveCards(2);
-            if(cards.ElementAt(1).Card.Suite == CardSuits.Diamonds || cards.ElementAt(1).Card.Suite == CardSuits.Hearths) 
+            var second = cards.ElementAt(1);
+            if (second.Card.Suite == CardSuits.Diamonds || second.Card.Suite == CardSuits.Hearths) 
             {
                 cards.AddRange(Character.Game.GetAndRemoveCards(1));
-                //TODO: Megmutatni a második lapot.
             }
             await DrawAsync(cards);
             await Character.Game.EndReactionAsync(Hub);
+
+            if(Hub is not null)
+                await Hub.Clients.Group(Character.Game.Name).ShowCard(new CardViewModel(second.Id, second.Card.Name, second.Card.Type, second.Card.Suite, second.Card.Value));
         }
     }
 }

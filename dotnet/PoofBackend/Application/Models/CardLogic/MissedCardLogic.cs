@@ -18,23 +18,23 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Task OptionAsync(BaseCharacterLogic character)
-        {
-            return Task.CompletedTask;
-            //Semmi nem torténjen
-            //return new Option
-            //{
-            //    Description = CardMessages.KARTYA_NEM_KIJATSZATO,
-            //    RequireAnswear = false,
-            //    RequireCards = false,
-            //    PossibleTargets = null,
-            //    PossibleCards = null
-            //};
+        public override async Task OptionAsync(BaseCharacterLogic character)
+        {   
+            var option = new OptionViewModel
+            {
+                Description = CardMessages.MISSED_OPTION,
+                RequireAnswear = false,
+                RequireCards = false,
+                PossibleTargets = null,
+                PossibleCards = null
+            };
+            await character.ShowOptionAsync(option);
+
         }
 
         public override Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            throw new PoofException(CardMessages.KARTYA_NEM_KIJATSZATO);
+            throw new PoofException(CardMessages.MISSED_ERROR);
         }
     }
 }

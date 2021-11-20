@@ -20,6 +20,17 @@ namespace Application.Models.CardLogic
         public override async Task OptionAsync(BaseCharacterLogic character)
         {
             await character.ActivateCardAsync(Card.Id, null);
+
+            var option = new OptionViewModel
+            {
+                Description = CardMessages.WEAPONS_OPTION,
+                RequireAnswear = false,
+                RequireCards = false,
+                PossibleTargets = null,
+                PossibleCards = null
+            };
+
+            await character.ShowOptionAsync(option);
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)

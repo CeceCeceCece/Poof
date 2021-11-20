@@ -17,19 +17,19 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Task OptionAsync(BaseCharacterLogic character)
+        public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            return Task.CompletedTask;
-            //TODO: értasíteni hogy küldjön egy kártyát.
-            //return new Option
-            //{
-            //    Description = CardMessages.CHOOSE_ONE_CARD,
-            //    RequireAnswear = true,
-            //    RequireCards = true,
-            //    PossibleTargets = game.GetAllPlayer(),
-            //    PossibleCards = null,
-            //    NumberOfCards = 1
-            //};
+            var option =  new OptionViewModel
+            {
+                Description = CardMessages.CHOOSE_ONE_CARD,
+                RequireAnswear = true,
+                RequireCards = true,
+                PossibleTargets = character.Character.Game.GetOtherCharacters(),
+                PossibleCards = null,
+                NumberOfCards = 1
+            };
+
+            await character.ShowOptionAsync(option);
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)

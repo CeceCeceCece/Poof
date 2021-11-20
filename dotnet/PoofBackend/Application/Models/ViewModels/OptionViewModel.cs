@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.ViewModels
 {
-    public class Option
+    public class OptionViewModel
     {
         public string Description { get; set; }
         public List<string> PossibleTargets{ get; set; }

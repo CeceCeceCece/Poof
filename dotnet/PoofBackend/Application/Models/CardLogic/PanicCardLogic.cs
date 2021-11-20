@@ -17,10 +17,17 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Task OptionAsync(BaseCharacterLogic character)
+        public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            //Hub értesítani hogy kinek tudja elvenni a kártyáját.
-            return Task.CompletedTask;
+            var option = new OptionViewModel
+            {
+                Description = CardMessages.PANIC_OPTION,
+                RequireAnswear = true,
+                RequireCards = false,
+                PossibleTargets = character.GetNeighbours(),
+                PossibleCards = null
+            };
+            await character.ShowOptionAsync(option);
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)

@@ -19,17 +19,17 @@ namespace Application.Models.CardLogic
         {
         }
 
-        public override Task OptionAsync(BaseCharacterLogic character)
+        public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            return Task.CompletedTask;
-            //return new Option
-            //{
-            //    Description = CardMessages.CHOOSE_ONE_PLAYER,
-            //    RequireAnswear = true,
-            //    RequireCards = false,
-            //    PossibleTargets = game.GetAllPlayer(),
-            //    PossibleCards = null
-            //};
+            var option = new OptionViewModel
+            {
+                Description = CardMessages.DUEL_OPTION,
+                RequireAnswear = true,
+                RequireCards = false,
+                PossibleTargets = character.Character.Game.GetOtherCharacters(),
+                PossibleCards = null
+            };
+            await character.ShowOptionAsync(option);
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)

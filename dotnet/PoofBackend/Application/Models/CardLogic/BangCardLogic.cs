@@ -17,18 +17,17 @@ namespace Application.Models.CardLogic
     {
         public BangCardLogic(GameCard card) : base(card){}
 
-        public override Task OptionAsync(BaseCharacterLogic character)
+        public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            var option = new Option
+            var option = new OptionViewModel
             {
-                Description = CardMessages.CHOOSE_ONE_PLAYER,
+                Description = CardMessages.BANG_OPTION,
                 RequireAnswear = true,
                 RequireCards = false,
-                PossibleTargets = character.GetNeighbours(),
+                PossibleTargets = character.GetNeighboursWithWeapon(),
                 PossibleCards = null
             };
-            //TODO: hub
-            return Task.CompletedTask;
+            await character.ShowOptionAsync(option);
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
