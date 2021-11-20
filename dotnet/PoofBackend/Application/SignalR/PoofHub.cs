@@ -26,9 +26,6 @@ namespace Application.SignalR
         }
         public override async Task OnConnectedAsync()
         {
-            //var httpContext = Context.GetHttpContext();
-            //var gameName = httpContext.Request.Query["game"].ToString();
-            //await Groups.AddToGroupAsync(Context.ConnectionId, gameName);
             await base.OnConnectedAsync();
             await tracker.UserConnected(currentPlayerService.Player.Id, Context.ConnectionId);
         }
@@ -44,58 +41,28 @@ namespace Application.SignalR
         {
             var lobby = new Lobby(name, currentPlayerService.Player.Name);
             lobby.Connections.Add(new Connection(Context.ConnectionId, currentPlayerService.Player.Name, currentPlayerService.Player.Id));
-            await lobbyService.CreateLobby(lobby);
-
-            var lobbyModel = new LobbyViewModel(lobby.Name, lobby.Vezeto);
-            lobbyModel.Users.Add(new UserViewModel(currentPlayerService.Player.Id, currentPlayerService.Player.Name));
-            await Clients.All.LobbyCreated(lobbyModel);
+            await lobbyService.CreateLobbyAsync(lobby, this);
         }
 
         public async Task JoinLobby(string name) 
         {
-            await lobbyService.AddConnection(name, new Connection(Context.ConnectionId, currentPlayerService.Player.Name, currentPlayerService.Player.Id));
-            await Clients.Groups(name).UserEntered(new UserViewModel(currentPlayerService.Player.Id, currentPlayerService.Player.Name));
-            await Groups.AddToGroupAsync(Context.ConnectionId, name);
-
-            var lobby = await lobbyService.GetLobby(name);
-            await Clients.Caller.SetUsers(lobby.Connections.Select(x => new UserViewModel(x.UserId, x.Username)).ToList());
-            await Clients.Caller.SetMessages(lobby.Messages.Select(x => new MessageViewModel(x.Kuldo, x.Tartalom, x.Datum)).ToList());
+            await lobbyService.AddConnectionAsync(name, new Connection(Context.ConnectionId, currentPlayerService.Player.Name, currentPlayerService.Player.Id), this);
         }
 
         public async Task DisconnectLobby()
         {
-            var lobby = await lobbyService.RemoveConnection(Context.ConnectionId);
-
-            if(currentPlayerService.Player.Name == lobby.Vezeto) 
-            {
-                await Clients.All.LobbyDeleted(lobby.Name);
-                foreach(var conncetion in lobby.Connections) 
-                {
-                    await Groups.RemoveFromGroupAsync(conncetion.ConnectionId, lobby.Name);
-                }
-            }
-            else 
-            {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, lobby.Name);
-                await Clients.Group(lobby.Name).UserLeft(currentPlayerService.Player.Id);
-            }
+            await lobbyService.RemoveConnectionAsync(currentPlayerService.Player.Id, this);
         }
 
         public async Task SendMessage(string message, string name) 
         {
             var messageInstance = new Message(Guid.NewGuid().ToString(), currentPlayerService.Player.Name, message, DateTime.Now);
-            await lobbyService.SendMessage(name, Context.ConnectionId, messageInstance);
-            await Clients.Groups(name).RecieveMessage(new MessageViewModel(currentPlayerService.Player.Name, message, messageInstance.Datum));
+            await lobbyService.SendMessageAsync(name, currentPlayerService.Player.Id, messageInstance, this);
         }
 
         public async Task DeleteLobby(string name) 
         {
-            var lobby = await lobbyService.DeleteLobby(name, currentPlayerService.Player.Name);
-            await Clients.All.LobbyDeleted(lobby.Name);
-            foreach (var conncetion in lobby.Connections)
-            {
-                await Groups.RemoveFromGroupAsync(conncetion.ConnectionId, lobby.Name);
-            }
+            await lobbyService.DeleteLobbyAsync(name, currentPlayerService.Player.Name, this);
         }
     }
 }

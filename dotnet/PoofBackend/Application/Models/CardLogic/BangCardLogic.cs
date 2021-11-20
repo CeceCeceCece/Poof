@@ -24,10 +24,11 @@ namespace Application.Models.CardLogic
                 Description = CardMessages.BANG_OPTION,
                 RequireAnswear = true,
                 RequireCards = false,
-                PossibleTargets = character.GetNeighboursWithWeapon(),
+                PossibleTargets = character.GetNeighbours(),
                 PossibleCards = null
             };
             await character.ShowOptionAsync(option);
+            //TODO megcsinálni a levonást és az optionst
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)

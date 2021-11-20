@@ -155,7 +155,6 @@ namespace Application.Models.CharacterLogic
 
         public virtual async Task DropCardAsync(string cardId) 
         {
-            //TODO: hub értesítés a kártya eldobásról.
             var deckCard = Character.Deck.SingleOrDefault(x => x.Id == cardId);
             var game = Character.Game;
             if(deckCard is not null) 
