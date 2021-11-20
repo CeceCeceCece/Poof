@@ -1,6 +1,7 @@
 ﻿using Application.Services;
 using Domain;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,5 +94,59 @@ namespace UnitTests.ServiceTests
             Assert.Equal("Hello", message.Tartalom);
         }
 
+        [Fact]
+        public async Task RemoveConnectionAsyncTest()
+        {
+            //Arrange
+            var context = new ConnectionFactory().CreateContextForSQLite();
+
+            var service = new LobbyService(context);
+
+            //Act
+            await service.CreateLobbyAsync(new Lobby
+            {
+                Name = "Test",
+                Vezeto = "TestUserId",
+                Connections = new List<Connection> { new Connection("testId", "testName", "testUserId") }
+            }, null);
+
+            await service.RemoveConnectionAsync("testUserId", null);
+
+            var lobby = await service.GetLobbyAsync("Test");
+
+            var connections = await context.Connections.ToListAsync();
+            //Result
+            Assert.Empty(lobby.Connections);
+            Assert.Empty(connections);
+        }
+
+        [Fact]
+        public async Task DeletLobbyAsyncTest()
+        {
+            //Arrange
+            var context = new ConnectionFactory().CreateContextForSQLite();
+
+            var service = new LobbyService(context);
+
+            //Act
+            await service.CreateLobbyAsync(new Lobby
+            {
+                Name = "Test",
+                Vezeto = "TestUserId",
+                Connections = new List<Connection> { new Connection("testId", "testName", "testUserId") },
+                Messages = new List<Message> { new Message("id", "kuldo", "hello", DateTime.Now) }
+            }, null);
+
+            await service.DeleteLobbyAsync("Test", "TestUserId", null);
+
+            var lobbys = await context.Lobbies.ToListAsync();
+            var connections = await context.Connections.ToListAsync();
+            var messages = await context.Messages.ToListAsync();
+
+            //Result
+            Assert.Empty(lobbys);
+            Assert.Empty(connections);
+            Assert.Empty(messages);
+        }
     }
 }
