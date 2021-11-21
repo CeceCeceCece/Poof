@@ -16,5 +16,6 @@ namespace Application.SignalR.ClientInterfaces
         public Task UserEntered(UserViewModel user);
         public Task UserLeft(string userId);
         public Task RecieveMessage(MessageViewModel message);
+        public Task GameCreated(string gameId);
     }
 }

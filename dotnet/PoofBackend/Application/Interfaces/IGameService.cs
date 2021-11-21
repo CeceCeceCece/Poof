@@ -1,4 +1,5 @@
 ﻿using Application.Models;
+using Application.SignalR;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Application.Interfaces
 {
     public interface IGameService
     {
-        public Task CreateGame(Lobby lobby, CancellationToken cancellationToken);
+        public Task CreateGameAsync(string lobbyName, PoofHub lobbyHub, CancellationToken cancellationToken);
         public Task<Game> GetGameAsync(string groupId, CancellationToken cancellationToken);
         public Task<Game> RemoveGame(string groupId, CancellationToken cancellationToken);
     }

@@ -41,7 +41,7 @@ namespace Application.Models.CardLogic
 
         public override async Task OnActiveAsync(BaseCharacterLogic character)
         {
-            if(character.Character.Game.NextCard.Name == "Bang!" && await character.Character.Game.CheckNextCardAsync(CardSuits.Hearths, null, character.Hub)) 
+            if(character.Character.Game.NextCard.Card.Name == "Bang!" && await character.Character.Game.CheckNextCardAsync(CardSuits.Hearths, null, character.Hub)) 
             {
                 await character.Character.Game.EndReactionAsync(character.Hub);
             }

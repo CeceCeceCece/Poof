@@ -27,6 +27,7 @@ namespace Application.SignalR.ClientInterfaces
         public Task CardsAdded(List<CardIdViewModel> cards);
         public Task ShowCard(CardViewModel card);
         public Task SetGameEvent(GameEventViewModel gameEvent); // lehet null a kártya pl húzásnál.
+        public Task MessageReceieved(MessageViewModel message);
 
         //Client
         public Task CardsReceieved(List<CardViewModel> cards);

@@ -9,8 +9,8 @@ namespace Domain.ApplicationViewModel
     public class CardOption
     {
         public string Description { get; set; }
-        public List<string>? PossibleTargets { get; set; }
-        public List<ApplicationCardViewModel>? PossibleCards { get; set; }
+        public List<string> PossibleTargets { get; set; }
+        public List<ApplicationCardViewModel> PossibleCards { get; set; }
         public bool? RequireCards { get; set; }
         public bool? RequireAnswear { get; set; }
     }

@@ -25,8 +25,7 @@ namespace UnitTests
                 Messages = new List<Message>(),
                 Name = name,
                 NextCard = null,
-                NextUserId = null,
-                Password = ""
+                NextUserId = null
             };
 
             game.Characters.AddRange(new List<Character>
@@ -59,7 +58,7 @@ namespace UnitTests
                 EquipedCards = new List<GameCard>(),
                 LifePoint = 4,
                 MaxLifePoint = 4,
-                Role = new RoleCard
+                PersonalCard = new CharacterCard
                 {
                     Id = Guid.NewGuid().ToString(),
                     LifePoint = 4,
@@ -80,8 +79,7 @@ namespace UnitTests
                 Suite = suit,
                 Type = type,
                 Value = value
-            },
-            name
+            }
             );
         }
     }

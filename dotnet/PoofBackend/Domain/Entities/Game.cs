@@ -11,8 +11,8 @@ namespace Domain.Entities
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Password { get; set; }
         public GameEvent Event { get; set; }
+        public WinType Win { get; set; }
         public string CurrentUserId { get; set; }
         public string NextUserId { get; set; }
         public GameCard NextCard { get; set; }

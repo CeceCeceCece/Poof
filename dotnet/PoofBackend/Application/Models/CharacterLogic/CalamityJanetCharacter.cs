@@ -20,7 +20,7 @@ namespace Application.Models.CharacterLogic
         public override async Task CardOptionAsync(string cardId)
         {
             var card = Character.Deck.SingleOrDefault(x => x.Id == cardId) ?? throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
-            if(card.Name == "Missed!") 
+            if(card.Card.Name == "Missed!") 
             {
                 await new BangCardLogic(card).OptionAsync(this);
             }
@@ -35,7 +35,7 @@ namespace Application.Models.CharacterLogic
             var card = Character.Deck.SingleOrDefault(x => x.Id == cardId);
             if (card is null)
                 throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
-            if(card.Name == "Missed!") 
+            if(card.Card.Name == "Missed!") 
             {
                 await new BangCardLogic(card).ActivateAsync(this, option);
             }
@@ -49,7 +49,7 @@ namespace Application.Models.CharacterLogic
         {
             var card = Character.Deck.SingleOrDefault(x => x.Id == dto.CardIds.First()); 
 
-            if (Character.Game.NextCard.Name == "Indians!") 
+            if (Character.Game.NextCard.Card.Name == "Indians!") 
             {
             
             }
@@ -58,7 +58,7 @@ namespace Application.Models.CharacterLogic
 
         public override async Task CheckAnswearCardAsync(OptionDto dto)
         {
-            if (Character.Game.NextCard != null && Character.Game.NextCard.Name == "Missed!")
+            if (Character.Game.NextCard != null && Character.Game.NextCard.Card.Name == "Missed!")
             {
                 await new BangCardLogic(Character.Game.NextCard).AnswearAsync(this, dto);
             }

@@ -104,7 +104,6 @@ namespace Domain.Entities
 
         public static async Task SetAllReactAsync(this Game game, string currentUserId, PoofGameHub hub, GameCard card, bool currentStart = false)
         {
-            //hub
             if (currentStart) 
             {
                 game.NextUserId = currentUserId;
@@ -236,6 +235,12 @@ namespace Domain.Entities
         {
             if(hub != null)
                 await hub.Clients.Client(game.GetReactionCharacter().ConnectionId).ShowOption(option);
+        }
+
+        public static async Task CheckWinAsync(this Game game) 
+        {
+            var winLogic = game.Win.GetWinLogic();
+            await winLogic.CheckWinAsync(game);
         }
     }
 }
