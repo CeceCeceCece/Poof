@@ -6,6 +6,7 @@ import 'package:bang/cards/model/non_playable_cards/role_card.dart';
 import 'package:bang/cards/widgets/bang_card_widget.dart';
 import 'package:bang/cards/widgets/card_widget_helpers.dart';
 import 'package:bang/cards/widgets/non_playable_card_widget.dart';
+import 'package:bang/core/colors.dart';
 import 'package:bang/pages/game/widgets/hand_of_cards.dart';
 import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
@@ -46,10 +47,10 @@ class PlayerView extends StatelessWidget {
                                             (card) => Padding(
                                               padding: EdgeInsets.only(
                                                   left: 3, right: 3),
-                                              child: Transform.rotate(
-                                                angle: (pi / 180) *
-                                                    (random.nextInt(7) - 3),
-                                                child: Positioned(
+                                              child: Positioned(
+                                                child: Transform.rotate(
+                                                  angle: (pi / 180) *
+                                                      (random.nextInt(7) - 3),
                                                   child: BangCardWidget(
                                                     card: card,
                                                     scale: 0.55,
@@ -67,10 +68,10 @@ class PlayerView extends StatelessWidget {
                                             (card) => Padding(
                                               padding: EdgeInsets.only(
                                                   left: 3, right: 3),
-                                              child: Transform.rotate(
-                                                angle: (pi / 180) *
-                                                    (random.nextInt(7) - 3),
-                                                child: Positioned(
+                                              child: Positioned(
+                                                child: Transform.rotate(
+                                                  angle: (pi / 180) *
+                                                      (random.nextInt(7) - 3),
                                                   child: BangCardWidget(
                                                     card: card,
                                                     scale: 0.55,
@@ -90,7 +91,7 @@ class PlayerView extends StatelessWidget {
                     : Container())
                 : Container(),
             Container(
-              color: Colors.red,
+              // ! color: Colors.red,
               height: service.expandedHandView()
                   ? 350
                   : (service.expandedEquipmentView() ? 150 : 310),
@@ -143,37 +144,47 @@ class PlayerView extends StatelessWidget {
                                     ),
                                   ),
                                   Positioned(
-                                      bottom: 15,
-                                      left: 10,
-                                      child: Material(
-                                        shape: CircleBorder(),
-                                        color: Colors.brown,
+                                    bottom: 15,
+                                    left: 10,
+                                    child: Material(
                                         elevation: 20,
-                                        child: Center(
-                                          child: AnimatedIconButton(
-                                              size: 18,
-                                              duration:
-                                                  Duration(milliseconds: 400),
-                                              onPressed: () => service
-                                                      .expandedEquipmentView
-                                                      .value =
-                                                  !service
-                                                      .expandedEquipmentView(),
-                                              icons: [
-                                                AnimatedIconItem(
-                                                    icon: Icon(
-                                                  Icons.arrow_upward,
-                                                  size: 20,
-                                                  color: Colors.white,
-                                                )),
-                                                AnimatedIconItem(
-                                                    icon: Icon(
-                                                        Icons.arrow_downward,
-                                                        size: 20,
-                                                        color: Colors.white)),
-                                              ]),
-                                        ),
-                                      )),
+                                        shape: CircleBorder(),
+                                        color: Colors.transparent,
+                                        child: Ink(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 1,
+                                                  color: BangColors.darkBrown),
+                                              gradient:
+                                                  BangColors.buttonGradient,
+                                              borderRadius:
+                                                  BorderRadius.circular(200)),
+                                          child: Center(
+                                            child: AnimatedIconButton(
+                                                size: 18,
+                                                duration:
+                                                    Duration(milliseconds: 400),
+                                                onPressed: () => service
+                                                        .expandedEquipmentView
+                                                        .value =
+                                                    !service
+                                                        .expandedEquipmentView(),
+                                                icons: [
+                                                  AnimatedIconItem(
+                                                      icon: Icon(
+                                                    Icons.arrow_upward,
+                                                    size: 20,
+                                                    color: Colors.white,
+                                                  )),
+                                                  AnimatedIconItem(
+                                                      icon: Icon(
+                                                          Icons.arrow_downward,
+                                                          size: 20,
+                                                          color: Colors.white)),
+                                                ]),
+                                          ),
+                                        )),
+                                  )
                                 ]),
                       //)),
                     ),
@@ -247,30 +258,40 @@ class PlayerView extends StatelessWidget {
                                 bottom: 15,
                                 left: 10,
                                 child: Material(
-                                  shape: CircleBorder(),
-                                  color: Colors.brown,
                                   elevation: 20,
-                                  child: Center(
-                                    child: AnimatedIconButton(
-                                        size: 18,
-                                        duration: Duration(milliseconds: 400),
-                                        onPressed: () => service
-                                                .expandedEquipmentView.value =
-                                            !service.expandedEquipmentView(),
-                                        icons: [
-                                          AnimatedIconItem(
-                                              icon: Icon(
-                                            Icons.arrow_upward,
-                                            size: 20,
-                                            color: Colors.white,
-                                          )),
-                                          AnimatedIconItem(
-                                              icon: Icon(Icons.arrow_downward,
-                                                  size: 20,
-                                                  color: Colors.white)),
-                                        ]),
+                                  shape: CircleBorder(),
+                                  color: Colors.transparent,
+                                  child: Ink(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1,
+                                            color: BangColors.darkBrown),
+                                        gradient: BangColors.buttonGradient,
+                                        borderRadius:
+                                            BorderRadius.circular(200)),
+                                    child: Center(
+                                      child: AnimatedIconButton(
+                                          size: 18,
+                                          duration: Duration(milliseconds: 400),
+                                          onPressed: () => service
+                                                  .expandedEquipmentView.value =
+                                              !service.expandedEquipmentView(),
+                                          icons: [
+                                            AnimatedIconItem(
+                                                icon: Icon(
+                                              Icons.arrow_upward,
+                                              size: 20,
+                                              color: Colors.white,
+                                            )),
+                                            AnimatedIconItem(
+                                                icon: Icon(Icons.arrow_downward,
+                                                    size: 20,
+                                                    color: Colors.white)),
+                                          ]),
+                                    ),
                                   ),
-                                ))
+                                ),
+                              )
                             : Container(),
                       ],
                     ),

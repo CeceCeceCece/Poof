@@ -1,4 +1,5 @@
 import 'package:bang/cards/widgets/button.dart';
+import 'package:bang/core/colors.dart';
 import 'package:bang/core/constants.dart';
 import 'package:bang/pages/lobby/lobby_controller.dart';
 import 'package:flutter/material.dart';
@@ -115,18 +116,68 @@ class LobbyView extends GetView<LobbyController> {
                             ),
                           ),
                     Spacer(),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: BangButton(
-                          width: 90,
-                          height: 40,
-                          onPressed: controller.back,
-                          text: 'Kilépés',
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 12, 12, 12),
+                          child: Material(
+                            elevation: 20,
+                            shape: CircleBorder(),
+                            color: Colors.transparent,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 1, color: BangColors.darkBrown),
+                                  gradient: BangColors.buttonGradient,
+                                  borderRadius: BorderRadius.circular(200)),
+                              child: IconButton(
+                                onPressed: () {
+                                  Get.bottomSheet(
+                                    Container(
+                                        height: 200,
+                                        child: Column(
+                                          children: [
+                                            Text('Hii 1', textScaleFactor: 2),
+                                            Text('Hii 2', textScaleFactor: 2),
+                                            Text('Hii 3', textScaleFactor: 2),
+                                            Text('Hii 4', textScaleFactor: 2),
+                                          ],
+                                        )),
+                                    barrierColor: Colors.transparent,
+                                    isDismissible: true,
+                                    backgroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(35),
+                                      /*side: BorderSide(
+                                            width: 1, color: Colors.black)*/
+                                    ),
+                                    enableDrag: true,
+                                    enterBottomSheetDuration:
+                                        Duration(milliseconds: 300),
+                                    exitBottomSheetDuration:
+                                        Duration(milliseconds: 300),
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.chat,
+                                  color: BangColors.background,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: BangButton(
+                            width: 90,
+                            height: 40,
+                            onPressed: controller.back,
+                            text: 'Kilépés',
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
