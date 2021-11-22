@@ -26,32 +26,36 @@ class GameView extends GetView<GameController> {
               fit: BoxFit.fitHeight)),
       child: WillPopScope(
         onWillPop: controller.showBackPopupForResult,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Center(
-            child: Obx(
-              () => Stack(
-                alignment: Alignment.center,
-                fit: StackFit.passthrough,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Spacer(),
-                      Positioned(
-                        child: BangCardWidget(
-                          card: EquipmentCard(
-                              background: 'barrel',
-                              name: 'barrel',
-                              value: Bang.Value.Ten,
-                              type: Bang.CardType.Equipment,
-                              suit: Bang.Suit.Diamonds),
-                          canBeFocused: true,
-                          scale: 0.8,
-                        ),
+        child: SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Center(
+              child: Obx(
+                () => Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    /*Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Spacer(),*/
+                    Positioned(
+                      right: MediaQuery.of(context).size.width / 2 + 5,
+                      child: BangCardWidget(
+                        card: EquipmentCard(
+                            background: 'barrel',
+                            name: 'barrel',
+                            value: Bang.Value.Ten,
+                            type: Bang.CardType.Equipment,
+                            suit: Bang.Suit.Diamonds),
+                        canBeFocused: true,
+                        scale: 0.8,
                       ),
-                      SizedBox(width: 10, height: 180),
-                      BangCardWidget(
+                    ),
+                    //SizedBox(width: 10, height: 180),
+                    Positioned(
+                      left: MediaQuery.of(context).size.width / 2 + 5,
+                      child: BangCardWidget(
                         card: EquipmentCard(
                             background: 'barrel',
                             name: 'barrel',
@@ -62,11 +66,13 @@ class GameView extends GetView<GameController> {
                         canBeFocused: false,
                         scale: 0.65,
                       ),
-                      Spacer()
-                    ],
-                  ),
-                  ..._buildLayout(height, width),
-                ],
+                    ),
+                    /*Spacer()
+                      ],
+                    ),*/
+                    ..._buildLayout(height, width),
+                  ],
+                ),
               ),
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -11,8 +12,10 @@ class LobbyController extends GetxController {
 
   var playerIsLobbyAdmin = true.obs;
   @override
-  void onInit() {
+  void onInit() async {
     refreshUI();
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: []);
     super.onInit();
   }
 

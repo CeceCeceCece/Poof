@@ -5,8 +5,10 @@ import 'package:bang/core/constants.dart';
 import 'package:bang/pages/home/home_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeView extends GetView<HomeController> {
   final _formKey = GlobalKey<FormState>();
@@ -20,10 +22,10 @@ class HomeView extends GetView<HomeController> {
               ),
               fit: BoxFit.fitHeight)),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: Center(
           child: Column(
-            //mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Stack(
                 alignment: Alignment.topCenter,
@@ -51,14 +53,6 @@ class HomeView extends GetView<HomeController> {
                             width: 5,
                           ),
                           IconButton(
-                              onPressed: () => Get.toNamed(Routes.PROFILE),
-                              icon: FaIcon(FontAwesomeIcons.userCircle),
-                              iconSize: 28,
-                              color: BangColors.background),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          IconButton(
                               onPressed: () => controller.logout(),
                               icon: FaIcon(FontAwesomeIcons.signOutAlt),
                               iconSize: 28,
@@ -67,12 +61,28 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
                   ),
+                  Positioned(
+                    top: 235,
+                    child: Text(
+                      'Van lövésed, kivel vagy?',
+                      style: GoogleFonts.graduate(
+                        textStyle: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff4E3B42),
+                        ),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
                 ],
               ),
+              SizedBox(
+                height: 25,
+              ),
               BangButton(
-                //onPressed: () => controller.joinRoom('randomID'),
                 onPressed: () async {
-                  var textController = TextEditingController(text: '123456');
+                  var textController = TextEditingController();
                   var content = Form(
                     key: _formKey,
                     child: BangInputField(
@@ -80,23 +90,17 @@ class HomeView extends GetView<HomeController> {
                       onSubmit: () {
                         if (_formKey.currentState!.validate())
                           Get.back(result: textController.text);
-                        /*else
-                          Fluttertoast.showToast(
-                              msg: 'Nem megfelelő szoba kód!',
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1);*/
                       },
-                      hint: 'Szobakód',
+                      hint: 'Szobanév',
                       validator: (code) {
-                        if (code?.length != 6)
-                          return 'Nem megfelelő hosszú a kód';
+                        if (code == null || code.length == 0)
+                          return 'Nem lehet ilyen szobanév!';
                       },
                       controller: textController,
                     ),
                   );
                   controller.roomCodeToJoin = (await Get.defaultDialog<String>(
-                          title: 'Írd be a kódot!',
+                          title: 'Írd be a szoba nevét!',
                           content: content,
                           cancel: BangButton(
                             text: 'Mégse',
@@ -112,12 +116,6 @@ class HomeView extends GetView<HomeController> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate())
                                   Get.back(result: textController.text);
-                                /*else
-                                  Fluttertoast.showToast(
-                                      msg: 'Nem megfelelő hosszú a kód',
-                                      toastLength: Toast.LENGTH_LONG,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1);*/
                               }),
                           onCancel: Get.back,
                           onWillPop: () async {
@@ -127,17 +125,10 @@ class HomeView extends GetView<HomeController> {
                           onConfirm: () {
                             if (_formKey.currentState!.validate())
                               Get.back(result: textController.text);
-                            /*else
-                              Fluttertoast.showToast(
-                                  msg: 'Nem megfelelő hosszú a kód',
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1);*/
                           }))
                       .obs;
                   controller.joinRoom();
                 },
-
                 text: 'Csatlakozás kóddal',
               ),
               SizedBox(height: 10),
@@ -145,60 +136,71 @@ class HomeView extends GetView<HomeController> {
                 onPressed: controller.readQR,
                 text: 'QR beolvasás',
               ),
-              SizedBox(height: 25),
+              Spacer(),
               BangButton(
-                onPressed: controller.createGame,
+                onPressed: () async {
+                  var textController = TextEditingController();
+                  var content = Form(
+                    key: _formKey,
+                    child: BangInputField(
+                      autofocus: true,
+                      onSubmit: () {
+                        if (_formKey.currentState!.validate())
+                          Get.back(result: textController.text);
+                      },
+                      hint: 'Szobakód',
+                      validator: (code) {
+                        if (code == null || code.length == 0)
+                          return 'Nem lehet ilyen név!';
+                      },
+                      controller: textController,
+                    ),
+                  );
+                  var lobbyName = await Get.defaultDialog<String>(
+                      title: 'Adj nevet a szobának!',
+                      content: content,
+                      cancel: BangButton(
+                        text: 'Mégse',
+                        isNormal: false,
+                        onPressed: Get.back,
+                        height: 35,
+                        width: 60,
+                      ),
+                      confirm: BangButton(
+                          text: 'Ok',
+                          height: 35,
+                          width: 60,
+                          onPressed: () {
+                            if (_formKey.currentState!.validate())
+                              Get.back(result: textController.text);
+                          }),
+                      onCancel: Get.back,
+                      onWillPop: () async {
+                        Get.back();
+                        return false;
+                      },
+                      onConfirm: () {
+                        if (_formKey.currentState!.validate())
+                          Get.back(result: textController.text);
+                      });
+                  controller.createGame(lobbyName);
+                },
                 text: 'Szoba létrehozása',
               ),
-
-              /*IconButton(
-                          // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
-                          icon: FaIcon(FontAwesomeIcons.gamepad),
-                          onPressed: () {
-                            print("Pressed");
-                          }),
-                      AnimatedIconButton(
-                        onPressed: () => print('all icons pressed'),
-                        icons: [
-                          AnimatedIconItem(
-                            icon: Icon(Icons.mic_off),
-                            onPressed: () => print('add pressed'),
-                          ),
-                          AnimatedIconItem(
-                            icon: Icon(Icons.mic),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 250.0,
-                        child: DefaultTextStyle(
-                          style: const TextStyle(
-                            fontSize: 35,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 7.0,
-                                color: Colors.white,
-                                offset: Offset(0, 0),
-                              ),
-                            ],
-                          ),
-                          child: AnimatedTextKit(
-                            repeatForever: true,
-                            animatedTexts: [
-                              FlickerAnimatedText('Flicker Frenzy',
-                                  textStyle: TextStyle(color: Colors.amber)),
-                              FlickerAnimatedText('Night Vibes On',
-                                  textStyle: TextStyle(color: Colors.amber)),
-                              FlickerAnimatedText("C'est La Vie !",
-                                  textStyle: TextStyle(color: Colors.amber)),
-                            ],
-                            onTap: () {
-                              print("Tap Event");
-                            },
-                          ),
-                        ),
-                      )*/
+              Spacer(),
+              Spacer(),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: BangButton(
+                    width: 90,
+                    height: 40,
+                    onPressed: () => SystemNavigator.pop(animated: true),
+                    text: 'Kilépés',
+                  ),
+                ),
+              ),
             ],
           ),
         ),

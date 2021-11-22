@@ -49,6 +49,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       getPages: Pages.routes,
       initialRoute: Pages.initial,
       theme: ThemeData(
+        primarySwatch: Colors.brown,
         primaryColor: BangColors.buttonGradientColors.first,
         backgroundColor: BangColors.background,
         elevatedButtonTheme: ElevatedButtonThemeData(

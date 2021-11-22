@@ -148,11 +148,13 @@ class LoginView extends GetView<LoginController> {
     );
 
     var usernameField = BangInputField(
-      controller: controller.usernameC,
-      hint: 'Felhasználónév',
-      nextNode: passwordField.focusNode,
-      onSubmit: () => passwordField.focusNode.nextFocus(),
-    );
+        controller: controller.usernameC,
+        hint: 'Felhasználónév',
+        nextNode: passwordField.focusNode,
+        onSubmit: () {
+          //FocusScope.of(context).unfocus();
+          passwordField.focusNode.nextFocus();
+        });
 
     return Column(children: [
       Container(

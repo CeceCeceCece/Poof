@@ -25,8 +25,8 @@ class GameController extends GetxController {
       confirm: BangButton(
         text: 'Értem, kilépek!',
         onPressed: _exit,
-        height: 35,
-        width: 105,
+        height: 40,
+        width: 150,
         isNormal: false,
       ),
       content: Text(

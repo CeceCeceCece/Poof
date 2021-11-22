@@ -45,7 +45,7 @@ class HomeController extends GetxController {
           isNormal: false,
           onPressed: () {
             controller?.dispose();
-            Get.back();
+
             log('contoller disposed');
           },
         ),
@@ -75,18 +75,14 @@ class HomeController extends GetxController {
     Get.back();
     controller?.dispose();
     joinRoom(qrValue);
-    Fluttertoast.showToast(
-        msg: "Joining to room with code: $qrValue",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    Fluttertoast.showToast(msg: 'Csatlakozás a "$qrValue" szobához');
   }
 
-  void createGame() {
-    Get.put(GameService());
+  void createGame(String? lobbyName) {
+    if (lobbyName == null) return;
+    var gameService = Get.put(GameService());
     Get.toNamed(Routes.LOBBY);
+    gameService.roomId = lobbyName.obs;
+    AudioService.playBackgroundMusic();
   }
 }
