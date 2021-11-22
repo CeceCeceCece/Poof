@@ -27,13 +27,9 @@ class LobbyView extends GetView<LobbyController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Spacer(),
-                  Text('LOBBY: ${controller.roomID}'),
-                  Text('PLAYERS: ${controller.playerList().length}/7'),
+                  Text('Szoba kód: ${controller.roomID}'),
+                  Text('Játékosok: ${controller.playerList().length}/7'),
                   SizedBox(height: 50),
-                  BangButton(
-                    text: 'Enter game',
-                    onPressed: controller.join,
-                  ),
                   Container(
                     padding: EdgeInsets.only(top: 20),
                     height: 7 * 50,
@@ -42,24 +38,29 @@ class LobbyView extends GetView<LobbyController> {
                       physics: NeverScrollableScrollPhysics(),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  BangButton(
+                    text: 'Játék indítása',
+                    onPressed: controller.join,
+                  ),
+                  SizedBox(height: 40),
                   BangButton(
                     onPressed: controller.showQR,
-                    text: 'Show QR code!',
+                    text: 'QR kód mutatása',
                   ),
                   SizedBox(height: 20),
-                  BangButton(
+
+                  /*BangButton(
                     text: 'Add players',
                     onPressed: () => controller.addPlayers(['players']),
-                  ),
+                  ),*/
                   Expanded(
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: BangButton(
-                          width: 70,
-                          height: 40,
+                          width: 90,
+                          height: 50,
                           onPressed: controller.back,
                           text: 'Kilépés',
                         ),

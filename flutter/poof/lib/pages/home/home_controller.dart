@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/game_service.dart';
@@ -32,10 +33,22 @@ class HomeController extends GetxController {
 
   void readQR() {
     Get.defaultDialog(
+        title: 'Olvasd be a kódot!',
         onCancel: () {
           controller?.dispose();
           log('contoller disposed');
         },
+        cancel: BangButton(
+          text: 'Vissza',
+          height: 50,
+          width: 90,
+          isNormal: false,
+          onPressed: () {
+            controller?.dispose();
+            Get.back();
+            log('contoller disposed');
+          },
+        ),
         onWillPop: () async {
           controller?.dispose();
           Get.back();

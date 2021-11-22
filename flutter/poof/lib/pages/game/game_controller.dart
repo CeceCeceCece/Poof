@@ -5,7 +5,6 @@ import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/core/constants.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:signalr_core/signalr_core.dart';
 
@@ -47,8 +46,6 @@ class GameController extends GetxController {
   @override
   void onInit() async {
     //initWebsocket();
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: []);
     super.onInit();
   }
 

@@ -12,7 +12,7 @@ void main() async {
   await AppServices.initAudio();
   AppServices.init();
   await GetStorage.init();
-  _setScreenProperties();
+  await _setScreenProperties();
   await Future.delayed(Duration(milliseconds: 500));
   runApp(App());
 }
@@ -20,12 +20,8 @@ void main() async {
 Future<void> _setScreenProperties() async {
   Wakelock.enable();
 
-  /* SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemStatusBarContrastEnforced: false,
-      statusBarColor: Colors.transparent));*/
-
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+      overlays: []);
 }

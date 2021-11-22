@@ -5,7 +5,6 @@ import 'package:bang/core/constants.dart';
 import 'package:bang/pages/home/home_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
@@ -81,14 +80,14 @@ class HomeView extends GetView<HomeController> {
                       onSubmit: () {
                         if (_formKey.currentState!.validate())
                           Get.back(result: textController.text);
-                        else
+                        /*else
                           Fluttertoast.showToast(
-                              msg: 'Invalid format of lobby code!',
+                              msg: 'Nem megfelelő szoba kód!',
                               toastLength: Toast.LENGTH_LONG,
                               gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1);
+                              timeInSecForIosWeb: 1);*/
                       },
-                      hint: 'Lobby code',
+                      hint: 'Szobakód',
                       validator: (code) {
                         if (code?.length != 6)
                           return 'Nem megfelelő hosszú a kód';
@@ -97,7 +96,7 @@ class HomeView extends GetView<HomeController> {
                     ),
                   );
                   controller.roomCodeToJoin = (await Get.defaultDialog<String>(
-                          title: 'Enter lobby code:',
+                          title: 'Írd be a kódot!',
                           content: content,
                           cancel: BangButton(
                             text: 'Mégse',
@@ -113,12 +112,12 @@ class HomeView extends GetView<HomeController> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate())
                                   Get.back(result: textController.text);
-                                else
+                                /*else
                                   Fluttertoast.showToast(
-                                      msg: 'Invalid format of lobby code!',
+                                      msg: 'Nem megfelelő hosszú a kód',
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1);
+                                      timeInSecForIosWeb: 1);*/
                               }),
                           onCancel: Get.back,
                           onWillPop: () async {
@@ -128,28 +127,28 @@ class HomeView extends GetView<HomeController> {
                           onConfirm: () {
                             if (_formKey.currentState!.validate())
                               Get.back(result: textController.text);
-                            else
+                            /*else
                               Fluttertoast.showToast(
-                                  msg: 'Invalid format of lobby code!',
+                                  msg: 'Nem megfelelő hosszú a kód',
                                   toastLength: Toast.LENGTH_LONG,
                                   gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1);
+                                  timeInSecForIosWeb: 1);*/
                           }))
                       .obs;
                   controller.joinRoom();
                 },
 
-                text: 'Join with code',
+                text: 'Csatlakozás kóddal',
               ),
               SizedBox(height: 10),
               BangButton(
                 onPressed: controller.readQR,
-                text: 'Join with QR',
+                text: 'QR beolvasás',
               ),
               SizedBox(height: 25),
               BangButton(
                 onPressed: controller.createGame,
-                text: 'Create a game',
+                text: 'Szoba létrehozása',
               ),
 
               /*IconButton(

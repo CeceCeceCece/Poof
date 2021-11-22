@@ -4,6 +4,6 @@ abstract class BangAnimations {
 
   static String _format(String name) => _prefix + name + _fileFormat;
 
-  static get splash => _format('boom');
+  static get splash => _format('boom_');
   static get noInternet => _format('no_internet');
 }

@@ -79,8 +79,8 @@ class _BangCardWidgetState extends State<BangCardWidget>
             width *= 6.3 / 5;
           }
         }
-        widget.handCallback?.call();
         isElevated = true;
+        widget.handCallback?.call();
       }
     });
   }
@@ -104,7 +104,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
           var card = showBack
               ? Material(
                   borderRadius: BorderRadius.circular(10 * widget.scale),
-                  elevation: isElevated ? 40 : 0,
+                  elevation: isElevated && !widget.isInsideHand ? 40 : 0,
                   child: AnimatedContainer(
                     height: height,
                     width: width,
@@ -114,7 +114,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
                 )
               : Material(
                   borderRadius: BorderRadius.circular(10 * widget.scale),
-                  elevation: isElevated ? 40 : 0,
+                  elevation: isElevated && !widget.isInsideHand ? 40 : 0,
                   child: Transform(
                     alignment: Alignment.center,
                     transform: Matrix4.identity()
