@@ -125,6 +125,7 @@ class LobbyView extends GetView<LobbyController> {
                             elevation: 20,
                             shape: CircleBorder(),
                             color: Colors.transparent,
+                            clipBehavior: Clip.hardEdge,
                             child: Ink(
                               decoration: BoxDecoration(
                                   border: Border.all(

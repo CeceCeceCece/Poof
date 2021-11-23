@@ -20,8 +20,15 @@ class GameController extends GetxController {
   Future<bool> showBackPopupForResult() async {
     await Get.defaultDialog<bool>(
       title: 'Megerősítés szükséges',
-      onWillPop: () => Future.value(true),
+      onWillPop: () => Future.value(false),
       onConfirm: _exit,
+      onCancel: () => Future.value(false),
+      cancel: BangButton(
+        text: 'Mégse',
+        onPressed: Get.back,
+        height: 35,
+        width: 60,
+      ),
       confirm: BangButton(
         text: 'Értem, kilépek!',
         onPressed: _exit,
@@ -34,7 +41,9 @@ class GameController extends GetxController {
         textAlign: TextAlign.center,
       ),
     );
-    return Future.value(_exitConfirmed);
+    var returnValue = _exitConfirmed;
+    _exitDone();
+    return Future.value(returnValue);
   }
 
   void _exit() {
@@ -42,6 +51,8 @@ class GameController extends GetxController {
     Get.back();
     AudioService.playMenuSong();
   }
+
+  void _exitDone() => _exitConfirmed = false;
 
   @override
   void onInit() async {

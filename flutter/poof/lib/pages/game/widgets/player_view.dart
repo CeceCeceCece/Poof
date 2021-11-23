@@ -27,282 +27,216 @@ class PlayerView extends StatelessWidget {
       () => AnimatedContainer(
         duration: Duration(milliseconds: 150),
         height: service.expandedHandView() ? 370 : 310,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+        child: Stack(
           children: [
-            !service.expandedHandView()
-                ? (service.expandedEquipmentView()
-                    ? Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: Stack(
-                              children: [
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      ...service.temporaryEffectList
-                                          .map(
-                                            (card) => Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 3, right: 3),
-                                              child: Positioned(
-                                                child: Transform.rotate(
-                                                  angle: (pi / 180) *
-                                                      (random.nextInt(7) - 3),
-                                                  child: BangCardWidget(
-                                                    card: card,
-                                                    scale: 0.55,
-                                                    extraScaleAtHighlight: true,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                      Spacer(),
-                                      SizedBox(height: 140, width: 1),
-                                      ...service.equipmentList
-                                          .map(
-                                            (card) => Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 3, right: 3),
-                                              child: Positioned(
-                                                child: Transform.rotate(
-                                                  angle: (pi / 180) *
-                                                      (random.nextInt(7) - 3),
-                                                  child: BangCardWidget(
-                                                    card: card,
-                                                    scale: 0.55,
-                                                    extraScaleAtHighlight: true,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                    ]),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container())
-                : Container(),
-            Container(
-              // ! color: Colors.red,
-              height: service.expandedHandView()
-                  ? 350
-                  : (service.expandedEquipmentView() ? 150 : 310),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Container(
-                      child: service.expandedHandView()
-                          ? null
-                          : Stack(
-                              alignment: Alignment.centerRight,
-                              fit: StackFit.passthrough,
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              children: [
-                                  Positioned(
-                                    bottom: 20,
-                                    right:
-                                        2 * CardWidgetHelpers.cardWidth * 0.4 +
+            ..._buildEquipmentView(
+                !service.expandedHandView() && service.expandedEquipmentView(),
+                157),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  height: service.expandedHandView() ? 350 : 310,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          child: service.expandedHandView()
+                              ? null
+                              : Stack(
+                                  alignment: Alignment.centerRight,
+                                  fit: StackFit.passthrough,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  children: [
+                                      Positioned(
+                                        bottom: 20,
+                                        right: 2 *
+                                                CardWidgetHelpers.cardWidth *
+                                                0.4 +
                                             14 -
                                             health -
                                             (5 - health) * pixelPerHealth -
                                             85,
-                                    child: Transform.rotate(
-                                      angle: pi / 2,
-                                      child: NonPlayableCardWidget(
-                                        scale: 0.9,
-                                        showBackPermanently: true,
-                                        card: characterCard,
-                                        canBeFocused: false,
+                                        child: Transform.rotate(
+                                          angle: pi / 2,
+                                          child: NonPlayableCardWidget(
+                                            scale: 0.9,
+                                            showBackPermanently: true,
+                                            card: characterCard,
+                                            canBeFocused: false,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  /*Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [*/
-                                  Positioned(
-                                    bottom: 20,
-                                    child: NonPlayableCardWidget(
-                                      scale: 0.95,
-                                      card: characterCard,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 20,
-                                    left: 10,
-                                    child: NonPlayableCardWidget(
-                                      card: roleCard,
-                                      scale: 0.95,
-                                    ),
-                                  ),
-                                  Positioned(
+                                      Positioned(
+                                        bottom: 20,
+                                        child: NonPlayableCardWidget(
+                                          scale: 0.95,
+                                          card: characterCard,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: 20,
+                                        left: 10,
+                                        child: NonPlayableCardWidget(
+                                          card: roleCard,
+                                          scale: 0.95,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: 15,
+                                        left: 10,
+                                        child: Material(
+                                            elevation: 20,
+                                            shape: CircleBorder(),
+                                            clipBehavior: Clip.hardEdge,
+                                            color: Colors.transparent,
+                                            child: Ink(
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      width: 1,
+                                                      color:
+                                                          BangColors.darkBrown),
+                                                  gradient:
+                                                      BangColors.buttonGradient,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          200)),
+                                              child: Center(
+                                                child: AnimatedIconButton(
+                                                    size: 18,
+                                                    duration: Duration(
+                                                        milliseconds: 400),
+                                                    onPressed: () => service
+                                                            .expandedEquipmentView
+                                                            .value =
+                                                        !service
+                                                            .expandedEquipmentView(),
+                                                    icons: [
+                                                      AnimatedIconItem(
+                                                          icon: Icon(
+                                                        Icons.arrow_upward,
+                                                        size: 20,
+                                                        color: Colors.white,
+                                                      )),
+                                                      AnimatedIconItem(
+                                                          icon: Icon(
+                                                              Icons
+                                                                  .arrow_downward,
+                                                              size: 20,
+                                                              color: Colors
+                                                                  .white)),
+                                                    ]),
+                                              ),
+                                            )),
+                                      )
+                                    ]),
+                        ),
+                        flex: service.expandedHandView() ? 0 : 22,
+                      ),
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            ..._buildEquipmentView(
+                                service.expandedEquipmentView() &&
+                                    service.expandedHandView(),
+                                208),
+                            Hand(),
+                            service.expandedHandView()
+                                ? Positioned(
                                     bottom: 15,
                                     left: 10,
                                     child: Material(
-                                        elevation: 20,
-                                        shape: CircleBorder(),
-                                        color: Colors.transparent,
-                                        child: Ink(
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 1,
-                                                  color: BangColors.darkBrown),
-                                              gradient:
-                                                  BangColors.buttonGradient,
-                                              borderRadius:
-                                                  BorderRadius.circular(200)),
-                                          child: Center(
-                                            child: AnimatedIconButton(
-                                                size: 18,
-                                                duration:
-                                                    Duration(milliseconds: 400),
-                                                onPressed: () => service
-                                                        .expandedEquipmentView
-                                                        .value =
-                                                    !service
-                                                        .expandedEquipmentView(),
-                                                icons: [
-                                                  AnimatedIconItem(
-                                                      icon: Icon(
-                                                    Icons.arrow_upward,
-                                                    size: 20,
-                                                    color: Colors.white,
-                                                  )),
-                                                  AnimatedIconItem(
-                                                      icon: Icon(
-                                                          Icons.arrow_downward,
-                                                          size: 20,
-                                                          color: Colors.white)),
-                                                ]),
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                      //)),
-                    ),
-                    flex: service.expandedHandView() ? 0 : 22,
-                  ),
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        service.expandedEquipmentView() &&
-                                service.expandedHandView()
-                            ? Container(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                child: /* Stack(
-                                  overflow: Overflow.visible,
-                                  children: [*/
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                      ...service.temporaryEffectList
-                                          .map(
-                                            (card) => Container(
-                                              padding: EdgeInsets.only(
-                                                  left: 3, right: 3),
-                                              child: Transform.rotate(
-                                                angle: (pi / 180) *
-                                                    (random.nextInt(7) - 3),
-                                                child: Positioned(
-                                                  child: BangCardWidget(
-                                                    card: card,
-                                                    scale: 0.55,
-                                                    extraScaleAtHighlight: true,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                      Spacer(),
-                                      SizedBox(height: 140, width: 1),
-                                      ...service.equipmentList
-                                          .map(
-                                            (card) => Container(
-                                              padding: EdgeInsets.only(
-                                                  left: 3, right: 3),
-                                              child: Transform.rotate(
-                                                angle: (pi / 180) *
-                                                    (random.nextInt(7) - 3),
-                                                child: Positioned(
-                                                  child: BangCardWidget(
-                                                    card: card,
-                                                    extraScaleAtHighlight: true,
-                                                    scale: 0.55,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                    ]),
-                                //  ],
-                                // ),
-                              )
-                            : Container(),
-                        Hand(),
-                        service.expandedHandView()
-                            ? Positioned(
-                                bottom: 15,
-                                left: 10,
-                                child: Material(
-                                  elevation: 20,
-                                  shape: CircleBorder(),
-                                  color: Colors.transparent,
-                                  child: Ink(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 1,
-                                            color: BangColors.darkBrown),
-                                        gradient: BangColors.buttonGradient,
-                                        borderRadius:
-                                            BorderRadius.circular(200)),
-                                    child: Center(
-                                      child: AnimatedIconButton(
-                                          size: 18,
-                                          duration: Duration(milliseconds: 400),
-                                          onPressed: () => service
-                                                  .expandedEquipmentView.value =
-                                              !service.expandedEquipmentView(),
-                                          icons: [
-                                            AnimatedIconItem(
-                                                icon: Icon(
-                                              Icons.arrow_upward,
-                                              size: 20,
-                                              color: Colors.white,
-                                            )),
-                                            AnimatedIconItem(
-                                                icon: Icon(Icons.arrow_downward,
-                                                    size: 20,
-                                                    color: Colors.white)),
-                                          ]),
+                                      elevation: 20,
+                                      clipBehavior: Clip.hardEdge,
+                                      shape: CircleBorder(),
+                                      color: Colors.transparent,
+                                      child: Ink(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 1,
+                                                color: BangColors.darkBrown),
+                                            gradient: BangColors.buttonGradient,
+                                            borderRadius:
+                                                BorderRadius.circular(200)),
+                                        child: Center(
+                                          child: AnimatedIconButton(
+                                              size: 18,
+                                              duration:
+                                                  Duration(milliseconds: 400),
+                                              onPressed: () => service
+                                                      .expandedEquipmentView
+                                                      .value =
+                                                  !service
+                                                      .expandedEquipmentView(),
+                                              icons: [
+                                                AnimatedIconItem(
+                                                    icon: Icon(
+                                                  Icons.arrow_upward,
+                                                  size: 20,
+                                                  color: Colors.white,
+                                                )),
+                                                AnimatedIconItem(
+                                                    icon: Icon(
+                                                        Icons.arrow_downward,
+                                                        size: 20,
+                                                        color: Colors.white)),
+                                              ]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    ),
-                    flex: service.expandedHandView() ? 30 : 8,
-                  )
-                ],
-              ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                        flex: service.expandedHandView() ? 30 : 8,
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildEquipmentView(bool shouldShow, double bottomOffset) {
+    return shouldShow
+        ? [
+            SizedBox(height: 140, width: 1),
+            for (int i = 0; i < service.temporaryEffectList.length; i++)
+              Positioned(
+                left: (service.temporaryEffectList.length - 1) * 58 -
+                    58 * i.toDouble() +
+                    10,
+                bottom: bottomOffset,
+                child: Transform.rotate(
+                  angle: (pi / 180) * (random.nextInt(7) - 3),
+                  child: BangCardWidget(
+                    card: service.temporaryEffectList[i],
+                    scale: 0.55,
+                    extraScaleAtHighlight: true,
+                  ),
+                ),
+              ),
+            for (int i = 0; i < service.equipmentList.length; i++)
+              Positioned(
+                bottom: bottomOffset,
+                right: (service.equipmentList.length - 1) * 58 -
+                    58 * i.toDouble() +
+                    10,
+                child: Transform.rotate(
+                  angle: (pi / 180) * (random.nextInt(7) - 3),
+                  child: BangCardWidget(
+                    card: service.equipmentList[i],
+                    scale: 0.55,
+                    extraScaleAtHighlight: true,
+                  ),
+                ),
+              )
+          ]
+        : [];
   }
 }

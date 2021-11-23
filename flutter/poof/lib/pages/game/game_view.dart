@@ -5,6 +5,7 @@ import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/cards/model/non_playable_cards/role_card.dart';
 import 'package:bang/cards/widgets/bang_card_widget.dart';
 import 'package:bang/cards/widgets/non_playable_card_widget.dart';
+import 'package:bang/core/colors.dart';
 import 'package:bang/core/constants.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player_view.dart';
@@ -71,6 +72,62 @@ class GameView extends GetView<GameController> {
                       ],
                     ),*/
                     ..._buildLayout(height, width),
+                    Positioned(
+                      top: 5,
+                      left: 20,
+                      child: IconButton(
+                        iconSize: 28,
+                        onPressed: () {
+                          Get.bottomSheet(
+                            Container(
+                                height: 200,
+                                child: Column(
+                                  children: [
+                                    Text('Hii 1', textScaleFactor: 2),
+                                    Text('Hii 2', textScaleFactor: 2),
+                                    Text('Hii 3', textScaleFactor: 2),
+                                    Text('Hii 4', textScaleFactor: 2),
+                                  ],
+                                )),
+                            barrierColor: Colors.transparent,
+                            isDismissible: true,
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(35),
+                              /*side: BorderSide(
+                                            width: 1, color: Colors.black)*/
+                            ),
+                            enableDrag: true,
+                            enterBottomSheetDuration:
+                                Duration(milliseconds: 300),
+                            exitBottomSheetDuration:
+                                Duration(milliseconds: 300),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.chat,
+                          color: BangColors.background,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 5,
+                      right: 20,
+                      child: IconButton(
+                        iconSize: 28,
+                        onPressed: () async {
+                          var shouldClose =
+                              await controller.showBackPopupForResult();
+                          if (shouldClose) {
+                            Get.back();
+                          }
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          color: BangColors.background,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
