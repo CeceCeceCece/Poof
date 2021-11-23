@@ -208,31 +208,31 @@ class PlayerView extends StatelessWidget {
             SizedBox(height: 140, width: 1),
             for (int i = 0; i < service.temporaryEffectList.length; i++)
               Positioned(
-                left: (service.temporaryEffectList.length - 1) * 58 -
-                    58 * i.toDouble() +
-                    10,
+                left: (service.temporaryEffectList.length - 1) * 54 -
+                    54 * i.toDouble() +
+                    5,
                 bottom: bottomOffset,
                 child: Transform.rotate(
                   angle: (pi / 180) * (random.nextInt(7) - 3),
                   child: BangCardWidget(
                     card: service.temporaryEffectList[i],
                     scale: 0.55,
-                    extraScaleAtHighlight: true,
+                    highlightMultiplier: 6.3 / 5,
                   ),
                 ),
               ),
             for (int i = 0; i < service.equipmentList.length; i++)
               Positioned(
                 bottom: bottomOffset,
-                right: (service.equipmentList.length - 1) * 58 -
-                    58 * i.toDouble() +
-                    10,
+                right: (service.equipmentList.length - 1) * 54 -
+                    54 * i.toDouble() +
+                    5,
                 child: Transform.rotate(
                   angle: (pi / 180) * (random.nextInt(7) - 3),
                   child: BangCardWidget(
                     card: service.equipmentList[i],
                     scale: 0.55,
-                    extraScaleAtHighlight: true,
+                    highlightMultiplier: 6.3 / 5,
                   ),
                 ),
               )

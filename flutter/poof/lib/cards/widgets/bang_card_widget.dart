@@ -17,7 +17,7 @@ class BangCardWidget extends StatefulWidget {
   final double scale;
   final bool canBeFocused;
   final bool canBeDragged;
-  final bool extraScaleAtHighlight;
+  final double highlightMultiplier;
   late final bool isInsideHand;
 
   final bool showBackPermanently;
@@ -29,7 +29,7 @@ class BangCardWidget extends StatefulWidget {
     this.onDragSuccessCallback,
     this.handCallback,
     this.scale = 1.0,
-    this.extraScaleAtHighlight = false,
+    this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
   }) : super(key: key) {
     this.isInsideHand = handCallback != null;
@@ -61,23 +61,23 @@ class _BangCardWidgetState extends State<BangCardWidget>
     setState(() {
       if (isElevated) {
         if (!widget.isInsideHand) {
-          height *= 2 / 3;
-          width *= 2 / 3;
-          if (widget.extraScaleAtHighlight) {
+          height *= 2 / 3 / widget.highlightMultiplier;
+          width *= 2 / 3 / widget.highlightMultiplier;
+          /* if (widget.extraScaleAtHighlight) {
             height *= 5 / 6.3;
             width *= 5 / 6.3;
-          }
+          }*/
         }
         Get.find<GameService>().highlight(-1);
         isElevated = false;
       } else {
         if (!widget.isInsideHand) {
-          height *= 1.5;
-          width *= 1.5;
-          if (widget.extraScaleAtHighlight) {
+          height *= 1.5 * widget.highlightMultiplier;
+          width *= 1.5 * widget.highlightMultiplier;
+          /*if (widget.extraScaleAtHighlight) {
             height *= 6.3 / 5;
             width *= 6.3 / 5;
-          }
+          }*/
         }
         isElevated = true;
         widget.handCallback?.call();

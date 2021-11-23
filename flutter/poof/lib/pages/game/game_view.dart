@@ -1,10 +1,8 @@
-import 'package:bang/cards/model/action_cards/action_card.dart';
 import 'package:bang/cards/model/action_cards/equipment_card.dart';
 import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/cards/model/non_playable_cards/role_card.dart';
 import 'package:bang/cards/widgets/bang_card_widget.dart';
-import 'package:bang/cards/widgets/non_playable_card_widget.dart';
 import 'package:bang/core/colors.dart';
 import 'package:bang/core/constants.dart';
 import 'package:bang/pages/game/game_controller.dart';
@@ -12,6 +10,8 @@ import 'package:bang/pages/game/widgets/player_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'widgets/other_player_view.dart';
 
 class GameView extends GetView<GameController> {
   @override
@@ -36,26 +36,8 @@ class GameView extends GetView<GameController> {
                   alignment: Alignment.center,
                   fit: StackFit.passthrough,
                   children: [
-                    /*Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Spacer(),*/
                     Positioned(
-                      right: MediaQuery.of(context).size.width / 2 + 5,
-                      child: BangCardWidget(
-                        card: EquipmentCard(
-                            background: 'barrel',
-                            name: 'barrel',
-                            value: Bang.Value.Ten,
-                            type: Bang.CardType.Equipment,
-                            suit: Bang.Suit.Diamonds),
-                        canBeFocused: true,
-                        scale: 0.8,
-                      ),
-                    ),
-                    //SizedBox(width: 10, height: 180),
-                    Positioned(
-                      left: MediaQuery.of(context).size.width / 2 + 5,
+                      bottom: height / 2 + 45,
                       child: BangCardWidget(
                         card: EquipmentCard(
                             background: 'barrel',
@@ -65,12 +47,22 @@ class GameView extends GetView<GameController> {
                             suit: Bang.Suit.Diamonds),
                         showBackPermanently: true,
                         canBeFocused: false,
-                        scale: 0.65,
+                        scale: 0.55,
                       ),
                     ),
-                    /*Spacer()
-                      ],
-                    ),*/
+                    Positioned(
+                      bottom: height / 2 - 35,
+                      child: BangCardWidget(
+                        card: EquipmentCard(
+                            background: 'barrel',
+                            name: 'barrel',
+                            value: Bang.Value.Ten,
+                            type: Bang.CardType.Equipment,
+                            suit: Bang.Suit.Diamonds),
+                        canBeFocused: true,
+                        scale: 0.55,
+                      ),
+                    ),
                     ..._buildLayout(height, width),
                     Positioned(
                       top: 5,
@@ -138,76 +130,31 @@ class GameView extends GetView<GameController> {
     );
   }
 
-  Widget _ph([Color? color]) => Container(
-      width: 100,
-      height: 100,
-      child: Column(
-        children: [
-          Row(children: [
-            Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                NonPlayableCardWidget(
-                  scale: 0.5,
-                  highlightMultiplier: 1.75,
-                  card: CharacterCard(
-                      background: 'willythekid',
-                      health: 4,
-                      name: 'willythekid'),
-                ),
-                Text('❤: 4', style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
-            ),
-            Expanded(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  BangCardWidget(
-                    scale: 0.5,
-                    showBackPermanently: true,
-                    card: ActionCard(
-                      background: 'stagecoach',
-                      name: 'stagecoach',
-                      suit: Bang.Suit.Clubs,
-                      value: Bang.Value.Nine,
-                      type: Bang.CardType.Action,
-                      range: 0,
-                    ),
-                  ),
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 1.5),
-                        shape: BoxShape.circle),
-                    child: Opacity(
-                      opacity: 0.6,
-                      child: Material(
-                        shape: CircleBorder(),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    '5',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  )
-                ],
-              ),
-            ),
-          ]),
-        ],
-      ));
-
   List<Widget> _buildLayout(double height, double width) {
     switch (controller.playerNumber()) {
       case 4:
         return [
-          Positioned(child: _ph(), top: 20, left: width / 2 - 50),
-          Positioned(child: _ph(), top: height * 0.4 - 10, left: 10),
-          Positioned(child: _ph(), top: height * 0.4 - 10, right: 10),
+          Positioned(
+              child: EnemyPlayer(
+                top: true,
+                left: true,
+              ),
+              top: 40,
+              left: width / 2 - 100),
+          Positioned(
+            child: EnemyPlayer(
+              left: true,
+            ),
+            top: height * 0.37,
+            left: 10,
+          ),
+          Positioned(
+            child: EnemyPlayer(
+              right: true,
+            ),
+            top: height * 0.37,
+            right: 10,
+          ),
           Align(
               alignment: Alignment.bottomCenter,
               child: PlayerView(
@@ -218,10 +165,33 @@ class GameView extends GetView<GameController> {
         ];
       case 5:
         return [
-          Positioned(child: _ph(), top: 40, left: width * 0.75 + 50),
-          Positioned(child: _ph(), top: 40, left: width * 0.25 - 50),
-          Positioned(child: _ph(), top: height * 0.45 - 10, left: 10),
-          Positioned(child: _ph(), top: height * 0.45 - 10, right: 10),
+          Positioned(
+              child: EnemyPlayer(
+                left: true,
+              ),
+              top: height * 0.38,
+              left: 10),
+          Positioned(
+              child: EnemyPlayer(
+                right: true,
+              ),
+              top: height * 0.38,
+              right: 10),
+          Positioned(
+            child: EnemyPlayer(
+              top: true,
+              right: true,
+            ),
+            top: height * 0.1,
+            left: width * 0.76 - 100,
+          ),
+          Positioned(
+              child: EnemyPlayer(
+                top: true,
+                left: true,
+              ),
+              top: height * 0.1,
+              left: width * 0.24 - 100),
           Align(
               alignment: Alignment.bottomCenter,
               child: PlayerView(
@@ -232,11 +202,19 @@ class GameView extends GetView<GameController> {
         ];
       case 6:
         return [
-          Positioned(child: _ph(), top: height * 0.1, left: width / 2 - 50),
-          Positioned(child: _ph(), top: height * 0.25, left: width * 0.9 - 50),
-          Positioned(child: _ph(), top: height * 0.25, left: width * 0.10 + 50),
-          Positioned(child: _ph(), top: height * 0.5 - 10, left: 10),
-          Positioned(child: _ph(), top: height * 0.5 - 10, right: 10),
+          Positioned(
+              child: EnemyPlayer(left: true), top: height * 0.45, left: 5),
+          Positioned(
+              child: EnemyPlayer(right: true), top: height * 0.45, right: 5),
+          Positioned(
+              child: EnemyPlayer(right: true), top: height * 0.24, right: 20),
+          Positioned(
+              child: EnemyPlayer(left: true), top: height * 0.24, left: 20),
+          Positioned(
+            child: EnemyPlayer(top: true, left: true),
+            top: height * 0.05,
+            left: width / 2 - 100,
+          ),
           Align(
               alignment: Alignment.bottomCenter,
               child: PlayerView(
@@ -247,12 +225,24 @@ class GameView extends GetView<GameController> {
         ];
       case 7:
         return [
-          Positioned(child: _ph(), top: height * 0.1, left: width * 0.3 - 10),
-          Positioned(child: _ph(), top: height * 0.1, left: width * 0.7 - 10),
-          Positioned(child: _ph(), top: height * 0.3, left: width * 0.95 - 10),
-          Positioned(child: _ph(), top: height * 0.3, left: width * 0.05 - 10),
-          Positioned(child: _ph(), top: height * 0.55 - 10, left: 10),
-          Positioned(child: _ph(), top: height * 0.55 - 10, right: 10),
+          Positioned(
+              child: EnemyPlayer(left: true), top: height * 0.48, left: 5),
+          Positioned(
+              child: EnemyPlayer(right: true), top: height * 0.48, right: 5),
+          Positioned(
+              child: EnemyPlayer(right: true), top: height * 0.27, right: 20),
+          Positioned(
+              child: EnemyPlayer(left: true), top: height * 0.27, left: 20),
+          Positioned(
+            child: EnemyPlayer(top: true, right: true),
+            top: height * 0.07,
+            right: width / 3 - 125,
+          ),
+          Positioned(
+            child: EnemyPlayer(top: true, left: true),
+            top: height * 0.07,
+            left: width / 3 - 125,
+          ),
           Align(
               alignment: Alignment.bottomCenter,
               child: PlayerView(
