@@ -278,16 +278,28 @@ class LobbyView extends GetView<LobbyController> {
                                       return StatefulBuilder(
                                         builder: (BuildContext context,
                                             StateSetter setState) {
-                                          var textController =
-                                              TextEditingController();
-
-                                          var field = BangInputField(
-                                              controller: textController,
-                                              hint: 'üzenet');
                                           var username =
                                               Get.find<AuthService>().player;
+                                          var textController =
+                                              TextEditingController();
                                           var scrollController =
                                               ScrollController();
+                                          var field = BangInputField(
+                                              onSubmit: () async {
+                                                controller.sendMessage(
+                                                  message: textController.text,
+                                                  username: username,
+                                                );
+                                                textController.clear();
+
+                                                setState(() {});
+                                                scrollController.jumpTo(
+                                                    scrollController.position
+                                                            .maxScrollExtent +
+                                                        100);
+                                              },
+                                              controller: textController,
+                                              hint: 'üzenet');
 
                                           return Padding(
                                               padding: EdgeInsets.only(
@@ -339,7 +351,7 @@ class LobbyView extends GetView<LobbyController> {
                                                                         BoxDecoration(
                                                                       borderRadius:
                                                                           BorderRadius.circular(
-                                                                              10.0),
+                                                                              20),
                                                                       color: sentBySelf
                                                                           ? Colors
                                                                               .brown
@@ -348,9 +360,9 @@ class LobbyView extends GetView<LobbyController> {
                                                                     ),
                                                                     child:
                                                                         Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
+                                                                      padding: const EdgeInsets
+                                                                              .all(
+                                                                          12.0),
                                                                       child: Column(
                                                                           mainAxisAlignment: MainAxisAlignment
                                                                               .start,
@@ -363,16 +375,15 @@ class LobbyView extends GetView<LobbyController> {
                                                                                     'Te - ${DateFormat('kk:mm').format(message.postedDate)}',
                                                                                     overflow: TextOverflow.ellipsis,
                                                                                     maxLines: 1,
-                                                                                    style: TextStyle(color: BangColors.background),
+                                                                                    style: TextStyle(
+                                                                                      color: BangColors.background,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
                                                                                   )
-                                                                                : Text(
-                                                                                    '${DateFormat('kk:mm').format(message.postedDate)} - ${message.sender}:',
-                                                                                    overflow: TextOverflow.ellipsis,
-                                                                                    maxLines: 1,
-                                                                                  ),
+                                                                                : Text('${DateFormat('kk:mm').format(message.postedDate)} - ${message.sender}:', overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontWeight: FontWeight.bold)),
                                                                             Container(
                                                                               child: Padding(
-                                                                                padding: const EdgeInsets.only(left: 3, right: 3),
+                                                                                padding: const EdgeInsets.only(left: 3, top: 5, right: 3),
                                                                                 child: Text('${message.text}', overflow: TextOverflow.ellipsis, maxLines: 4, style: sentBySelf ? TextStyle(color: BangColors.background) : null
                                                                                     //softWrap: false,
                                                                                     ),
@@ -404,7 +415,7 @@ class LobbyView extends GetView<LobbyController> {
                                                       child: Row(
                                                         children: [
                                                           Container(
-                                                            width: 200,
+                                                            width: 230,
                                                             height: 50,
                                                             child: field,
                                                           ),

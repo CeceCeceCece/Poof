@@ -4,7 +4,9 @@ import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/cards/widgets/bang_card_widget.dart';
 import 'package:bang/cards/widgets/non_playable_card_widget.dart';
+import 'package:bang/core/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EnemyPlayer extends StatelessWidget {
   EnemyPlayer(
@@ -103,50 +105,67 @@ class EnemyPlayer extends StatelessWidget {
         top ? (right ? 55 : null) : (right ? 0 : null);
     return Container(
       child: Stack(
-        alignment: top
-            ? Alignment.topCenter
-            : (left ? Alignment.topLeft : Alignment.topRight),
-        children: [
-          SizedBox(
-            height: 200,
-            width: 200,
-            //child: Container(color: left ? Colors.green : Colors.red),
-          ),
-          for (int i = 0; i < equipmentCards.length; i++)
-            Positioned(
-                top: 70,
-                right: right
-                    ? ((equipmentCards.length - 1) * 23 -
-                        i * 23.0 +
-                        rightEquipmentCards!)
-                    : null,
-                left: left
-                    ? ((equipmentCards.length - 1) * 23 -
-                        i * 23.0 +
-                        leftEquipmentCards!)
-                    : null,
-                child: equipmentCards[i]),
-          for (int i = 0; i < temporaryEffectCards.length; i++)
-            Positioned(
-                top: (temporaryEffectCards.length - 1) * 37 - i * 37,
-                right: rightTemporaryEffectCards,
-                left: leftTemporaryEffectCards,
-                child: temporaryEffectCards[i]),
-          Positioned(
-            right: rightCards,
-            left: leftCards,
-            child: _backWithAmount(5),
-          ),
-          Positioned(
-            right: rightChar,
-            left: leftChar,
-            child: _buildCharacter(
-              characterName: 'willythekid',
-              health: 4,
+          alignment: top
+              ? Alignment.topCenter
+              : (left ? Alignment.topLeft : Alignment.topRight),
+          children: [
+            SizedBox(
+              height: 200,
+              width: 200,
+              //child: Container(color: left ? Colors.green : Colors.red),
             ),
-          ),
-        ],
-      ),
+            Positioned(
+              top: equipmentCards.isEmpty ? 75 : 110,
+              child: Container(
+                width: 120,
+                child: Text(
+                  'Cece',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: GoogleFonts.graduate(
+                    textStyle: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: BangColors.background),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            for (int i = 0; i < equipmentCards.length; i++)
+              Positioned(
+                  top: 70,
+                  right: right
+                      ? ((equipmentCards.length - 1) * 23 -
+                          i * 23.0 +
+                          rightEquipmentCards!)
+                      : null,
+                  left: left
+                      ? ((equipmentCards.length - 1) * 23 -
+                          i * 23.0 +
+                          leftEquipmentCards!)
+                      : null,
+                  child: equipmentCards[i]),
+            for (int i = 0; i < temporaryEffectCards.length; i++)
+              Positioned(
+                  top: (temporaryEffectCards.length - 1) * 37 - i * 37,
+                  right: rightTemporaryEffectCards,
+                  left: leftTemporaryEffectCards,
+                  child: temporaryEffectCards[i]),
+            Positioned(
+              right: rightCards,
+              left: leftCards,
+              child: _backWithAmount(5),
+            ),
+            Positioned(
+              right: rightChar,
+              left: leftChar,
+              child: _buildCharacter(
+                characterName: 'willythekid',
+                health: 4,
+              ),
+            ),
+          ]),
     );
   }
 
