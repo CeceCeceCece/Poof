@@ -54,7 +54,7 @@ class LoginView extends GetView<LoginController> {
       onSubmit: () {
         if (_formKey.currentState!.validate()) {
           controller.register();
-          controller.login();
+          //controller.login();
         }
       },
       validator: (value) {
@@ -119,7 +119,7 @@ class LoginView extends GetView<LoginController> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               controller.register();
-              controller.login();
+              //controller.login();
             }
           },
           text: 'Regisztráció!',

@@ -1,4 +1,3 @@
-import 'package:bang/routes/routes.dart';
 import 'package:bang/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,11 +11,11 @@ class LoginController extends GetxController {
 
   void login() {
     Get.find<AuthService>().login(usernameC.text, passwordC.text);
-    Get.offAndToNamed(Routes.HOME);
   }
 
   void register() {
     Get.find<AuthService>().register(usernameC.text, passwordC.text);
+    //Get.offAndToNamed(Routes.HOME);
   }
 
   void goToRegister() {

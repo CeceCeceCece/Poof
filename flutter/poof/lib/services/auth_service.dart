@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bang/network/user_provider.dart';
+import 'package:bang/routes/routes.dart';
 import 'package:bang/services/service_base.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -31,6 +32,7 @@ class AuthService extends ServiceBase {
         SharedPreferenceService.token = response.body!.token!;
         Fluttertoast.showToast(msg: 'token acquired');
         player = 'Cece';
+        Get.offAndToNamed(Routes.HOME);
       } else {
         Fluttertoast.showToast(msg: '${response.statusCode}');
       }
