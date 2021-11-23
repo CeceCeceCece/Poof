@@ -10,6 +10,7 @@ import 'shared_preference_service.dart';
 class AuthService extends ServiceBase {
   final UserProvider _userProvider = Get.find();
 
+  var player = 'default_playername';
   @override
   Future<void> init() async {
     log('SERVICES: AUTH_SERVICE INITIALIZED');
@@ -29,6 +30,7 @@ class AuthService extends ServiceBase {
       if (response.statusCode == 200) {
         SharedPreferenceService.token = response.body!.token!;
         Fluttertoast.showToast(msg: 'token acquired');
+        player = 'Cece';
       } else {
         Fluttertoast.showToast(msg: '${response.statusCode}');
       }

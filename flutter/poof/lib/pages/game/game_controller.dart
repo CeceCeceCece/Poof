@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:math' as Math;
-
 import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +6,6 @@ import 'package:get/get.dart';
 class GameController extends GetxController {
   var _exitConfirmed = false;
   var playerNumber = 7.obs;
-
-  void randomizePlayerNumber() {
-    playerNumber.value = Math.Random().nextInt(4) + 4;
-    log('PLAYERS: $playerNumber');
-  }
 
   Future<bool> showBackPopupForResult() async {
     await Get.defaultDialog<bool>(
