@@ -30,6 +30,7 @@ class LobbyController extends GetxController {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: []);
     await initWebsocket();
+    createLobby(lobbyName: roomID ?? 'RANDOM');
     super.onInit();
   }
 
@@ -81,15 +82,23 @@ class LobbyController extends GetxController {
         .withUrl(
             Constants.BASE_URL + Constants.LOBBY_HUB,
             HttpConnectionOptions(
+              logMessageContent: true,
               logging: (level, message) => print(message),
             ))
         .withAutomaticReconnect()
         .build();
     try {
-      //await _connection.start(); // !visszakommentezni!!!
+      await _connection.start(); // !visszakommentezni!!!
+      Fluttertoast.showToast(msg: 'Websocket init');
     } catch (error) {
       log('$error');
     }
+    _connection.onreconnected((connectionId) {
+      log('RECONNECTED');
+    });
+    _connection.onreconnecting((exception) {
+      log(exception.toString());
+    });
 
     _connection.on(
       'LobbyCreated',
@@ -207,7 +216,8 @@ class LobbyController extends GetxController {
   }
 
   void createLobby({required String lobbyName}) async {
-    await _connection.invoke('CreateLobby', args: [lobbyName]);
+    //await _connection.invoke('CreateLobby', args: [lobbyName]);
+    log('success!');
   }
 
   void joinLobby({required String lobbyName}) async {
