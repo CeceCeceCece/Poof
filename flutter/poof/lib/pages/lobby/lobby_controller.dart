@@ -8,6 +8,7 @@ import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/auth_service.dart';
 import 'package:bang/services/game_service.dart';
+import 'package:bang/services/shared_preference_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -61,7 +62,8 @@ class LobbyController extends GetxController {
     if (!isAdmin(user)) users.removeWhere((element) => element.id == user.id);
   }
 
-  bool isAdmin(UserDto user) => user.name == Get.find<AuthService>().player;
+  bool isAdmin(UserDto user) =>
+      true; //user.name == Get.find<AuthService>().player;
 
   void toggleAdmin(UserDto user) {
     Fluttertoast.showToast(
@@ -80,24 +82,31 @@ class LobbyController extends GetxController {
   Future<void> initWebsocket() async {
     _connection = HubConnectionBuilder()
         .withUrl(
-            Constants.BASE_URL + Constants.LOBBY_HUB,
-            HttpConnectionOptions(
-              logMessageContent: true,
-              logging: (level, message) => print(message),
-            ))
+          Constants.BASE_URL + Constants.LOBBY_HUB,
+          HttpConnectionOptions(
+            transport: HttpTransportType.longPolling,
+            logging: (level, message) => print('SIGNALR ---- $message'),
+            accessTokenFactory: () async => SharedPreferenceService.token,
+          ),
+        )
+        .withHubProtocol(JsonHubProtocol())
         .withAutomaticReconnect()
         .build();
     try {
-      await _connection.start(); // !visszakommentezni!!!
-      Fluttertoast.showToast(msg: 'Websocket init');
+      _connection.start()?.then((value) =>
+          createLobby(lobbyName: 'lobbyName')); // !visszakommentezni!!!
     } catch (error) {
       log('$error');
+      _connection.start();
     }
     _connection.onreconnected((connectionId) {
       log('RECONNECTED');
     });
     _connection.onreconnecting((exception) {
       log(exception.toString());
+    });
+    _connection.onclose((exception) {
+      log('$exception');
     });
 
     _connection.on(
@@ -216,7 +225,7 @@ class LobbyController extends GetxController {
   }
 
   void createLobby({required String lobbyName}) async {
-    //await _connection.invoke('CreateLobby', args: [lobbyName]);
+    await _connection.invoke('CreateLobby', args: [lobbyName]);
     log('success!');
   }
 

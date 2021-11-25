@@ -6,7 +6,7 @@ abstract class Constants {
   static const NOTIFICATIONS = 'NOTIFICATIONS';
   static const TOKEN = 'TOKEN';
   static const LOBBY_HUB = '/hubs/poof';
-  static const BASE_URL = "https://poof.azurewebsites.net";
+  static const BASE_URL = "https://poofapi.azurewebsites.net";
   static const backgroundPath = 'assets/background/bg2.jpg';
 
   static void defaultOnChanged(String s) {}
