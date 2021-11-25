@@ -5,10 +5,7 @@ using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
@@ -24,15 +21,17 @@ namespace Application.Models.CardLogic
                 Description = CardMessages.BANG_OPTION,
                 RequireAnswear = true,
                 RequireCards = false,
-                PossibleTargets = character.GetNeighbours(),
+                PossibleTargets = character.GetNeighbours(true),
                 PossibleCards = null
             };
             await character.ShowOptionAsync(option);
-            //TODO megcsinálni a levonást és az optionst
         }
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
+            if(character.Character.BangState == BangState.None)
+                throw new PoofException(CardMessages.BANG_USING_AGAIN);
+
             if (string.IsNullOrEmpty(dto.UserId))
                 throw new PoofException(CharacterMessages.NEM_MEGFELELO_JATEKOS_AZONOSITO);
 
@@ -40,8 +39,9 @@ namespace Application.Models.CardLogic
 
             await character.Character.Game.SetSingleReactAsync(Card, targetCharacter.Id, character.Hub);
             await character.LeaveCardAsync(Card.Id);
-            //await character.DropCardAsync(Card.Id);
-            //TODO: hub ertesites
+
+            if (character.Character.BangState == BangState.One)
+                character.Character.BangState = BangState.None;
 
         }
         public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
@@ -58,7 +58,6 @@ namespace Application.Models.CardLogic
                     throw new PoofException(CardMessages.BANG_ANSWEAR_ERROR);
             }
             await character.Character.Game.EndReactionAsync(character.Hub);
-            //TODO: hu ertesítés a sikerről
         }
     }
 }

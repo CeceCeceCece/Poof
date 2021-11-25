@@ -21,7 +21,7 @@ namespace Application.SignalR.ClientInterfaces
         //Group
         public Task SetWeapon(string characterId, CardViewModel weapon); //lehet null
         public Task SetLifePoint(LifePointViewModel pointModel);
-        public Task CardsDroped(List<CardIdViewModel> card);
+        public Task CardsDroped(List<CardIdViewModel> cards);
         public Task CardUnequiped(CardIdViewModel card);
         public Task CardEquiped(string characterId, CardViewModel card);
         public Task CardsAdded(List<CardIdViewModel> cards);

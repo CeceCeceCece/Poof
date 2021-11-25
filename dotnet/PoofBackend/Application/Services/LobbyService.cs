@@ -36,7 +36,9 @@ namespace Application.Services
             if(hub is not null) 
             {
                 await hub.Groups.AddToGroupAsync(hub.Context.ConnectionId, lobby.Name);
-                await hub.Clients.All.LobbyCreated(new LobbyViewModel(lobby.Name, lobby.Vezeto));
+                var viewModel = new LobbyViewModel(lobby.Name, lobby.Vezeto);
+                viewModel.Users = lobby.Connections.Select(x => new UserViewModel(x.UserId, x.Username)).ToList();
+                await hub.Clients.Caller.LobbyCreated(viewModel);
             }
         }
 

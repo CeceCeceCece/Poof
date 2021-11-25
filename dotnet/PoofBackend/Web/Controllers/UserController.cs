@@ -24,9 +24,9 @@ namespace Web.Controllers
 
         // POST api/<UserController>
         [HttpPost("registration")]
-        public async Task Post([FromBody] RegisterDto dto, CancellationToken cancellationToken)
+        public async Task Post([FromBody] RegisterDto dto)
         {
-            await userService.Register(dto, cancellationToken);
+            await userService.Register(dto);
         }
     }
 }

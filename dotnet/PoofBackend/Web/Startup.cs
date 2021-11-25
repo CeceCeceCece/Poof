@@ -44,10 +44,10 @@ namespace Web
                .AddEntityFrameworkStores<PoofDbContext>();
 
             services.AddSignalR();
+            services.AddHttpContextAccessor();
 
             services.AddSingleton<PoofTracker>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICurrentPlayerService, CurrentPlayerService>();
             services.AddTransient<IGameService, GameService>();
             services.AddTransient<ILobbyService, LobbyService>();
             services.AddTransient<IConnectionService, ConnectionService>();
@@ -171,7 +171,6 @@ namespace Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapDefaultControllerRoute();
                 endpoints.MapHub<PoofHub>("hubs/poof");
                 endpoints.MapHub<PoofGameHub>("hubs/poofgame");
             });

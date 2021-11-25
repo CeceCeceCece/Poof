@@ -24,7 +24,7 @@ namespace Application.Models.CardLogic
                 Description = CardMessages.PANIC_OPTION,
                 RequireAnswear = true,
                 RequireCards = false,
-                PossibleTargets = character.GetNeighbours(),
+                PossibleTargets = character.GetNeighbours(false),
                 PossibleCards = null
             };
             await character.ShowOptionAsync(option);

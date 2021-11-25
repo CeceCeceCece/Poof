@@ -14,12 +14,12 @@ namespace Application.Services
 {
     public class CurrentPlayerService : ICurrentPlayerService
     {
-        public CurrentPlayerService(IHttpContextAccessor accessor)
+        public CurrentPlayerService(HttpContext context)
         {
             Player = new CurrentPlayer
             {
-                Id = accessor.HttpContext.User.FindFirstValue(JwtClaimTypes.Id),
-                Name = accessor.HttpContext.User.FindFirstValue(JwtClaimTypes.Name)
+                Id = context.User.FindFirstValue(JwtClaimTypes.Id),
+                Name = context.User.FindFirstValue(JwtClaimTypes.Name)
             };
         }
 

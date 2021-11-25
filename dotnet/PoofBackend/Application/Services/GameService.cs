@@ -21,10 +21,10 @@ namespace Application.Services
         private readonly PoofDbContext context;
         private readonly ICurrentPlayerService playerService;
 
-        public GameService(PoofDbContext context, ICurrentPlayerService playerService)
+        public GameService(PoofDbContext context)
         {
             this.context = context;
-            this.playerService = playerService;
+            //this.playerService = playerService; paraméterben vegye át
         }
 
         public PoofGameHub Hub { get; set; }

@@ -9,9 +9,9 @@ namespace Application.ViewModels
 {
     public class GameEventViewModel
     {
-        public GameEventViewModel(GameEvent @event, string characterId, CardViewModel card)
+        public GameEventViewModel(GameEvent gameEvent, string characterId, CardViewModel card)
         {
-            Event = @event;
+            Event = gameEvent;
             CharacterId = characterId;
             Card = card;
         }

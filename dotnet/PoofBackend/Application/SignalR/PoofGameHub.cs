@@ -18,10 +18,11 @@ namespace Application.SignalR
         private readonly ICurrentPlayerService currentPlayerService;
         private readonly ILobbyService lobbyService;
 
-        public PoofGameHub(PoofTracker tracker, ICurrentPlayerService currentPlayerService, ILobbyService lobbyService)
+        public PoofGameHub(PoofTracker tracker, ILobbyService lobbyService)
         {
             this.tracker = tracker;
-            this.currentPlayerService = currentPlayerService;
+            //Létrehpzni a playert servicet
+
             this.lobbyService = lobbyService;
         }
         public override async Task OnConnectedAsync()

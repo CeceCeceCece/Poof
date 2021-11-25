@@ -190,32 +190,44 @@ namespace Domain.Entities
             return game.Characters.ElementAt(index);
         }
 
-        public static List<string> Neigbours(this Game game, string playerId)
+        public static List<string> Neigbours(this Game game, bool withWeapon)
         {
-            var playerCharacter = game.Characters.Where(x => x.Id == playerId).SingleOrDefault();
+            var character = game.GetCurrentCharacter();
 
-            if (playerCharacter is null)
-            {
-                //TODO: Exception
-            }
+            int indx = game.Characters.IndexOf(character);
+            int count = game.Characters.Count;
+            int weaponCount = withWeapon ? character.WeaponDistance : 1;
 
             List<string> result = new List<string>();
 
-            if (playerCharacter.AimDistance >= game.Characters.Count())
+            for (int i = 0; i < count; i++) 
             {
-                result.AddRange(game.Characters.Select(x => x.Id).ToList());
-                return result;
-            }
+                if(i != indx) 
+                {
+                    int next;
+                    int previous;
+                    if(i < indx) 
+                    {
+                        next = indx - i;
+                        previous = count - indx + i;
+                    }
+                    else 
+                    {
+                        next = i - indx;
+                        previous = count - i + indx;
+                    }
 
-            var indexof = game.Characters.IndexOf(playerCharacter);
-            var startpos = indexof - playerCharacter.AimDistance < 0 ? indexof - playerCharacter.AimDistance - game.Characters.Count : indexof - playerCharacter.AimDistance;
-            var stoppos = indexof + playerCharacter.AimDistance >= game.Characters.Count ? indexof + playerCharacter.AimDistance - game.Characters.Count : indexof + playerCharacter.AimDistance;
+                    int min = next < previous ? next : previous;
 
-            for (int i = startpos; i == stoppos; i++)
-            {
-                if (i >= game.Characters.Count)
-                    i = i - game.Characters.Count;
-                //Megnézni hogy a sima vagy a plusz listahossz a közelebbi érték if nagyobbak vagyunk az indexnél akkor + count ha nem akkor count - index
+                    var target = game.Characters.ElementAt(i);
+
+                    min += target.DistanceFromOthers - 1;
+
+                    if(min <= weaponCount + character.AimDistance) 
+                    {
+                        result.Add(target.Id);
+                    }
+                }
             }
 
             return result;

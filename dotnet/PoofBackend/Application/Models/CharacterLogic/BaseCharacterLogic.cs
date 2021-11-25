@@ -253,9 +253,9 @@ namespace Application.Models.CharacterLogic
             await Character.Game.AnswearCardAsync(Hub, dto);
         }
 
-        public virtual List<string> GetNeighbours() 
+        public virtual List<string> GetNeighbours(bool withWeapon) 
         {
-            return Character.Game.Neigbours(Character.Id);
+            return Character.Game.Neigbours(withWeapon);
         }
 
         public virtual async Task GetCardFromGameAsync(string cardId)
