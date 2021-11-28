@@ -10,6 +10,7 @@ namespace Application.SignalR.ClientInterfaces
     public interface IPoofClient
     {
         public Task LobbyCreated(LobbyViewModel lobby);
+        public Task LobbyJoined(LobbyViewModel lobby);
         public Task LobbyDeleted(string name);
         public Task SetUsers(List<UserViewModel> users);
         public Task SetMessages(List<MessageViewModel> messages);
@@ -17,5 +18,6 @@ namespace Application.SignalR.ClientInterfaces
         public Task UserLeft(string userId);
         public Task RecieveMessage(MessageViewModel message);
         public Task GameCreated(string gameId);
+        public Task OnStatus();
     }
 }

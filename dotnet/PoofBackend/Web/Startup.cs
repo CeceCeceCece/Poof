@@ -73,7 +73,7 @@ namespace Web
                .AddJwtBearer(opt =>
                {
                    opt.RequireHttpsMetadata = false;
-                   opt.Authority = "https://localhost:5443";
+                   opt.Authority = "https://poofapi.azurewebsites.net";
                    opt.Audience = "poof-api";
                });
 

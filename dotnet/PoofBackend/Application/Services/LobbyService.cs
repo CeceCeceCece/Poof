@@ -6,8 +6,6 @@ using Application.SignalR;
 using Domain;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,11 +40,30 @@ namespace Application.Services
             }
         }
 
+        public async Task ReconnectLobbyAsync(PoofHub hub, CancellationToken cancellationToken = default)
+        {
+            var lobby = await context.Lobbies.Include(x =>x.Connections).Include(x => x.Messages).SingleOrDefaultAsync(x => x.Connections.Any(c => c.ConnectionId == hub.Context.ConnectionId), cancellationToken);
+
+            if (lobby is null)
+                return;
+
+            var connection = lobby.Connections.SingleOrDefault(x => x.ConnectionId == hub.Context.ConnectionId);
+            connection.ConnectionId = hub.Context.ConnectionId;
+            await context.SaveChangesAsync(cancellationToken);
+
+            if (hub is not null)
+            {
+                await hub.Groups.AddToGroupAsync(connection.ConnectionId, lobby.Name);
+                var viewModel = new LobbyViewModel(lobby.Name, lobby.Vezeto);
+                viewModel.Users = lobby.Connections.Select(x => new UserViewModel(x.UserId, x.Username)).ToList();
+                await hub.Clients.Client(connection.ConnectionId).LobbyJoined(viewModel);
+                await hub.Clients.Client(connection.ConnectionId).SetMessages(lobby.Messages.Select(x => new MessageViewModel(x.Kuldo, x.Tartalom, x.Datum)).ToList());
+            }
+        }
+
         public async Task SendMessageAsync(string name, string userId, Message message, PoofHub hub, CancellationToken cancellationToken = default)
         {
             var lobby = await GetLobbyAsync(name, cancellationToken);
-            if (lobby is null)
-                throw new PoofException(LobbyMessages.LOBBY_NEM_LETEZIK);
 
             var isMemeber = lobby.Connections.Any(x => x.UserId == userId);
             if (!isMemeber)
@@ -56,31 +73,34 @@ namespace Application.Services
             await context.SaveChangesAsync(cancellationToken);
 
             if (hub is not null)
-                await hub?.Clients.Group(lobby.Name).RecieveMessage(new MessageViewModel(message.Kuldo, message.Tartalom, message.Datum));
+                await hub.Clients.Group(lobby.Name).RecieveMessage(new MessageViewModel(message.Kuldo, message.Tartalom, message.Datum));
         }
 
         public async Task AddConnectionAsync(string name, Connection connection, PoofHub hub, CancellationToken cancellationToken = default)
         {
             var lobby = await GetLobbyAsync(name, cancellationToken);
-            if (lobby is null)
-                throw new PoofException(LobbyMessages.LOBBY_NEM_LETEZIK);
 
             lobby.Connections.Add(connection);
             await context.SaveChangesAsync(cancellationToken);
 
             if (hub is not null) 
             {
-                await hub?.Clients.Group(lobby.Name).UserEntered(new UserViewModel(connection.UserId, connection.Username));
-                await hub?.Groups.AddToGroupAsync(connection.ConnectionId, lobby.Name);
-                await hub?.Clients.Client(connection.ConnectionId).SetMessages(lobby.Messages.Select(x => new MessageViewModel(x.Kuldo, x.Tartalom, x.Datum)).ToList());
-                await hub?.Clients.Client(connection.ConnectionId).SetUsers(lobby.Connections.Select(x => new UserViewModel(x.UserId, x.Username)).ToList());
+                await hub.Clients.Group(lobby.Name).UserEntered(new UserViewModel(connection.UserId, connection.Username));
+                await hub.Groups.AddToGroupAsync(connection.ConnectionId, lobby.Name);
+                var viewModel = new LobbyViewModel(lobby.Name, lobby.Vezeto);
+                viewModel.Users = lobby.Connections.Select(x => new UserViewModel(x.UserId, x.Username)).ToList();
+                await hub.Clients.Client(connection.ConnectionId).LobbyJoined(viewModel);
+                await hub.Clients.Client(connection.ConnectionId).SetMessages(lobby.Messages.Select(x => new MessageViewModel(x.Kuldo, x.Tartalom, x.Datum)).ToList());
             }
 
         }
 
         public async Task<Lobby> GetLobbyAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await context.Lobbies.Include(x => x.Connections).Include(x => x.Messages).SingleOrDefaultAsync(x => x.Name == name, cancellationToken);
+            var lobby = await context.Lobbies.Include(x => x.Connections).Include(x => x.Messages).SingleOrDefaultAsync(x => x.Name == name, cancellationToken);
+            if(lobby is null)
+                throw new PoofException(LobbyMessages.LOBBY_NEM_LETEZIK);
+            return lobby;
         }
 
         public async Task DeleteLobbyAsync(string name, string userName, PoofHub hub, CancellationToken cancellationToken = default)
@@ -96,11 +116,11 @@ namespace Application.Services
 
             if (hub is not null) 
             {
-                await hub?.Clients.All.LobbyDeleted(lobby.Name);
+                await hub.Clients.All.LobbyDeleted(lobby.Name);
 
                 foreach (var conncetion in lobby.Connections)
                 {
-                    await hub?.Groups.RemoveFromGroupAsync(conncetion.ConnectionId, lobby.Name);
+                    await hub.Groups.RemoveFromGroupAsync(conncetion.ConnectionId, lobby.Name);
                 }
             }
                 
@@ -108,7 +128,7 @@ namespace Application.Services
 
         public async Task RemoveConnectionAsync(string userId, PoofHub hub, CancellationToken cancellationToken = default)
         {
-            var lobby = await context.Lobbies.SingleOrDefaultAsync(x => x.Connections.Any(x => x.UserId == userId), cancellationToken);
+            var lobby = await context.Lobbies.Include(x => x.Connections).SingleOrDefaultAsync(x => x.Connections.Any(c => c.UserId == userId), cancellationToken);
             if (lobby is null)
                 throw new PoofException(LobbyMessages.LOBBY_NEM_LETEZIK);
 
@@ -116,17 +136,17 @@ namespace Application.Services
 
             if(lobby.Vezeto == connection.Username) 
             {
-                context.Lobbies.Remove(lobby);
                 context.Connections.RemoveRange(lobby.Connections);
                 context.Messages.RemoveRange(lobby.Messages);
+                context.Lobbies.Remove(lobby);
 
                 if (hub is not null) 
                 {
-                    await hub?.Clients.Group(lobby.Name).LobbyDeleted(lobby.Name);
+                    await hub.Clients.Group(lobby.Name).LobbyDeleted(lobby.Name);
 
                     foreach (var conncetion in lobby.Connections)
                     {
-                        await hub?.Groups.RemoveFromGroupAsync(conncetion.ConnectionId, lobby.Name);
+                        await hub.Groups.RemoveFromGroupAsync(conncetion.ConnectionId, lobby.Name);
                     }
                 }
             }
@@ -136,13 +156,21 @@ namespace Application.Services
 
                 if (hub is not null) 
                 {
-                    await hub?.Clients.Group(lobby.Name).UserLeft(userId);
-                    await hub?.Groups.RemoveFromGroupAsync(hub.Context.ConnectionId, lobby.Name);
+                    await hub.Clients.Group(lobby.Name).UserLeft(userId);
+                    await hub.Groups.RemoveFromGroupAsync(connection.ConnectionId, lobby.Name, cancellationToken);
                 }
             
             }
 
             await context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task DeletePlayerAsync(string userName, string deleteUserId, PoofHub hub, CancellationToken cancellationToken = default)
+        {
+            if(await context.Lobbies.AnyAsync(x => x.Vezeto == userName && x.Connections.Any(x => x.UserId == deleteUserId && x.Username != userName), cancellationToken)) 
+            {
+                await RemoveConnectionAsync(deleteUserId, hub, cancellationToken);
+            }
         }
     }
 }

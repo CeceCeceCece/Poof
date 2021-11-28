@@ -1,15 +1,10 @@
 ﻿using Application.Interfaces;
-using Application.Models.ViewModels;
 using Application.Services;
 using Application.SignalR.ClientInterfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.SignalR
@@ -20,17 +15,20 @@ namespace Application.SignalR
         private readonly PoofTracker tracker;
         private ICurrentPlayerService currentPlayerService;
         private readonly ILobbyService lobbyService;
+        private readonly IGameService gameService;
 
-        public PoofHub(PoofTracker tracker,ILobbyService lobbyService)
+        public PoofHub(PoofTracker tracker, ILobbyService lobbyService, IGameService gameService)
         {
             this.tracker = tracker;
             this.lobbyService = lobbyService;
+            this.gameService = gameService;
         }
         public override async Task OnConnectedAsync()
         {
             await base.OnConnectedAsync();
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await tracker.UserConnected(currentPlayerService.Player.Id, Context.ConnectionId);
+            await lobbyService.ReconnectLobbyAsync(this);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -47,6 +45,13 @@ namespace Application.SignalR
             var lobby = new Lobby(name, currentPlayerService.Player.Name);
             lobby.Connections.Add(new Connection(Context.ConnectionId, currentPlayerService.Player.Name, currentPlayerService.Player.Id));
             await lobbyService.CreateLobbyAsync(lobby, this);
+        }
+
+        public async Task CreateGame(string lobbyName)
+        {
+            currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
+            var lobby = await lobbyService.GetLobbyAsync(lobbyName);
+            await gameService.CreateGameAsync(lobby, this);
         }
 
         public async Task JoinLobby(string name) 
@@ -68,10 +73,20 @@ namespace Application.SignalR
             await lobbyService.SendMessageAsync(name, currentPlayerService.Player.Id, messageInstance, this);
         }
 
+        public async Task DeletePlayer(string userId) 
+        {
+            currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
+            await lobbyService.DeletePlayerAsync(currentPlayerService.Player.Name, userId, this);
+        }
+        
         public async Task DeleteLobby(string name) 
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await lobbyService.DeleteLobbyAsync(name, currentPlayerService.Player.Name, this);
+        }
+        public async Task Status(string name) 
+        {
+            await Clients.Group(name).OnStatus();
         }
     }
 }
