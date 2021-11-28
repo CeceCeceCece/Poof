@@ -4,6 +4,7 @@ import 'package:bang/core/colors.dart';
 import 'package:bang/core/constants.dart';
 import 'package:bang/pages/lobby/lobby_controller.dart';
 import 'package:bang/services/auth_service.dart';
+import 'package:bang/services/lobby_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class LobbyView extends GetView<LobbyController> {
+  void _sendMessage(String message) {
+    Get.find<LobbyService>().sendMessage(message: message);
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -286,9 +291,9 @@ class LobbyView extends GetView<LobbyController> {
                                               ScrollController();
                                           var field = BangInputField(
                                               onSubmit: () async {
-                                                controller.sendMessage(
+                                                Get.find<LobbyService>()
+                                                    .sendMessage(
                                                   message: textController.text,
-                                                  username: username,
                                                 );
                                                 textController.clear();
 
@@ -426,13 +431,9 @@ class LobbyView extends GetView<LobbyController> {
                                                             height: 50,
                                                             onPressed:
                                                                 () async {
-                                                              controller
-                                                                  .sendMessage(
-                                                                message:
-                                                                    textController
-                                                                        .text,
-                                                                username:
-                                                                    username,
+                                                              _sendMessage(
+                                                                textController
+                                                                    .text,
                                                               );
                                                               textController
                                                                   .clear();

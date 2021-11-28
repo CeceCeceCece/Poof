@@ -2,8 +2,7 @@ import 'dart:developer';
 
 import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/routes/routes.dart';
-import 'package:bang/services/audio_service.dart';
-import 'package:bang/services/game_service.dart';
+import 'package:bang/services/lobby_service.dart';
 import 'package:bang/services/shared_preference_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,11 +18,17 @@ class HomeController extends GetxController {
   void joinRoom([String? roomId]) {
     var roomID = roomId ?? roomCodeToJoin.value;
     if (roomID == null) return;
-    log(roomID);
-    var gameService = Get.put(GameService());
-    Get.toNamed(Routes.LOBBY);
-    gameService.roomId = roomID.obs;
-    AudioService.playBackgroundMusic();
+    findOrPutLobbyService()
+        .then((service) => service.joinLobby(lobbyName: roomID));
+  }
+
+  Future<LobbyService> findOrPutLobbyService() async {
+    var service = Get.find<LobbyService>();
+    if (service.isPlayerInsideLobby) await service.disconnect();
+    service.isPlayerInsideLobby = false;
+    await service.initWebsocket();
+
+    return service;
   }
 
   void logout() {
@@ -80,9 +85,7 @@ class HomeController extends GetxController {
 
   void createGame(String? lobbyName) {
     if (lobbyName == null) return;
-    var gameService = Get.put(GameService());
-    Get.toNamed(Routes.LOBBY);
-    gameService.roomId = lobbyName.obs;
-    AudioService.playBackgroundMusic();
+    findOrPutLobbyService()
+        .then((service) => service.createLobby(lobbyName: lobbyName));
   }
 }
