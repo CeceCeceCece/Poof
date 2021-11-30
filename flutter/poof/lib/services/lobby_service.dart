@@ -9,6 +9,7 @@ import 'package:bang/pages/lobby/lobby_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/service_base.dart';
 import 'package:bang/services/shared_preference_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -23,6 +24,7 @@ class LobbyService extends ServiceBase {
   var statusInterval = Duration(seconds: 10);
   String? roomID;
   Timer? statusTimer;
+  StateSetter? onMessageArrivedCallback;
 
   late HubConnection _connection;
   Future<void> initWebsocket() async {
@@ -229,6 +231,9 @@ class LobbyService extends ServiceBase {
     log('Arrived:$message');
     var controller = Get.find<LobbyController>();
     controller.messages.add(message);
+    onMessageArrivedCallback?.call(() {});
+    controller.modalSheetScrollController.animateTo(controller.modalSheetScrollController.position.maxScrollExtent + 100,
+        curve: Curves.fastLinearToSlowEaseIn, duration: Duration(milliseconds: 300));
     controller.refreshUI();
   }
 
@@ -260,7 +265,7 @@ class LobbyService extends ServiceBase {
     if (message.isNotEmpty) {
       await _connection.invoke('SendMessage', args: [
         message,
-        Get.find<LobbyController>().roomID,
+        roomID,
       ]).then(
         (value) => print('MESSAGE SENT!'),
       );

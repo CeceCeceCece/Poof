@@ -8,6 +8,11 @@ import 'package:bang/cards/model/bang_card.dart';
 import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/widgets/bang_card_widget.dart';
 import 'package:bang/core/constants.dart';
+import 'package:bang/models/card_dto.dart';
+import 'package:bang/models/game_event_dto.dart';
+import 'package:bang/models/life_point_dto.dart';
+import 'package:bang/models/message_dto.dart';
+import 'package:bang/models/option_dto.dart';
 import 'package:bang/services/service_base.dart';
 import 'package:bang/services/shared_preference_service.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -19,6 +24,7 @@ class GameService extends ServiceBase {
   RxBool expandedEquipmentView = false.obs;
 
   Rx<String?> roomId = Rx(null);
+  String? gameId;
 
   RxList handWidgets = <BangCardWidget>[].obs;
   var statusInterval = Duration(seconds: 10);
@@ -292,38 +298,85 @@ class GameService extends ServiceBase {
     });
 
     _connection.on(
-      'LobbyCreated',
-      (lobby) => _lobbyCreated(),
+      'SetDeck',
+      (cards) => _setDeck(
+        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
+      ),
     );
 
     _connection.on(
-      'LobbyDeleted',
-      (name) => _lobbyDeleted(),
+      'SetEquipedDeck',
+      (cards) => _setEquippedDeck(
+        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
+      ),
     );
 
     _connection.on(
-      'LobbyJoined',
-      (lobby) => _lobbyJoined(),
+      'SetDiscardPile',
+      (card) => _setDiscardPile(
+        CardDto.fromJson(card?[0]),
+      ),
     );
 
     _connection.on(
-      'SetUsers',
-      (users) => _setUsers(),
+      'SetWeapon',
+      (weaponData) => _setWeapon(
+        weaponData![0] as String,
+        CardDto.fromJson(
+          weaponData[1],
+        ),
+      ),
     );
 
     _connection.on(
-      'SetMessages',
-      (messages) => _setMessages(),
+      'SetLifePoint',
+      (lifePoint) => _setLifePoint(
+        LifePointDto.fromJson(lifePoint?[0]),
+      ),
     );
 
     _connection.on(
-      'UserEntered',
-      (user) => _userEntered(),
+      'CardsDroped',
+      (cards) => _cardsDropped(
+        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
+      ),
     );
 
     _connection.on(
-      'UserLeft',
-      (userId) => _userLeft(),
+      'CardUnequiped',
+      (card) => _cardUnequipped(
+        CardDto.fromJson(
+          card?[0],
+        ),
+      ),
+    );
+
+    _connection.on(
+      'CardEquiped',
+      (card) => _cardsEquipped(
+        card![0] as String,
+        CardDto.fromJson(
+          card[1],
+        ),
+      ),
+    );
+    _connection.on(
+      'ShowCard',
+      (card) => _showCard(
+        CardDto.fromJson(card?[0]),
+      ),
+    );
+    _connection.on(
+      'CardsAdded',
+      (cards) => _cardsAdded(
+        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
+      ),
+    );
+    _connection.on(
+      'SetGameEvent',
+      (gameEvent) => _setGameEvent(
+        GameEventDto.fromJson(gameEvent?[0]),
+      ),
     );
     _connection.on(
       'OnStatus',
@@ -332,24 +385,39 @@ class GameService extends ServiceBase {
 
     _connection.on(
       'RecieveMessage',
-      (message) => _recieveMessage(),
+      (message) => _recieveMessage(
+        MessageDto.fromJson(
+          message?[0],
+        ),
+      ),
     );
 
     _connection.on(
-      'GameCreated',
-      (gameId) => _gameCreated(),
+      'CardsReceieved',
+      (cards) => _cardsReceived(
+        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
+      ),
+    );
+
+    _connection.on(
+      'ShowOption',
+      (option) => _showOption(
+        OptionDto.fromJson(
+          option?[0],
+        ),
+      ),
     );
   }
 
-  void _lobbyJoined() {}
+  void _setDiscardPile(CardDto card) {}
 
-  void _lobbyCreated() {}
+  void _setDeck(List<CardDto> cards) {}
 
-  void _lobbyDeleted() {}
+  void _setEquippedDeck(List<CardDto> cards) {}
 
-  void _setUsers() {}
+  void _setWeapon(String characterId, CardDto weapon) {}
 
-  void _setMessages() {}
+  void _setLifePoint(LifePointDto lifePoint) {}
 
   void _status() {
     _connection.invoke('Status', args: [roomId]);
@@ -359,13 +427,59 @@ class GameService extends ServiceBase {
     log('Status recieved');
   }
 
-  void _userEntered() {}
+  void _cardsDropped(List<CardDto> cards) {}
 
-  void _userLeft() {}
+  void _cardUnequipped(CardDto card) {}
 
-  void _recieveMessage() {}
+  void _recieveMessage(MessageDto message) {}
 
-  void _gameCreated() {}
+  void _cardsEquipped(String characterId, CardDto card) {}
+  void _cardsAdded(List<CardDto> cards) {}
+  void _showCard(CardDto card) {}
+  void _setGameEvent(GameEventDto gameEvent) {}
+
+  void _showOption(OptionDto optionDto) {}
+
+  void _cardsReceived(List<CardDto> list) {}
+
+  void sendMessage({required String message}) async {
+    if (message.isNotEmpty) {
+      await _connection.invoke('SendMessage', args: [
+        gameId,
+        message,
+      ]).then(
+        (value) => print('MESSAGE SENT!'),
+      );
+    }
+  }
+
+  void answerCard({required OptionDto option}) async {
+    await _connection.invoke('AnswearCard', args: [
+      gameId,
+      option.toJson(),
+    ]).then(
+      (value) => print('CARD ANSWER SENT!'),
+    );
+  }
+
+  void drawReact({required OptionDto option}) async {
+    await _connection.invoke('DrawReact', args: [
+      gameId,
+      option.toJson(),
+    ]).then(
+      (value) => print('DRAW REACT SENT!'),
+    );
+  }
+
+  void activeCard({required OptionDto option, required String cardId}) async {
+    await _connection.invoke('ActiveCard', args: [
+      gameId,
+      cardId,
+      option.toJson(),
+    ]).then(
+      (value) => print('ACTIVE CARD SENT!'),
+    );
+  }
 
   Future<void> disconnect() async {
     statusTimer?.cancel();

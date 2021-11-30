@@ -49,27 +49,20 @@ class LobbyView extends GetView<LobbyController> {
                           width: 240,
                           decoration: BoxDecoration(
                               color: Colors.white38,
-                              border:
-                                  Border.all(color: Colors.white, width: 1.5),
+                              border: Border.all(color: Colors.white, width: 1.5),
                               borderRadius: BorderRadius.circular(30)),
                         ),
                         Column(
                           children: [
                             Text('Szoba kód: ${controller.roomID}',
                                 style: GoogleFonts.graduate(
-                                    textStyle: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.brown))),
+                                    textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.brown))),
                             SizedBox(
                               height: 10,
                             ),
                             Text('Játékosok: ${controller.users().length}/7',
                                 style: GoogleFonts.graduate(
-                                    textStyle: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.brown))),
+                                    textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.brown))),
                           ],
                         ),
                       ],
@@ -81,14 +74,10 @@ class LobbyView extends GetView<LobbyController> {
                         children: controller.users
                             .map((user) => controller.playerIsLobbyAdmin
                                 ? Dismissible(
-                                    confirmDismiss:
-                                        (DismissDirection details) async =>
-                                            Future.delayed(Duration(seconds: 1),
-                                                () {
+                                    confirmDismiss: (DismissDirection details) async => Future.delayed(Duration(seconds: 1), () {
                                       return !controller.isAdmin(user);
                                     }),
-                                    onDismissed: (_) =>
-                                        controller.removeUser(user),
+                                    onDismissed: (_) => controller.removeUser(user),
                                     key: UniqueKey(),
                                     background: Container(
                                       alignment: Alignment.centerLeft,
@@ -98,8 +87,7 @@ class LobbyView extends GetView<LobbyController> {
                                           SizedBox(
                                             width: 30,
                                           ),
-                                          Icon(Icons.highlight_remove_sharp,
-                                              color: Colors.white),
+                                          Icon(Icons.highlight_remove_sharp, color: Colors.white),
                                         ],
                                       ),
                                     ),
@@ -107,11 +95,9 @@ class LobbyView extends GetView<LobbyController> {
                                       alignment: Alignment.centerRight,
                                       color: Colors.transparent,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                        mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
-                                          Icon(Icons.highlight_remove_sharp,
-                                              color: Colors.white),
+                                          Icon(Icons.highlight_remove_sharp, color: Colors.white),
                                           SizedBox(
                                             width: 30,
                                           ),
@@ -119,19 +105,13 @@ class LobbyView extends GetView<LobbyController> {
                                       ),
                                     ),
                                     child: Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(30, 3, 30, 3),
+                                      padding: EdgeInsets.fromLTRB(30, 3, 30, 3),
                                       child: Container(
                                         height: 35,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            color: Colors.white),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0), color: Colors.white),
                                         child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               SizedBox(
                                                 width: 35,
@@ -140,8 +120,7 @@ class LobbyView extends GetView<LobbyController> {
                                                 child: Container(
                                                   child: Text(
                                                     user.name,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    overflow: TextOverflow.ellipsis,
                                                     maxLines: 1,
                                                     //softWrap: false,
                                                   ),
@@ -150,13 +129,9 @@ class LobbyView extends GetView<LobbyController> {
                                               IconButton(
                                                 icon: Icon(
                                                   Icons.star,
-                                                  color:
-                                                      controller.isAdmin(user)
-                                                          ? Colors.amber
-                                                          : Colors.grey,
+                                                  color: controller.isAdmin(user) ? Colors.amber : Colors.grey,
                                                 ),
-                                                onPressed: () => controller
-                                                    .toggleAdmin(user),
+                                                onPressed: () => controller.toggleAdmin(user),
                                               ),
                                               SizedBox(
                                                 width: 20,
@@ -170,15 +145,10 @@ class LobbyView extends GetView<LobbyController> {
                                     child: Flexible(
                                       child: Container(
                                         height: 35,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            color: Colors.white),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0), color: Colors.white),
                                         child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               SizedBox(
                                                 width: 35,
@@ -186,16 +156,14 @@ class LobbyView extends GetView<LobbyController> {
                                               Expanded(
                                                 child: Text(
                                                   user.name,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                   maxLines: 1,
                                                   //softWrap: false,
                                                 ),
                                               ),
                                               controller.isAdmin(user)
                                                   ? IconButton(
-                                                      icon: Icon(Icons.star,
-                                                          color: Colors.amber),
+                                                      icon: Icon(Icons.star, color: Colors.amber),
                                                       onPressed: null,
                                                     )
                                                   : Container(),
@@ -234,18 +202,14 @@ class LobbyView extends GetView<LobbyController> {
                             child: Container(
                               decoration: BoxDecoration(
                                   color: Colors.white38,
-                                  border: Border.all(
-                                      color: Colors.white, width: 1.5),
+                                  border: Border.all(color: Colors.white, width: 1.5),
                                   borderRadius: BorderRadius.circular(30)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   'Várj, hogy a szoba létrehozója elindítsa a játékot!',
                                   style: GoogleFonts.graduate(
-                                    textStyle: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.brown),
+                                    textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.brown),
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -265,8 +229,7 @@ class LobbyView extends GetView<LobbyController> {
                             clipBehavior: Clip.hardEdge,
                             child: Ink(
                               decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1, color: BangColors.darkBrown),
+                                  border: Border.all(width: 1, color: BangColors.darkBrown),
                                   gradient: BangColors.buttonGradient,
                                   borderRadius: BorderRadius.circular(200)),
                               child: IconButton(
@@ -275,36 +238,27 @@ class LobbyView extends GetView<LobbyController> {
                                     isScrollControlled: true,
                                     backgroundColor: BangColors.background,
                                     elevation: 10,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                     context: context,
                                     builder: (context) {
                                       return StatefulBuilder(
-                                        builder: (BuildContext context,
-                                            StateSetter setState) {
-                                          var username =
-                                              Get.find<AuthService>().player;
-                                          var textController =
-                                              TextEditingController();
-                                          var scrollController =
-                                              ScrollController();
+                                        builder: (BuildContext context, StateSetter setState) {
+                                          Get.find<LobbyService>().onMessageArrivedCallback = setState;
+                                          var username = Get.find<AuthService>().player;
+                                          var textController = TextEditingController();
+                                          ScrollController scrollController = ScrollController();
+
+                                          controller.modalSheetScrollController = scrollController;
                                           var field = BangInputField(
                                               onSubmit: () async {
-                                                Get.find<LobbyService>()
-                                                    .sendMessage(
-                                                  message: textController.text,
+                                                _sendMessage(
+                                                  textController.text,
                                                 );
                                                 textController.clear();
-
-                                                setState(() {});
-                                                scrollController.jumpTo(
-                                                    scrollController.position
-                                                            .maxScrollExtent +
-                                                        100);
                                               },
                                               controller: textController,
                                               hint: 'üzenet');
+                                          setState(() {});
 
                                           return Padding(
                                               padding: EdgeInsets.only(
@@ -317,60 +271,30 @@ class LobbyView extends GetView<LobbyController> {
                                                 children: [
                                                   Container(
                                                     height: 300,
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      controller:
-                                                          scrollController,
+                                                    child: SingleChildScrollView(
+                                                      physics: BouncingScrollPhysics(),
+                                                      controller: scrollController,
                                                       child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
                                                         children: [
-                                                          ...controller.messages
-                                                              .map(
+                                                          ...controller.messages.map(
                                                             (message) {
-                                                              var sentBySelf =
-                                                                  username ==
-                                                                      message
-                                                                          .sender;
+                                                              var sentBySelf = username == message.sender;
                                                               return Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .fromLTRB(
-                                                                            5,
-                                                                            3,
-                                                                            5,
-                                                                            3),
+                                                                padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
                                                                 child: Align(
-                                                                  alignment: sentBySelf
-                                                                      ? Alignment
-                                                                          .centerRight
-                                                                      : Alignment
-                                                                          .centerLeft,
-                                                                  child:
-                                                                      Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              20),
-                                                                      color: sentBySelf
-                                                                          ? Colors
-                                                                              .brown
-                                                                          : Colors
-                                                                              .white,
+                                                                  alignment:
+                                                                      sentBySelf ? Alignment.centerRight : Alignment.centerLeft,
+                                                                  child: Container(
+                                                                    decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.circular(20),
+                                                                      color: sentBySelf ? Colors.brown : Colors.white,
                                                                     ),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .all(
-                                                                          12.0),
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.all(12.0),
                                                                       child: Column(
-                                                                          mainAxisAlignment: MainAxisAlignment
-                                                                              .start,
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
                                                                           crossAxisAlignment: sentBySelf
                                                                               ? CrossAxisAlignment.end
                                                                               : CrossAxisAlignment.start,
@@ -385,11 +309,22 @@ class LobbyView extends GetView<LobbyController> {
                                                                                       fontWeight: FontWeight.bold,
                                                                                     ),
                                                                                   )
-                                                                                : Text('${DateFormat('kk:mm').format(message.postedDate)} - ${message.sender}:', overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontWeight: FontWeight.bold)),
+                                                                                : Text(
+                                                                                    '${DateFormat('kk:mm').format(message.postedDate)} - ${message.sender}:',
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                    maxLines: 1,
+                                                                                    style:
+                                                                                        TextStyle(fontWeight: FontWeight.bold)),
                                                                             Container(
                                                                               child: Padding(
-                                                                                padding: const EdgeInsets.only(left: 3, top: 5, right: 3),
-                                                                                child: Text('${message.text}', overflow: TextOverflow.ellipsis, maxLines: 4, style: sentBySelf ? TextStyle(color: BangColors.background) : null
+                                                                                padding: const EdgeInsets.only(
+                                                                                    left: 3, top: 5, right: 3),
+                                                                                child: Text('${message.text}',
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                    maxLines: 4,
+                                                                                    style: sentBySelf
+                                                                                        ? TextStyle(color: BangColors.background)
+                                                                                        : null
                                                                                     //softWrap: false,
                                                                                     ),
                                                                               ),
@@ -410,12 +345,7 @@ class LobbyView extends GetView<LobbyController> {
                                                   ),
                                                   Padding(
                                                     padding: EdgeInsets.only(
-                                                        bottom: MediaQuery.of(
-                                                                    context)
-                                                                .viewInsets
-                                                                .bottom +
-                                                            10,
-                                                        top: 10),
+                                                        bottom: MediaQuery.of(context).viewInsets.bottom + 10, top: 10),
                                                     child: Container(
                                                       child: Row(
                                                         children: [
@@ -429,21 +359,13 @@ class LobbyView extends GetView<LobbyController> {
                                                             text: 'Küldés!',
                                                             width: 90,
                                                             height: 50,
-                                                            onPressed:
-                                                                () async {
+                                                            onPressed: () async {
                                                               _sendMessage(
-                                                                textController
-                                                                    .text,
+                                                                textController.text,
                                                               );
-                                                              textController
-                                                                  .clear();
+                                                              textController.clear();
 
                                                               setState(() {});
-                                                              scrollController.jumpTo(
-                                                                  scrollController
-                                                                          .position
-                                                                          .maxScrollExtent +
-                                                                      100);
                                                             },
                                                           )
                                                         ],
@@ -455,6 +377,14 @@ class LobbyView extends GetView<LobbyController> {
                                         },
                                       );
                                     },
+                                  );
+                                  Future.delayed(
+                                    Duration(milliseconds: 100),
+                                    () => controller.modalSheetScrollController.animateTo(
+                                      controller.modalSheetScrollController.position.maxScrollExtent + 50,
+                                      curve: Curves.fastLinearToSlowEaseIn,
+                                      duration: Duration(milliseconds: 500),
+                                    ),
                                   );
                                 },
                                 icon: Icon(

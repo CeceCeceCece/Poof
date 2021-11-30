@@ -14,9 +14,10 @@ import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class LobbyController extends GetxController {
-  String? get roomID => Get.find<LobbyService>().roomID;
-
   var lobbyService = Get.find<LobbyService>();
+  String? get roomID => lobbyService.roomID;
+  var modalSheetScrollController = ScrollController();
+
   var showingQr = false.obs;
   var admin = 'default_playername'.obs;
 
@@ -26,8 +27,7 @@ class LobbyController extends GetxController {
   bool get playerIsLobbyAdmin => admin() == Get.find<AuthService>().player;
   @override
   void onInit() async {
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: []);
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     super.onInit();
   }
 
@@ -99,8 +99,7 @@ class LobbyController extends GetxController {
   bool isAdmin(UserDto user) => user.name == admin.value;
 
   void toggleAdmin(UserDto user) {
-    Fluttertoast.showToast(
-        msg: '${user.name} is now admin', gravity: ToastGravity.BOTTOM);
+    Fluttertoast.showToast(msg: '${user.name} is now admin', gravity: ToastGravity.BOTTOM);
   }
 
   void refreshUI() {
