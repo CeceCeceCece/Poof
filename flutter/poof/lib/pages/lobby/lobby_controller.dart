@@ -1,3 +1,4 @@
+import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/user_dto.dart';
 import 'package:bang/routes/routes.dart';
@@ -11,12 +12,12 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:signalr_core/signalr_core.dart';
 
 class LobbyController extends GetxController {
-  late final HubConnection _connection;
-  String? get roomID => Get.find<GameService>().roomId.value;
+  String? get roomID => Get.find<LobbyService>().roomID;
+
   var lobbyService = Get.find<LobbyService>();
+  var showingQr = false.obs;
   var admin = 'default_playername'.obs;
 
   var messages = <MessageDto>[].obs;
@@ -31,12 +32,31 @@ class LobbyController extends GetxController {
   }
 
   void showQR([String? data]) {
+    var qrValue = data ?? (roomID ?? null);
+    if (qrValue == null) return;
+    showingQr.value = true;
     Get.defaultDialog(
+      title: 'Olvasd be a kódot!',
+      onCancel: resetQRBoolean,
+      cancel: BangButton(
+          text: 'Vissza',
+          height: 50,
+          width: 90,
+          isNormal: false,
+          onPressed: () {
+            resetQRBoolean();
+            Get.back();
+          }),
+      onWillPop: () async {
+        resetQRBoolean();
+        Get.back();
+        return false;
+      },
       content: Container(
         width: 250,
         height: 250,
         child: QrImage(
-          data: data ?? (roomID ?? 'RANDOM'),
+          data: qrValue,
           version: QrVersions.auto,
           errorCorrectionLevel: QrErrorCorrectLevel.Q,
           size: 100.0,
@@ -50,11 +70,16 @@ class LobbyController extends GetxController {
   }
 
   void join() {
+    var gameService = Get.put(GameService());
+    gameService.roomId.value = roomID;
     Get.offAndToNamed(Routes.GAME);
   }
 
+  void resetQRBoolean() {
+    showingQr.value = false;
+  }
+
   void removeUser(UserDto user) {
-    //users.removeWhere((element) => element.id == user.id);
     lobbyService.removeUser(user.id);
   }
 
@@ -71,8 +96,7 @@ class LobbyController extends GetxController {
       );
   }
 
-  bool isAdmin(UserDto user) =>
-      user.name == admin.value; //user.name == Get.find<AuthService>().player;
+  bool isAdmin(UserDto user) => user.name == admin.value;
 
   void toggleAdmin(UserDto user) {
     Fluttertoast.showToast(

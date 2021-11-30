@@ -4,6 +4,8 @@ import 'package:bang/core/colors.dart';
 import 'package:bang/core/constants.dart';
 import 'package:bang/pages/home/home_controller.dart';
 import 'package:bang/routes/routes.dart';
+import 'package:bang/services/audio_service.dart';
+import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -138,6 +140,15 @@ class HomeView extends GetView<HomeController> {
               ),
               Spacer(),
               BangButton(
+                text: 'shortcut',
+                onPressed: () {
+                  var gameService = Get.put(GameService());
+                  gameService.roomId.value = 'roomID';
+                  AudioService.playBackgroundMusic();
+                  Get.offAndToNamed(Routes.GAME);
+                },
+              ),
+              BangButton(
                 onPressed: () async {
                   var textController = TextEditingController();
                   var content = Form(
@@ -156,6 +167,7 @@ class HomeView extends GetView<HomeController> {
                       controller: textController,
                     ),
                   );
+
                   var lobbyName = await Get.defaultDialog<String>(
                       title: 'Adj nevet a szobának!',
                       content: content,

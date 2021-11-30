@@ -7,7 +7,6 @@ import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/user_dto.dart';
 import 'package:bang/pages/lobby/lobby_controller.dart';
 import 'package:bang/routes/routes.dart';
-import 'package:bang/services/game_service.dart';
 import 'package:bang/services/service_base.dart';
 import 'package:bang/services/shared_preference_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,6 +21,7 @@ class LobbyService extends ServiceBase {
   var isPlayerInsideLobby = false;
   var delay = Duration(milliseconds: 150);
   var statusInterval = Duration(seconds: 10);
+  String? roomID;
   Timer? statusTimer;
 
   late HubConnection _connection;
@@ -144,32 +144,33 @@ class LobbyService extends ServiceBase {
   void _lobbyJoined(LobbyDto lobby) {
     log('$lobby');
     if (!isPlayerInsideLobby) {
-      var gameService = Get.put(GameService());
+      //var gameService = Get.put(GameService());
       AudioService.playBackgroundMusic();
       Get.toNamed(Routes.LOBBY);
 
-      gameService.roomId = lobby.name.obs;
+      //gameService.roomId = lobby.name.obs;
     }
     isPlayerInsideLobby = true;
     Future.delayed(delay, () {
       var lobbyController = Get.find<LobbyController>();
       lobbyController.admin.value = lobby.owner;
       lobbyController.users.value = lobby.users;
+      roomID = lobby.name;
       lobbyController.refreshUI();
     });
   }
 
   void _lobbyCreated(LobbyDto lobby) async {
     log('Arrived:$lobby');
-    var gameService = Get.put(GameService());
+
     AudioService.playBackgroundMusic();
     Get.toNamed(Routes.LOBBY);
     statusTimer = Timer.periodic(statusInterval, (_) => _status());
-    gameService.roomId = lobby.name.obs;
     Future.delayed(delay, () {
       var lobbyController = Get.find<LobbyController>();
       lobbyController.admin.value = lobby.owner;
       lobbyController.users.value = lobby.users;
+      roomID = lobby.name;
       lobbyController.refreshUI();
     });
   }
@@ -194,11 +195,11 @@ class LobbyService extends ServiceBase {
   }
 
   void _status() {
-    _connection.invoke('Status', args: [Get.find<LobbyController>().roomID]);
+    _connection.invoke('Status', args: [roomID]);
   }
 
   void _onStatus() {
-    Fluttertoast.showToast(msg: 'Status recieved');
+    log('Status recieved');
   }
 
   void _userEntered(UserDto user) {
@@ -206,6 +207,10 @@ class LobbyService extends ServiceBase {
     Future.delayed(delay, () {
       var controller = Get.find<LobbyController>();
       controller.users.add(user);
+      if (controller.showingQr()) {
+        controller.resetQRBoolean();
+        Get.back();
+      }
       controller.refreshUI();
     });
 
@@ -229,6 +234,7 @@ class LobbyService extends ServiceBase {
 
   void _gameCreated(String gameId) {
     log('Arrived:$gameId');
+    Get.find<LobbyController>().join();
   }
 
   void createLobby({required String lobbyName}) async {

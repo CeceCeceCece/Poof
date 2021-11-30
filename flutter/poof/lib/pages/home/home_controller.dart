@@ -32,8 +32,8 @@ class HomeController extends GetxController {
   }
 
   void logout() {
-    SharedPreferenceService.token = '';
     Get.offAndToNamed(Routes.LOGIN);
+    SharedPreferenceService.removeCredentials();
   }
 
   void readQR() {

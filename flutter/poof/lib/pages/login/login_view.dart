@@ -116,6 +116,7 @@ class LoginView extends GetView<LoginController> {
         confirmPasswordField,
         SizedBox(height: 20),
         BangButton(
+          isLoading: controller.loading(),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               controller.register();
@@ -131,6 +132,7 @@ class LoginView extends GetView<LoginController> {
             controller.goToLogin();
             FocusScope.of(context).unfocus();
           },
+          isLoading: controller.loading(),
           text: 'Már van fiókom...',
         ),
       ],
@@ -152,7 +154,6 @@ class LoginView extends GetView<LoginController> {
         hint: 'Felhasználónév',
         nextNode: passwordField.focusNode,
         onSubmit: () {
-          //FocusScope.of(context).unfocus();
           passwordField.focusNode.nextFocus();
         });
 
@@ -176,9 +177,11 @@ class LoginView extends GetView<LoginController> {
           if (_formKey.currentState!.validate()) controller.login();
         },
         text: 'Bejelentkezés',
+        isLoading: controller.loading(),
       ),
       SizedBox(height: 20),
       BangButton(
+        isLoading: controller.loading(),
         onPressed: () {
           _formKey.currentState?.reset();
           controller.goToRegister();

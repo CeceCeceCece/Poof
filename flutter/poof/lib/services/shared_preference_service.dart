@@ -24,6 +24,19 @@ class SharedPreferenceService extends ServiceBase {
     return _name!;
   }
 
+  static void removeCredentials() {
+    _preferences.clear();
+    token = '';
+    name = '';
+  }
+
+  static void saveCredentials(String username, String pw) {
+    name = username;
+    _preferences.setString('password', pw);
+  }
+
+  static String? get password => _preferences.getString('password');
+
   static set name(String name) {
     _preferences.setString(Constants.NAME, name);
     _name = name;

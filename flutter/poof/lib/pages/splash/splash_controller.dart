@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/auth_service.dart';
+import 'package:bang/services/shared_preference_service.dart';
 import 'package:get/get.dart';
 
 class SplashController extends GetxController {
@@ -16,10 +19,18 @@ class SplashController extends GetxController {
   }
 
   Future<void> _initState() async {
-    var route = AuthService.hasValidToken ? Routes.HOME : Routes.LOGIN;
-    await _splashDuration.delay();
-
-    Get.offAllNamed(route);
+    var password = SharedPreferenceService.password;
+    var name = SharedPreferenceService.name;
+    bool success = false;
     AudioService.playMenuSong();
+    if (name != '' && password != null)
+      success = await Get.find<AuthService>().login(name, password);
+    else
+      log('credentials not present');
+    if (!success) {
+      await _splashDuration.delay();
+      log('login not successful');
+      Get.offAllNamed(Routes.LOGIN);
+    }
   }
 }
