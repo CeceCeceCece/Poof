@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bang/cards/model/action_cards/equipment_card.dart';
 import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
@@ -7,7 +9,6 @@ import 'package:bang/core/app_colors.dart';
 import 'package:bang/core/app_constants.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player_view.dart';
-import 'package:bang/services/game_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,18 +33,16 @@ class GameView extends GetView<GameController> {
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Center(
-              child: Obx(
-                () => Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    _buildDrawPile(height),
-                    _buildDiscardPile(height),
-                    ..._buildLayout(height, width),
-                    _buildChat(),
-                    _buildCloseButton(),
-                  ],
-                ),
+              child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.passthrough,
+                children: [
+                  _buildDrawPile(height),
+                  _buildDiscardPile(height),
+                  ..._buildLayout(height, width),
+                  _buildChat(),
+                  _buildCloseButton(),
+                ],
               ),
             ),
           ),
@@ -54,31 +53,64 @@ class GameView extends GetView<GameController> {
 
   Widget _buildDrawPile(double height) => Positioned(
         bottom: height / 2 + 45,
-        child: BangCardWidget(
-          card: EquipmentCard(
-              background: 'barrel',
-              name: 'barrel',
-              value: Bang.CardValue.Ten,
-              type: Bang.CardType.Equipment,
-              suit: Bang.CardSuit.Diamonds),
-          showBackPermanently: true,
-          canBeFocused: false,
-          scale: 0.55,
+        child: Obx(() => Stack(
+              alignment: Alignment.center,
+              children: [
+                for (int i = 0; i < controller.drawPileAmount() / 5; i++)
+                  _buildDummyCardBack(),
+                BangCardWidget.back(isDrawPile: true, extraElevation: 2),
+                Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 1.5),
+                      shape: BoxShape.circle),
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: Material(
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                ),
+                Text(
+                  controller.drawPileAmount().toString(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ],
+            )),
+      );
+
+  Widget _buildDummyCardBack() => Transform.translate(
+        offset: Offset(
+            controller.random.nextInt(5) - 2, controller.random.nextInt(5) - 2),
+        child: Transform.rotate(
+          angle: (pi / 180) * (controller.random.nextInt(7) - 3),
+          child: BangCardWidget.back(isDrawPile: true, extraElevation: 2),
         ),
       );
 
   Widget _buildDiscardPile(double height) => Positioned(
         bottom: height / 2 - 35,
-        child: BangCardWidget(
-          card: EquipmentCard(
-              background: 'barrel',
-              name: 'barrel',
-              value: Bang.CardValue.Ten,
-              type: Bang.CardType.Equipment,
-              suit: Bang.CardSuit.Diamonds),
-          canBeFocused: true,
-          scale: 0.55,
-        ),
+        child: Obx(() => Stack(
+              children: [
+                for (int i = 0; i < controller.discardedPileAmount() / 5; i++)
+                  _buildDummyCardBack(),
+                BangCardWidget(
+                  card: EquipmentCard(
+                      background: 'barrel',
+                      name: 'barrel',
+                      value: Bang.CardValue.Ten,
+                      type: Bang.CardType.Equipment,
+                      suit: Bang.CardSuit.Diamonds),
+                  canBeFocused: true,
+                  scale: 0.5,
+                  highlightMultiplier: 1.3,
+                ),
+              ],
+            )),
       );
 
   Widget _buildChat() => Positioned(
@@ -400,24 +432,23 @@ class GameView extends GetView<GameController> {
         _buildPlayer(),
       ];
 
-  _buildPlayer() {
-    var service = Get.find<GameService>();
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: PlayerView(
-        health: 3,
-        characterCard: CharacterCard(
-            background: 'willythekid', health: 4, name: 'willythekid'),
-        roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
-        cardsInHand: controller.handWidgets,
-        equipment: controller.equipmentList,
-        handDoubleTap: controller.toggleExpandedHand,
-        highlightedIndexInHand: controller.highlightedIndex(),
-        isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
-        isHandViewExpanded: controller.isHandExpanded(),
-        temporaryEffects: controller.temporaryEffectList,
-        toggleEquipmentView: controller.toggleEquipmentView,
-      ),
-    );
+  Widget _buildPlayer() {
+    return Obx(() => Align(
+          alignment: Alignment.bottomCenter,
+          child: PlayerView(
+            health: 3,
+            characterCard: CharacterCard(
+                background: 'willythekid', health: 4, name: 'willythekid'),
+            roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
+            cardsInHand: controller.handWidgets,
+            equipment: controller.equipmentList,
+            handDoubleTap: controller.toggleExpandedHand,
+            highlightedIndexInHand: controller.highlightedIndex(),
+            isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
+            isHandViewExpanded: controller.isHandExpanded(),
+            temporaryEffects: controller.temporaryEffectList,
+            toggleEquipmentView: controller.toggleEquipmentView,
+          ),
+        ));
   }
 }

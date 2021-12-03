@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bang/cards/model/action_cards/action_card.dart';
 import 'package:bang/cards/model/action_cards/equipment_card.dart';
 import 'package:bang/cards/model/action_cards/weapon_card.dart';
@@ -16,6 +18,9 @@ class GameController extends GetxController {
   var isHandExpanded = false.obs;
   var isEquipmentViewExpanded = false.obs;
   RxInt highlightedIndex = (-1).obs;
+  var drawPileAmount = 80.obs;
+  var discardedPileAmount = 20.obs;
+  Random random = Random();
 
   void toggleExpandedHand() {
     isHandExpanded.value = !isHandExpanded();

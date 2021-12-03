@@ -15,6 +15,7 @@ class BangCardWidget extends StatefulWidget {
 
   final double scale;
   final bool canBeFocused;
+  final double extraElevation;
   final bool canBeDragged;
   final double highlightMultiplier;
   late final bool isInsideHand;
@@ -28,6 +29,7 @@ class BangCardWidget extends StatefulWidget {
     this.canBeFocused = true,
     this.onDragSuccessCallback,
     this.handCallback,
+    this.extraElevation = 0,
     this.scale = 1.0,
     this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
@@ -43,10 +45,12 @@ class BangCardWidget extends StatefulWidget {
   @override
   _BangCardWidgetState createState() => _BangCardWidgetState();
 
-  static back() => BangCardWidget(
+  static back({bool isDrawPile = false, double extraElevation = 3}) =>
+      BangCardWidget(
         scale: 0.5,
         showBackPermanently: true,
         canBeFocused: false,
+        extraElevation: extraElevation,
         card: ActionCard(
           background: 'dummy',
           name: 'dummy',
@@ -123,7 +127,9 @@ class _BangCardWidgetState extends State<BangCardWidget>
                 )
               : Material(
                   borderRadius: BorderRadius.circular(10 * widget.scale),
-                  elevation: isElevated && !widget.isInsideHand ? 40 : 0,
+                  elevation: isElevated && !widget.isInsideHand
+                      ? 40
+                      : widget.extraElevation,
                   child: Transform(
                     alignment: Alignment.center,
                     transform: Matrix4.identity()..rotateY(pi),
