@@ -10,7 +10,6 @@ import 'package:bang/cards/widgets/non_playable_card_widget.dart';
 import 'package:bang/core/app_colors.dart';
 import 'package:bang/pages/game/widgets/hand.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class PlayerView extends StatelessWidget {
   final CharacterCard characterCard;
@@ -40,188 +39,133 @@ class PlayerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var health = 2;
-    return Obx(
-      () => AnimatedContainer(
-        duration: Duration(milliseconds: 150),
-        height: isHandViewExpanded ? 370 : 310,
-        child: Stack(
-          children: [
-            ..._buildEquipmentView(
-                !isHandViewExpanded && isEquipmentViewExpanded, 157),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  height: isHandViewExpanded ? 350 : 310,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          child: isHandViewExpanded
-                              ? null
-                              : Stack(
-                                  alignment: Alignment.centerRight,
-                                  fit: StackFit.passthrough,
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  children: [
-                                      Positioned(
-                                        bottom: 20,
-                                        right: 2 *
-                                                CardWidgetHelpers.cardWidth *
-                                                0.4 +
-                                            14 -
-                                            health -
-                                            (5 - health) * pixelPerHealth -
-                                            85,
-                                        child: Transform.rotate(
-                                          angle: pi / 2,
-                                          child: NonPlayableCardWidget(
-                                            scale: 0.9,
-                                            showBackPermanently: true,
-                                            card: characterCard,
-                                            canBeFocused: false,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 20,
-                                        child: NonPlayableCardWidget(
-                                          scale: 0.95,
-                                          card: characterCard,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 20,
-                                        left: 10,
-                                        child: NonPlayableCardWidget(
-                                          card: roleCard,
-                                          scale: 0.95,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 15,
-                                        left: 10,
-                                        child: Material(
-                                            elevation: 20,
-                                            shape: CircleBorder(),
-                                            clipBehavior: Clip.hardEdge,
-                                            color: Colors.transparent,
-                                            child: Ink(
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      width: 1,
-                                                      color:
-                                                          AppColors.darkBrown),
-                                                  gradient:
-                                                      AppColors.buttonGradient,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          200)),
-                                              child: Center(
-                                                child: AnimatedIconButton(
-                                                    size: 18,
-                                                    duration: Duration(
-                                                        milliseconds: 400),
-                                                    onPressed:
-                                                        toggleEquipmentView,
-                                                    icons: [
-                                                      AnimatedIconItem(
-                                                          icon: Icon(
-                                                        Icons.arrow_upward,
-                                                        size: 20,
-                                                        color: Colors.white,
-                                                      )),
-                                                      AnimatedIconItem(
-                                                          icon: Icon(
-                                                              Icons
-                                                                  .arrow_downward,
-                                                              size: 20,
-                                                              color: Colors
-                                                                  .white)),
-                                                    ]),
-                                              ),
-                                            )),
-                                      )
-                                    ]),
-                        ),
-                        flex: isHandViewExpanded ? 0 : 22,
-                      ),
-                      Expanded(
-                        child: Stack(
-                          children: [
-                            ..._buildEquipmentView(
-                                isEquipmentViewExpanded && isHandViewExpanded,
-                                208),
-                            Obx(
-                              () => Hand(
-                                indexOfFocusedCard: highlightedIndexInHand,
-                                cards: cardsInHand,
-                                isExpanded: isHandViewExpanded,
-                                handSize: cardsInHand.length,
-                                onDoubleTap: handDoubleTap,
-                              ),
-                            ),
-                            isHandViewExpanded
-                                ? Positioned(
-                                    bottom: 15,
-                                    left: 10,
-                                    child: Material(
-                                      elevation: 20,
-                                      clipBehavior: Clip.hardEdge,
-                                      shape: CircleBorder(),
-                                      color: Colors.transparent,
-                                      child: Ink(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 1,
-                                                color: AppColors.darkBrown),
-                                            gradient: AppColors.buttonGradient,
-                                            borderRadius:
-                                                BorderRadius.circular(200)),
-                                        child: Center(
-                                          child: AnimatedIconButton(
-                                              size: 18,
-                                              duration:
-                                                  Duration(milliseconds: 400),
-                                              onPressed: toggleEquipmentView,
-                                              /*() => service
-                                                      .expandedEquipmentView
-                                                      .value =
-                                                  !service
-                                                      .expandedEquipmentView(),*/
-                                              icons: [
-                                                AnimatedIconItem(
-                                                    icon: Icon(
-                                                  Icons.arrow_upward,
-                                                  size: 20,
-                                                  color: Colors.white,
-                                                )),
-                                                AnimatedIconItem(
-                                                    icon: Icon(
-                                                        Icons.arrow_downward,
-                                                        size: 20,
-                                                        color: Colors.white)),
-                                              ]),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                          ],
-                        ),
-                        flex: isHandViewExpanded ? 30 : 8,
-                      )
-                    ],
-                  ),
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 150),
+      height: isHandViewExpanded ? 370 : 310,
+      child: Stack(
+        children: [
+          ..._buildEquipmentView(
+              !isHandViewExpanded && isEquipmentViewExpanded, 157),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                height: isHandViewExpanded ? 350 : 310,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _buildRoleHealthCharacter(health),
+                    _buildHand(),
+                  ],
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
+
+  Widget _buildRoleHealthCharacter(int health) => Expanded(
+        child: Container(
+          child: isHandViewExpanded
+              ? null
+              : Stack(
+                  alignment: Alignment.centerRight,
+                  fit: StackFit.passthrough,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  children: [
+                      Positioned(
+                        bottom: 20,
+                        right: 2 * CardWidgetHelpers.cardWidth * 0.4 +
+                            14 -
+                            health -
+                            (5 - health) * pixelPerHealth -
+                            85,
+                        child: Transform.rotate(
+                          angle: pi / 2,
+                          child: NonPlayableCardWidget(
+                            scale: 0.9,
+                            showBackPermanently: true,
+                            card: characterCard,
+                            canBeFocused: false,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 20,
+                        child: NonPlayableCardWidget(
+                          scale: 0.95,
+                          card: characterCard,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 20,
+                        left: 10,
+                        child: NonPlayableCardWidget(
+                          card: roleCard,
+                          scale: 0.95,
+                        ),
+                      ),
+                      _buildEquipmentViewTogglerButton()
+                    ]),
+        ),
+        flex: isHandViewExpanded ? 0 : 22,
+      );
+
+  Widget _buildHand() => Expanded(
+        child: Stack(
+          children: [
+            ..._buildEquipmentView(
+                isEquipmentViewExpanded && isHandViewExpanded, 208),
+            Hand(
+              indexOfFocusedCard: highlightedIndexInHand,
+              cards: cardsInHand,
+              isExpanded: isHandViewExpanded,
+              handSize: cardsInHand.length,
+              onDoubleTap: handDoubleTap,
+            ),
+            isHandViewExpanded
+                ? _buildEquipmentViewTogglerButton()
+                : Container(),
+          ],
+        ),
+        flex: isHandViewExpanded ? 30 : 8,
+      );
+
+  Widget _buildEquipmentViewTogglerButton() => Positioned(
+        bottom: 15,
+        left: 10,
+        child: Material(
+          elevation: 20,
+          clipBehavior: Clip.hardEdge,
+          shape: CircleBorder(),
+          color: Colors.transparent,
+          child: Ink(
+            decoration: BoxDecoration(
+                border: Border.all(width: 1, color: AppColors.darkBrown),
+                gradient: AppColors.buttonGradient,
+                borderRadius: BorderRadius.circular(200)),
+            child: Center(
+              child: AnimatedIconButton(
+                  size: 18,
+                  duration: Duration(milliseconds: 400),
+                  onPressed: toggleEquipmentView,
+                  icons: [
+                    AnimatedIconItem(
+                        icon: Icon(
+                      Icons.arrow_upward,
+                      size: 20,
+                      color: Colors.white,
+                    )),
+                    AnimatedIconItem(
+                        icon: Icon(Icons.arrow_downward,
+                            size: 20, color: Colors.white)),
+                  ]),
+            ),
+          ),
+        ),
+      );
 
   List<Widget> _buildEquipmentView(bool shouldShow, double bottomOffset) {
     return shouldShow
