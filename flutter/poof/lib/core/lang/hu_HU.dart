@@ -37,7 +37,7 @@ const Map<String, String> hu_HU = {
   AppStrings.password: 'Jelszó',
   AppStrings.username: 'Felhasználónév',
   AppStrings.password_again: 'Jelszó újra',
-  AppStrings.registration: 'Registration',
+  AppStrings.registration: 'Regisztráció',
   AppStrings.already_have_account: 'Már van fiókom',
   AppStrings.login: 'Bejelentkezés',
   AppStrings.dont_have_an_account: 'Még nincs fiókom',

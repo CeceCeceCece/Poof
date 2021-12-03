@@ -26,7 +26,7 @@ class GameService extends ServiceBase {
   Rx<String?> roomId = Rx(null);
   String? gameId;
 
-  RxList handWidgets = <BangCardWidget>[].obs;
+  var handWidgets = <BangCardWidget>[].obs;
   var statusInterval = Duration(seconds: 10);
 
   Timer? statusTimer;

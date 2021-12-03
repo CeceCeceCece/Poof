@@ -54,7 +54,8 @@ class AuthService extends ServiceBase {
   }
 
   void register(String username, String password) async {
-    try {
+    Get.offAndToNamed(Routes.HOME);
+    /* try {
       final response = await _userProvider.register(username, password);
       if (response.statusCode == 200) {
         login(username, password);
@@ -63,6 +64,6 @@ class AuthService extends ServiceBase {
       log('$error');
     } finally {
       Get.find<LoginController>().loading.value = false;
-    }
+    }*/
   }
 }

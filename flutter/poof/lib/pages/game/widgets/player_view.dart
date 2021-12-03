@@ -7,7 +7,7 @@ import 'package:bang/cards/widgets/bang_card_widget.dart';
 import 'package:bang/cards/widgets/card_widget_helpers.dart';
 import 'package:bang/cards/widgets/non_playable_card_widget.dart';
 import 'package:bang/core/app_colors.dart';
-import 'package:bang/pages/game/widgets/hand_of_cards.dart';
+import 'package:bang/pages/game/widgets/hand.dart';
 import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -141,7 +141,19 @@ class PlayerView extends StatelessWidget {
                                 service.expandedEquipmentView() &&
                                     service.expandedHandView(),
                                 208),
-                            Hand(),
+                            Obx(
+                              () => Hand(
+                                indexOfFocusedCard: service.highlightedIndex(),
+                                cards: service.handWidgets(),
+                                isExpanded: service.expandedHandView(),
+                                handSize: service.handWidgets.length,
+                                onDoubleTap: () {
+                                  service.expandedHandView.value =
+                                      !service.expandedHandView();
+                                  service.expandedEquipmentView.value = false;
+                                },
+                              ),
+                            ),
                             service.expandedHandView()
                                 ? Positioned(
                                     bottom: 15,
