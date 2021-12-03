@@ -7,6 +7,7 @@ import 'package:bang/core/app_colors.dart';
 import 'package:bang/core/app_constants.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player_view.dart';
+import 'package:bang/services/game_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,90 +37,11 @@ class GameView extends GetView<GameController> {
                   alignment: Alignment.center,
                   fit: StackFit.passthrough,
                   children: [
-                    Positioned(
-                      bottom: height / 2 + 45,
-                      child: BangCardWidget(
-                        card: EquipmentCard(
-                            background: 'barrel',
-                            name: 'barrel',
-                            value: Bang.Value.Ten,
-                            type: Bang.CardType.Equipment,
-                            suit: Bang.Suit.Diamonds),
-                        showBackPermanently: true,
-                        canBeFocused: false,
-                        scale: 0.55,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: height / 2 - 35,
-                      child: BangCardWidget(
-                        card: EquipmentCard(
-                            background: 'barrel',
-                            name: 'barrel',
-                            value: Bang.Value.Ten,
-                            type: Bang.CardType.Equipment,
-                            suit: Bang.Suit.Diamonds),
-                        canBeFocused: true,
-                        scale: 0.55,
-                      ),
-                    ),
+                    _buildDrawPile(height),
+                    _buildDiscardPile(height),
                     ..._buildLayout(height, width),
-                    Positioned(
-                      top: 5,
-                      left: 20,
-                      child: IconButton(
-                        iconSize: 28,
-                        onPressed: () {
-                          Get.bottomSheet(
-                            Container(
-                                height: 200,
-                                child: Column(
-                                  children: [
-                                    Text('Hii 1', textScaleFactor: 2),
-                                    Text('Hii 2', textScaleFactor: 2),
-                                    Text('Hii 3', textScaleFactor: 2),
-                                    Text('Hii 4', textScaleFactor: 2),
-                                  ],
-                                )),
-                            barrierColor: Colors.transparent,
-                            isDismissible: true,
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(35),
-                              /*side: BorderSide(
-                                            width: 1, color: Colors.black)*/
-                            ),
-                            enableDrag: true,
-                            enterBottomSheetDuration:
-                                Duration(milliseconds: 300),
-                            exitBottomSheetDuration:
-                                Duration(milliseconds: 300),
-                          );
-                        },
-                        icon: Icon(
-                          Icons.chat,
-                          color: AppColors.background,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 5,
-                      right: 20,
-                      child: IconButton(
-                        iconSize: 28,
-                        onPressed: () async {
-                          var shouldClose =
-                              await controller.showBackPopupForResult();
-                          if (shouldClose) {
-                            Get.back();
-                          }
-                        },
-                        icon: Icon(
-                          Icons.close,
-                          color: AppColors.background,
-                        ),
-                      ),
-                    ),
+                    _buildChat(),
+                    _buildCloseButton(),
                   ],
                 ),
               ),
@@ -130,131 +52,224 @@ class GameView extends GetView<GameController> {
     );
   }
 
+  Widget _buildDrawPile(double height) => Positioned(
+        bottom: height / 2 + 45,
+        child: BangCardWidget(
+          card: EquipmentCard(
+              background: 'barrel',
+              name: 'barrel',
+              value: Bang.Value.Ten,
+              type: Bang.CardType.Equipment,
+              suit: Bang.Suit.Diamonds),
+          showBackPermanently: true,
+          canBeFocused: false,
+          scale: 0.55,
+        ),
+      );
+
+  Widget _buildDiscardPile(double height) => Positioned(
+        bottom: height / 2 - 35,
+        child: BangCardWidget(
+          card: EquipmentCard(
+              background: 'barrel',
+              name: 'barrel',
+              value: Bang.Value.Ten,
+              type: Bang.CardType.Equipment,
+              suit: Bang.Suit.Diamonds),
+          canBeFocused: true,
+          scale: 0.55,
+        ),
+      );
+
+  Widget _buildChat() => Positioned(
+        top: 5,
+        left: 20,
+        child: IconButton(
+          iconSize: 28,
+          onPressed: () {
+            Get.bottomSheet(
+              Container(
+                  height: 200,
+                  child: Column(
+                    children: [
+                      Text('Hii 1', textScaleFactor: 2),
+                      Text('Hii 2', textScaleFactor: 2),
+                      Text('Hii 3', textScaleFactor: 2),
+                      Text('Hii 4', textScaleFactor: 2),
+                    ],
+                  )),
+              barrierColor: Colors.transparent,
+              isDismissible: true,
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(35),
+              ),
+              enableDrag: true,
+              enterBottomSheetDuration: Duration(milliseconds: 300),
+              exitBottomSheetDuration: Duration(milliseconds: 300),
+            );
+          },
+          icon: Icon(
+            Icons.chat,
+            color: AppColors.background,
+          ),
+        ),
+      );
+
+  Widget _buildCloseButton() => Positioned(
+        top: 5,
+        right: 20,
+        child: IconButton(
+          iconSize: 28,
+          onPressed: () async {
+            var shouldClose = await controller.showBackPopupForResult();
+            if (shouldClose) {
+              Get.back();
+            }
+          },
+          icon: Icon(
+            Icons.close,
+            color: AppColors.background,
+          ),
+        ),
+      );
+
   List<Widget> _buildLayout(double height, double width) {
     switch (controller.playerNumber()) {
       case 4:
-        return [
-          Positioned(
-              child: EnemyPlayer(
-                top: true,
-                left: true,
-              ),
-              top: 40,
-              left: width / 2 - 100),
-          Positioned(
-            child: EnemyPlayer(
-              left: true,
-            ),
-            top: height * 0.37,
-            left: 10,
-          ),
-          Positioned(
-            child: EnemyPlayer(
-              right: true,
-            ),
-            top: height * 0.37,
-            right: 10,
-          ),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: PlayerView(
-                characterCard: CharacterCard(
-                    background: 'willythekid', health: 4, name: 'willythekid'),
-                roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
-              )),
-        ];
+        return _buildFourPlayerLayout(width: width, height: height);
       case 5:
-        return [
-          Positioned(
-              child: EnemyPlayer(
-                left: true,
-              ),
-              top: height * 0.38,
-              left: 10),
-          Positioned(
-              child: EnemyPlayer(
-                right: true,
-              ),
-              top: height * 0.38,
-              right: 10),
-          Positioned(
-            child: EnemyPlayer(
-              top: true,
-              right: true,
-            ),
-            top: height * 0.1,
-            left: width * 0.76 - 100,
-          ),
-          Positioned(
-              child: EnemyPlayer(
-                top: true,
-                left: true,
-              ),
-              top: height * 0.1,
-              left: width * 0.24 - 100),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: PlayerView(
-                characterCard: CharacterCard(
-                    background: 'willythekid', health: 4, name: 'willythekid'),
-                roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
-              )),
-        ];
+        return _buildFivePlayerLayout(width: width, height: height);
       case 6:
-        return [
-          Positioned(
-              child: EnemyPlayer(left: true), top: height * 0.45, left: 5),
-          Positioned(
-              child: EnemyPlayer(right: true), top: height * 0.45, right: 5),
-          Positioned(
-              child: EnemyPlayer(right: true), top: height * 0.24, right: 20),
-          Positioned(
-              child: EnemyPlayer(left: true), top: height * 0.24, left: 20),
-          Positioned(
-            child: EnemyPlayer(top: true, left: true),
-            top: height * 0.05,
-            left: width / 2 - 100,
-          ),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: PlayerView(
-                characterCard: CharacterCard(
-                    background: 'willythekid', health: 4, name: 'willythekid'),
-                roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
-              )),
-        ];
+        return _buildSixPlayerLayout(width: width, height: height);
       case 7:
-        return [
-          Positioned(
-              child: EnemyPlayer(left: true), top: height * 0.48, left: 5),
-          Positioned(
-              child: EnemyPlayer(right: true), top: height * 0.48, right: 5),
-          Positioned(
-              child: EnemyPlayer(right: true), top: height * 0.27, right: 20),
-          Positioned(
-              child: EnemyPlayer(left: true), top: height * 0.27, left: 20),
-          Positioned(
-            child: EnemyPlayer(top: true, right: true),
-            top: height * 0.07,
-            right: width / 3 - 125,
-          ),
-          Positioned(
-            child: EnemyPlayer(top: true, left: true),
-            top: height * 0.07,
-            left: width / 3 - 125,
-          ),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: PlayerView(
-                characterCard: CharacterCard(
-                    background: 'willythekid', health: 4, name: 'willythekid'),
-                roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
-              )),
-        ];
+        return _buildSevenPlayerLayout(width: width, height: height);
       default:
         return [
           Container(),
         ];
     }
+  }
+
+  List<Widget> _buildFourPlayerLayout(
+          {required double width, required double height}) =>
+      [
+        Positioned(
+            child: EnemyPlayer(
+              top: true,
+              left: true,
+            ),
+            top: 40,
+            left: width / 2 - 100),
+        Positioned(
+          child: EnemyPlayer(
+            left: true,
+          ),
+          top: height * 0.37,
+          left: 10,
+        ),
+        Positioned(
+          child: EnemyPlayer(
+            right: true,
+          ),
+          top: height * 0.37,
+          right: 10,
+        ),
+        _buildPlayer(),
+      ];
+  List<Widget> _buildFivePlayerLayout(
+          {required double width, required double height}) =>
+      [
+        Positioned(
+            child: EnemyPlayer(
+              left: true,
+            ),
+            top: height * 0.38,
+            left: 10),
+        Positioned(
+            child: EnemyPlayer(
+              right: true,
+            ),
+            top: height * 0.38,
+            right: 10),
+        Positioned(
+          child: EnemyPlayer(
+            top: true,
+            right: true,
+          ),
+          top: height * 0.1,
+          left: width * 0.76 - 100,
+        ),
+        Positioned(
+            child: EnemyPlayer(
+              top: true,
+              left: true,
+            ),
+            top: height * 0.1,
+            left: width * 0.24 - 100),
+        _buildPlayer(),
+      ];
+  List<Widget> _buildSixPlayerLayout(
+          {required double width, required double height}) =>
+      [
+        Positioned(child: EnemyPlayer(left: true), top: height * 0.45, left: 5),
+        Positioned(
+            child: EnemyPlayer(right: true), top: height * 0.45, right: 5),
+        Positioned(
+            child: EnemyPlayer(right: true), top: height * 0.24, right: 20),
+        Positioned(
+            child: EnemyPlayer(left: true), top: height * 0.24, left: 20),
+        Positioned(
+          child: EnemyPlayer(top: true, left: true),
+          top: height * 0.05,
+          left: width / 2 - 100,
+        ),
+        _buildPlayer(),
+      ];
+  List<Widget> _buildSevenPlayerLayout(
+          {required double width, required double height}) =>
+      [
+        Positioned(child: EnemyPlayer(left: true), top: height * 0.48, left: 5),
+        Positioned(
+            child: EnemyPlayer(right: true), top: height * 0.48, right: 5),
+        Positioned(
+            child: EnemyPlayer(right: true), top: height * 0.27, right: 20),
+        Positioned(
+            child: EnemyPlayer(left: true), top: height * 0.27, left: 20),
+        Positioned(
+          child: EnemyPlayer(top: true, right: true),
+          top: height * 0.07,
+          right: width / 3 - 125,
+        ),
+        Positioned(
+          child: EnemyPlayer(top: true, left: true),
+          top: height * 0.07,
+          left: width / 3 - 125,
+        ),
+        _buildPlayer(),
+      ];
+
+  _buildPlayer() {
+    var service = Get.find<GameService>();
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: PlayerView(
+        characterCard: CharacterCard(
+            background: 'willythekid', health: 4, name: 'willythekid'),
+        roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
+        cardsInHand: service.handWidgets,
+        equipment: service.equipmentList,
+        handDoubleTap: () {
+          service.expandedHandView.value = !service.expandedHandView();
+          service.expandedEquipmentView.value = false;
+        },
+        highlightedIndexInHand: service.highlightedIndex(),
+        isEquipmentViewExpanded: service.expandedEquipmentView(),
+        isHandViewExpanded: service.expandedHandView(),
+        temporaryEffects: service.temporaryEffectList,
+        toggleEquipmentView: () => service.expandedEquipmentView.value =
+            !service.expandedEquipmentView(),
+      ),
+    );
   }
 }
