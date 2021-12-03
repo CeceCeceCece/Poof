@@ -15,17 +15,19 @@ class PlayerView extends StatelessWidget {
   final CharacterCard characterCard;
   final RoleCard roleCard;
   final pixelPerHealth = (CardWidgetHelpers.cardHeight * 0.4 - 2 * 8) / 5;
-  PlayerView(
-      {required this.characterCard,
-      required this.roleCard,
-      required this.isHandViewExpanded,
-      required this.isEquipmentViewExpanded,
-      required this.toggleEquipmentView,
-      required this.handDoubleTap,
-      required this.equipment,
-      required this.temporaryEffects,
-      required this.cardsInHand,
-      required this.highlightedIndexInHand});
+  PlayerView({
+    required this.characterCard,
+    required this.roleCard,
+    required this.isHandViewExpanded,
+    required this.isEquipmentViewExpanded,
+    required this.toggleEquipmentView,
+    required this.handDoubleTap,
+    required this.equipment,
+    required this.temporaryEffects,
+    required this.cardsInHand,
+    required this.highlightedIndexInHand,
+    required this.health,
+  });
   final random = Random();
   final bool isHandViewExpanded;
   final bool isEquipmentViewExpanded;
@@ -35,10 +37,10 @@ class PlayerView extends StatelessWidget {
   final List<BangCard> temporaryEffects;
   final List<Widget> cardsInHand;
   final int highlightedIndexInHand;
+  final int health;
 
   @override
   Widget build(BuildContext context) {
-    var health = 2;
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
       height: isHandViewExpanded ? 370 : 310,
@@ -54,7 +56,7 @@ class PlayerView extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    _buildRoleHealthCharacter(health),
+                    _buildRoleHealthCharacter(),
                     _buildHand(),
                   ],
                 ),
@@ -66,7 +68,7 @@ class PlayerView extends StatelessWidget {
     );
   }
 
-  Widget _buildRoleHealthCharacter(int health) => Expanded(
+  Widget _buildRoleHealthCharacter() => Expanded(
         child: Container(
           child: isHandViewExpanded
               ? null
@@ -75,7 +77,11 @@ class PlayerView extends StatelessWidget {
                   fit: StackFit.passthrough,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   children: [
-                      Positioned(
+                      AnimatedPositioned(
+                        curve: Curves.bounceInOut,
+                        duration: Duration(
+                          milliseconds: 250,
+                        ),
                         bottom: 20,
                         right: 2 * CardWidgetHelpers.cardWidth * 0.4 +
                             14 -

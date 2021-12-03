@@ -8,8 +8,8 @@ class CardDto {
   final String id;
   final String name;
   final CardType type;
-  final Suit suite;
-  final Value value;
+  final CardSuit suite;
+  final CardValue value;
 
   CardDto({
     required this.id,

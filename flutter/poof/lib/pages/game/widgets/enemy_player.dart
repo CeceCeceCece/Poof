@@ -1,6 +1,3 @@
-import 'package:bang/cards/model/action_cards/action_card.dart';
-import 'package:bang/cards/model/action_cards/equipment_card.dart';
-import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/cards/widgets/bang_card_widget.dart';
 import 'package:bang/cards/widgets/non_playable_card_widget.dart';
@@ -10,84 +7,28 @@ import 'package:google_fonts/google_fonts.dart';
 
 class EnemyPlayer extends StatelessWidget {
   EnemyPlayer(
-      {Key? key, this.left = false, this.top = false, this.right = false})
+      {Key? key,
+      this.left = false,
+      this.top = false,
+      this.right = false,
+      required this.playerName,
+      required this.cardAmount,
+      required this.health,
+      required this.characterName,
+      required this.temporaryEffects,
+      required this.equipment})
       : super(key: key);
 
   final bool left;
   final bool top;
   final bool right;
+  final String playerName;
+  final int cardAmount;
+  final int health;
+  final String characterName;
 
-  final equipmentCards = [
-    BangCardWidget(
-      card: EquipmentCard(
-          background: 'barrel',
-          name: 'barrel',
-          value: Bang.Value.Ten,
-          type: Bang.CardType.Equipment,
-          suit: Bang.Suit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-    BangCardWidget(
-      card: EquipmentCard(
-          background: 'barrel',
-          name: 'barrel',
-          value: Bang.Value.Ten,
-          type: Bang.CardType.Equipment,
-          suit: Bang.Suit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-    BangCardWidget(
-      card: EquipmentCard(
-          background: 'barrel',
-          name: 'barrel',
-          value: Bang.Value.Ten,
-          type: Bang.CardType.Equipment,
-          suit: Bang.Suit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-    BangCardWidget(
-      card: EquipmentCard(
-          background: 'barrel',
-          name: 'barrel',
-          value: Bang.Value.Ten,
-          type: Bang.CardType.Equipment,
-          suit: Bang.Suit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-  ];
-
-  final temporaryEffectCards = [
-    BangCardWidget(
-      card: EquipmentCard(
-          background: 'dynamite',
-          name: 'dynamite',
-          value: Bang.Value.Ten,
-          type: Bang.CardType.Equipment,
-          suit: Bang.Suit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-    BangCardWidget(
-      card: EquipmentCard(
-          background: 'jail',
-          name: 'jail',
-          value: Bang.Value.Ten,
-          type: Bang.CardType.Equipment,
-          suit: Bang.Suit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-  ];
+  final List<BangCardWidget> temporaryEffects;
+  final List<BangCardWidget> equipment;
 
   @override
   Widget build(BuildContext context) {
@@ -115,11 +56,11 @@ class EnemyPlayer extends StatelessWidget {
               //child: Container(color: left ? Colors.green : Colors.red),
             ),
             Positioned(
-              top: equipmentCards.isEmpty ? 75 : 110,
+              top: equipment.isEmpty ? 75 : 110,
               child: Container(
                 width: 120,
                 child: Text(
-                  'Cece',
+                  playerName,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: GoogleFonts.graduate(
@@ -132,44 +73,41 @@ class EnemyPlayer extends StatelessWidget {
                 ),
               ),
             ),
-            for (int i = 0; i < equipmentCards.length; i++)
+            for (int i = 0; i < equipment.length; i++)
               Positioned(
                   top: 70,
                   right: right
-                      ? ((equipmentCards.length - 1) * 23 -
+                      ? ((equipment.length - 1) * 23 -
                           i * 23.0 +
                           rightEquipmentCards!)
                       : null,
                   left: left
-                      ? ((equipmentCards.length - 1) * 23 -
+                      ? ((equipment.length - 1) * 23 -
                           i * 23.0 +
                           leftEquipmentCards!)
                       : null,
-                  child: equipmentCards[i]),
-            for (int i = 0; i < temporaryEffectCards.length; i++)
+                  child: equipment[i]),
+            for (int i = 0; i < temporaryEffects.length; i++)
               Positioned(
-                  top: (temporaryEffectCards.length - 1) * 37 - i * 37,
+                  top: (temporaryEffects.length - 1) * 37 - i * 37,
                   right: rightTemporaryEffectCards,
                   left: leftTemporaryEffectCards,
-                  child: temporaryEffectCards[i]),
+                  child: temporaryEffects[i]),
             Positioned(
               right: rightCards,
               left: leftCards,
-              child: _backWithAmount(5),
+              child: _backWithAmount(),
             ),
             Positioned(
               right: rightChar,
               left: leftChar,
-              child: _buildCharacter(
-                characterName: 'willythekid',
-                health: 4,
-              ),
+              child: _buildCharacter(),
             ),
           ]),
     );
   }
 
-  Widget _buildCharacter({required String characterName, required int health}) {
+  Widget _buildCharacter() {
     return Stack(
       alignment: Alignment.bottomLeft,
       children: [
@@ -186,23 +124,11 @@ class EnemyPlayer extends StatelessWidget {
     );
   }
 
-  Widget _backWithAmount(int amount) {
+  Widget _backWithAmount() {
     return Stack(
       alignment: Alignment.center,
       children: [
-        BangCardWidget(
-          scale: 0.5,
-          showBackPermanently: true,
-          canBeFocused: false,
-          card: ActionCard(
-            background: 'stagecoach',
-            name: 'stagecoach',
-            suit: Bang.Suit.Clubs,
-            value: Bang.Value.Nine,
-            type: Bang.CardType.Action,
-            range: 0,
-          ),
-        ),
+        BangCardWidget.back(),
         Container(
           height: 30,
           width: 30,
@@ -217,7 +143,7 @@ class EnemyPlayer extends StatelessWidget {
           ),
         ),
         Text(
-          '$amount',
+          cardAmount.toString(),
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
         ),

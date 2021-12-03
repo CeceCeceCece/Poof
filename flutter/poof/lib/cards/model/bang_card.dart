@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'card_constants.dart';
+
 import 'card_base.dart';
+import 'card_constants.dart';
 
 abstract class BangCard extends CardBase {
-  Value value;
-  Suit suit;
+  CardValue value;
+  CardSuit suit;
   Color borderColor = Colors.white;
   CardType type;
 

@@ -1,11 +1,10 @@
 import 'dart:math';
 
+import 'package:bang/cards/model/action_cards/action_card.dart';
 import 'package:bang/cards/model/bang_card.dart';
-import 'package:bang/cards/model/card_constants.dart' as Bang;
-import 'package:bang/services/game_service.dart';
+import 'package:bang/cards/model/card_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -21,6 +20,7 @@ class BangCardWidget extends StatefulWidget {
   late final bool isInsideHand;
 
   final bool showBackPermanently;
+
   BangCardWidget({
     Key? key,
     required this.card,
@@ -31,15 +31,31 @@ class BangCardWidget extends StatefulWidget {
     this.scale = 1.0,
     this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
+    this.handCallbackInverse,
   }) : super(key: key) {
     this.isInsideHand = handCallback != null;
   }
 
-  final void Function()? onDragSuccessCallback;
-  final void Function()? handCallback;
+  final VoidCallback? onDragSuccessCallback;
+  final VoidCallback? handCallback;
+  final VoidCallback? handCallbackInverse;
 
   @override
   _BangCardWidgetState createState() => _BangCardWidgetState();
+
+  static back() => BangCardWidget(
+        scale: 0.5,
+        showBackPermanently: true,
+        canBeFocused: false,
+        card: ActionCard(
+          background: 'dummy',
+          name: 'dummy',
+          suit: CardSuit.Clubs,
+          value: CardValue.Nine,
+          type: CardType.Action,
+          range: 0,
+        ),
+      );
 }
 
 class _BangCardWidgetState extends State<BangCardWidget>
@@ -63,21 +79,14 @@ class _BangCardWidgetState extends State<BangCardWidget>
         if (!widget.isInsideHand) {
           height *= 2 / 3 / widget.highlightMultiplier;
           width *= 2 / 3 / widget.highlightMultiplier;
-          /* if (widget.extraScaleAtHighlight) {
-            height *= 5 / 6.3;
-            width *= 5 / 6.3;
-          }*/
         }
-        Get.find<GameService>().highlight(-1);
+
         isElevated = false;
+        widget.handCallbackInverse?.call();
       } else {
         if (!widget.isInsideHand) {
           height *= 1.5 * widget.highlightMultiplier;
           width *= 1.5 * widget.highlightMultiplier;
-          /*if (widget.extraScaleAtHighlight) {
-            height *= 6.3 / 5;
-            width *= 6.3 / 5;
-          }*/
         }
         isElevated = true;
         widget.handCallback?.call();
@@ -117,8 +126,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
                   elevation: isElevated && !widget.isInsideHand ? 40 : 0,
                   child: Transform(
                     alignment: Alignment.center,
-                    transform: Matrix4.identity()
-                      ..rotateY(pi), // it will flip horizontally the container
+                    transform: Matrix4.identity()..rotateY(pi),
                     child: AnimatedContainer(
                         height: height,
                         width: width,
@@ -254,7 +262,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
           child: Padding(
               padding: EdgeInsets.fromLTRB(height / 35, height / 160, 0, 0),
               child: SizedBox(
-                width: widget.card.value == Bang.Value.Ten
+                width: widget.card.value == CardValue.Ten
                     ? height / 6 + 1
                     : height / 8 + 1,
                 height: height / 8,

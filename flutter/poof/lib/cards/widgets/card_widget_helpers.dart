@@ -51,51 +51,51 @@ abstract class CardWidgetHelpers {
       type: type,
       scale: scale);
 
-  static String cardSuitToString(Suit suit) {
+  static String cardSuitToString(CardSuit suit) {
     switch (suit) {
-      case Suit.Clubs:
+      case CardSuit.Clubs:
         return "♣";
-      case Suit.Diamonds:
+      case CardSuit.Diamonds:
         return "♦";
-      case Suit.Hearts:
+      case CardSuit.Hearts:
         return "♥";
-      case Suit.Spades:
+      case CardSuit.Spades:
         return "♠";
     }
   }
 
-  static Color cardSuitColor(Suit suit) =>
-      (suit == Suit.Hearts || suit == Suit.Diamonds)
+  static Color cardSuitColor(CardSuit suit) =>
+      (suit == CardSuit.Hearts || suit == CardSuit.Diamonds)
           ? Colors.red
           : Colors.black;
 
-  static String cardValueToString(Value value) {
+  static String cardValueToString(CardValue value) {
     switch (value) {
-      case Value.Ace:
+      case CardValue.Ace:
         return 'A';
-      case Value.King:
+      case CardValue.King:
         return 'K';
-      case Value.Queen:
+      case CardValue.Queen:
         return 'Q';
-      case Value.Jack:
+      case CardValue.Jack:
         return 'J';
-      case Value.Ten:
+      case CardValue.Ten:
         return '10';
-      case Value.Nine:
+      case CardValue.Nine:
         return '9';
-      case Value.Eight:
+      case CardValue.Eight:
         return '8';
-      case Value.Seven:
+      case CardValue.Seven:
         return '7';
-      case Value.Six:
+      case CardValue.Six:
         return '6';
-      case Value.Five:
+      case CardValue.Five:
         return '5';
-      case Value.Four:
+      case CardValue.Four:
         return '4';
-      case Value.Three:
+      case CardValue.Three:
         return '3';
-      case Value.Two:
+      case CardValue.Two:
         return '2';
     }
   }

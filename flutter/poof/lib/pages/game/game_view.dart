@@ -12,7 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'widgets/other_player_view.dart';
+import 'widgets/enemy_player.dart';
 
 class GameView extends GetView<GameController> {
   @override
@@ -58,9 +58,9 @@ class GameView extends GetView<GameController> {
           card: EquipmentCard(
               background: 'barrel',
               name: 'barrel',
-              value: Bang.Value.Ten,
+              value: Bang.CardValue.Ten,
               type: Bang.CardType.Equipment,
-              suit: Bang.Suit.Diamonds),
+              suit: Bang.CardSuit.Diamonds),
           showBackPermanently: true,
           canBeFocused: false,
           scale: 0.55,
@@ -73,9 +73,9 @@ class GameView extends GetView<GameController> {
           card: EquipmentCard(
               background: 'barrel',
               name: 'barrel',
-              value: Bang.Value.Ten,
+              value: Bang.CardValue.Ten,
               type: Bang.CardType.Equipment,
-              suit: Bang.Suit.Diamonds),
+              suit: Bang.CardSuit.Diamonds),
           canBeFocused: true,
           scale: 0.55,
         ),
@@ -158,12 +158,24 @@ class GameView extends GetView<GameController> {
             child: EnemyPlayer(
               top: true,
               left: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
             ),
             top: 40,
             left: width / 2 - 100),
         Positioned(
           child: EnemyPlayer(
             left: true,
+            cardAmount: 4,
+            characterName: 'willythekid',
+            equipment: controller.equipmentCards,
+            health: 4,
+            playerName: 'Bonjour',
+            temporaryEffects: controller.temporaryEffectCards,
           ),
           top: height * 0.37,
           left: 10,
@@ -171,6 +183,12 @@ class GameView extends GetView<GameController> {
         Positioned(
           child: EnemyPlayer(
             right: true,
+            cardAmount: 4,
+            characterName: 'willythekid',
+            equipment: controller.equipmentCards,
+            health: 4,
+            playerName: 'Bonjour',
+            temporaryEffects: controller.temporaryEffectCards,
           ),
           top: height * 0.37,
           right: 10,
@@ -183,12 +201,24 @@ class GameView extends GetView<GameController> {
         Positioned(
             child: EnemyPlayer(
               left: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
             ),
             top: height * 0.38,
             left: 10),
         Positioned(
             child: EnemyPlayer(
               right: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
             ),
             top: height * 0.38,
             right: 10),
@@ -196,6 +226,12 @@ class GameView extends GetView<GameController> {
           child: EnemyPlayer(
             top: true,
             right: true,
+            cardAmount: 4,
+            characterName: 'willythekid',
+            equipment: controller.equipmentCards,
+            health: 4,
+            playerName: 'Bonjour',
+            temporaryEffects: controller.temporaryEffectCards,
           ),
           top: height * 0.1,
           left: width * 0.76 - 100,
@@ -204,6 +240,12 @@ class GameView extends GetView<GameController> {
             child: EnemyPlayer(
               top: true,
               left: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
             ),
             top: height * 0.1,
             left: width * 0.24 - 100),
@@ -212,15 +254,65 @@ class GameView extends GetView<GameController> {
   List<Widget> _buildSixPlayerLayout(
           {required double width, required double height}) =>
       [
-        Positioned(child: EnemyPlayer(left: true), top: height * 0.45, left: 5),
         Positioned(
-            child: EnemyPlayer(right: true), top: height * 0.45, right: 5),
+            child: EnemyPlayer(
+              left: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
+            ),
+            top: height * 0.45,
+            left: 5),
         Positioned(
-            child: EnemyPlayer(right: true), top: height * 0.24, right: 20),
+            child: EnemyPlayer(
+              right: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
+            ),
+            top: height * 0.45,
+            right: 5),
         Positioned(
-            child: EnemyPlayer(left: true), top: height * 0.24, left: 20),
+            child: EnemyPlayer(
+              right: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
+            ),
+            top: height * 0.24,
+            right: 20),
         Positioned(
-          child: EnemyPlayer(top: true, left: true),
+            child: EnemyPlayer(
+              left: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
+            ),
+            top: height * 0.24,
+            left: 20),
+        Positioned(
+          child: EnemyPlayer(
+            top: true,
+            left: true,
+            cardAmount: 4,
+            characterName: 'willythekid',
+            equipment: controller.equipmentCards,
+            health: 4,
+            playerName: 'Bonjour',
+            temporaryEffects: controller.temporaryEffectCards,
+          ),
           top: height * 0.05,
           left: width / 2 - 100,
         ),
@@ -229,20 +321,79 @@ class GameView extends GetView<GameController> {
   List<Widget> _buildSevenPlayerLayout(
           {required double width, required double height}) =>
       [
-        Positioned(child: EnemyPlayer(left: true), top: height * 0.48, left: 5),
         Positioned(
-            child: EnemyPlayer(right: true), top: height * 0.48, right: 5),
+            child: EnemyPlayer(
+              left: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
+            ),
+            top: height * 0.48,
+            left: 5),
         Positioned(
-            child: EnemyPlayer(right: true), top: height * 0.27, right: 20),
+            child: EnemyPlayer(
+              right: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
+            ),
+            top: height * 0.48,
+            right: 5),
         Positioned(
-            child: EnemyPlayer(left: true), top: height * 0.27, left: 20),
+            child: EnemyPlayer(
+              right: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
+            ),
+            top: height * 0.27,
+            right: 20),
         Positioned(
-          child: EnemyPlayer(top: true, right: true),
+            child: EnemyPlayer(
+              left: true,
+              cardAmount: 4,
+              characterName: 'willythekid',
+              equipment: controller.equipmentCards,
+              health: 4,
+              playerName: 'Bonjour',
+              temporaryEffects: controller.temporaryEffectCards,
+            ),
+            top: height * 0.27,
+            left: 20),
+        Positioned(
+          child: EnemyPlayer(
+            top: true,
+            right: true,
+            cardAmount: 4,
+            characterName: 'willythekid',
+            equipment: controller.equipmentCards,
+            health: 4,
+            playerName: 'Bonjour',
+            temporaryEffects: controller.temporaryEffectCards,
+          ),
           top: height * 0.07,
           right: width / 3 - 125,
         ),
         Positioned(
-          child: EnemyPlayer(top: true, left: true),
+          child: EnemyPlayer(
+            top: true,
+            left: true,
+            cardAmount: 4,
+            characterName: 'willythekid',
+            equipment: controller.equipmentCards,
+            health: 4,
+            playerName: 'Bonjour',
+            temporaryEffects: controller.temporaryEffectCards,
+          ),
           top: height * 0.07,
           left: width / 3 - 125,
         ),
@@ -254,21 +405,18 @@ class GameView extends GetView<GameController> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: PlayerView(
+        health: 3,
         characterCard: CharacterCard(
             background: 'willythekid', health: 4, name: 'willythekid'),
         roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
-        cardsInHand: service.handWidgets,
-        equipment: service.equipmentList,
-        handDoubleTap: () {
-          service.expandedHandView.value = !service.expandedHandView();
-          service.expandedEquipmentView.value = false;
-        },
-        highlightedIndexInHand: service.highlightedIndex(),
-        isEquipmentViewExpanded: service.expandedEquipmentView(),
-        isHandViewExpanded: service.expandedHandView(),
-        temporaryEffects: service.temporaryEffectList,
-        toggleEquipmentView: () => service.expandedEquipmentView.value =
-            !service.expandedEquipmentView(),
+        cardsInHand: controller.handWidgets,
+        equipment: controller.equipmentList,
+        handDoubleTap: controller.toggleExpandedHand,
+        highlightedIndexInHand: controller.highlightedIndex(),
+        isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
+        isHandViewExpanded: controller.isHandExpanded(),
+        temporaryEffects: controller.temporaryEffectList,
+        toggleEquipmentView: controller.toggleEquipmentView,
       ),
     );
   }

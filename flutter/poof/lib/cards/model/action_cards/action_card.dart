@@ -10,9 +10,9 @@ class ActionCard extends BangCard {
       {required this.range,
       required String background,
       required String name,
-      required Value value,
+      required CardValue value,
       required CardType type,
-      required Suit suit})
+      required CardSuit suit})
       : super(
           background: background,
           suit: suit,

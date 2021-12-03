@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-enum Value {
+enum CardValue {
   @JsonValue(0)
   Two,
   @JsonValue(1)
@@ -29,7 +29,7 @@ enum Value {
   Ace,
 }
 
-enum Suit {
+enum CardSuit {
   @JsonValue(0)
   Spades,
   @JsonValue(1)
