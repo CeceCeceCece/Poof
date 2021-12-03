@@ -1,13 +1,13 @@
 import 'dart:developer';
 
-import 'package:bang/core/constants.dart';
+import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/lang/app_translations.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'core/app_theme.dart';
-import 'core/lang/strings.dart';
+import 'core/lang/app_strings.dart';
 import 'routes/routes.dart';
 
 class App extends StatefulWidget {
@@ -47,7 +47,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void didChangeDependencies() {
     precacheImage(
         AssetImage(
-          AssetPaths.backgroundPath,
+          AppAssetPaths.backgroundPath,
         ),
         context);
     super.didChangeDependencies();

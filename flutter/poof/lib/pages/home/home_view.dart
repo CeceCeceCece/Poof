@@ -1,8 +1,8 @@
 import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/cards/widgets/input_field.dart';
-import 'package:bang/core/colors.dart';
-import 'package:bang/core/constants.dart';
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/app_constants.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/pages/home/home_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
@@ -21,7 +21,7 @@ class HomeView extends GetView<HomeController> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(
-                AssetPaths.backgroundPath,
+                AppAssetPaths.backgroundPath,
               ),
               fit: BoxFit.fitHeight)),
       child: Scaffold(
@@ -37,7 +37,7 @@ class HomeView extends GetView<HomeController> {
                     width: 275,
                     height: 275,
                     child: Image.asset(
-                      AssetPaths.bangLogo,
+                      AppAssetPaths.bangLogo,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -51,7 +51,7 @@ class HomeView extends GetView<HomeController> {
                               onPressed: () => Get.toNamed(Routes.SETTINGS),
                               icon: FaIcon(FontAwesomeIcons.cog),
                               iconSize: 28,
-                              color: BangColors.background),
+                              color: AppColors.background),
                           SizedBox(
                             width: 5,
                           ),
@@ -59,7 +59,7 @@ class HomeView extends GetView<HomeController> {
                               onPressed: () => controller.logout(),
                               icon: FaIcon(FontAwesomeIcons.signOutAlt),
                               iconSize: 28,
-                              color: BangColors.background),
+                              color: AppColors.background),
                         ],
                       ),
                     ),

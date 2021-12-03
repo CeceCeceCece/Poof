@@ -1,4 +1,4 @@
-abstract class Constants {
+abstract class AppConstants {
   static const MUSIC = 'MUSIC';
   static const SFX = 'SFX';
   static const PASSWORD = 'PASSWORD';
@@ -12,7 +12,7 @@ abstract class Constants {
   static void defaultOnChanged(String s) {}
 }
 
-abstract class AssetPaths {
+abstract class AppAssetPaths {
   static const backgroundPath = 'assets/background/bg2.jpg';
   static const bangLogo = 'assets/icons/bang_logo.png';
 }

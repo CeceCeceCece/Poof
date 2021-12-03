@@ -1,4 +1,4 @@
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/lang/app_strings.dart';
 
 const Map<String, String> hu_HU = {
   AppStrings.app_name: 'Bang!',

@@ -1,6 +1,6 @@
-import 'package:bang/core/animations.dart';
-import 'package:bang/core/colors.dart';
-import 'package:bang/core/constants.dart';
+import 'package:bang/core/app_animations.dart';
+import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/app_constants.dart';
 import 'package:bang/pages/splash/splash_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,13 +13,13 @@ class SplashView extends GetView<SplashController> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(
-                AssetPaths.backgroundPath,
+                AppAssetPaths.backgroundPath,
               ),
               fit: BoxFit.fitHeight)),
       child: Scaffold(
-        backgroundColor: BangColors.background,
+        backgroundColor: AppColors.background,
         body: Center(
-          child: Lottie.asset(BangAnimations.splash,
+          child: Lottie.asset(AppAnimations.splash,
               repeat: controller.shouldRepeat,
               frameRate: FrameRate(controller.frameRate)),
         ),

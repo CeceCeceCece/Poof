@@ -3,8 +3,8 @@ import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/cards/model/non_playable_cards/role_card.dart';
 import 'package:bang/cards/widgets/bang_card_widget.dart';
-import 'package:bang/core/colors.dart';
-import 'package:bang/core/constants.dart';
+import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/app_constants.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +22,7 @@ class GameView extends GetView<GameController> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(
-                AssetPaths.backgroundPath,
+                AppAssetPaths.backgroundPath,
               ),
               fit: BoxFit.fitHeight)),
       child: WillPopScope(
@@ -98,7 +98,7 @@ class GameView extends GetView<GameController> {
                         },
                         icon: Icon(
                           Icons.chat,
-                          color: BangColors.background,
+                          color: AppColors.background,
                         ),
                       ),
                     ),
@@ -116,7 +116,7 @@ class GameView extends GetView<GameController> {
                         },
                         icon: Icon(
                           Icons.close,
-                          color: BangColors.background,
+                          color: AppColors.background,
                         ),
                       ),
                     ),

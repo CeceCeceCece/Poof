@@ -1,8 +1,8 @@
 import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/cards/widgets/input_field.dart';
-import 'package:bang/core/constants.dart';
-import 'package:bang/core/helpers/validators.dart';
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/app_constants.dart';
+import 'package:bang/core/helpers/app_validators.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +19,7 @@ class LoginView extends GetView<LoginController> {
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-                  AssetPaths.backgroundPath,
+                  AppAssetPaths.backgroundPath,
                 ),
                 fit: BoxFit.fitHeight)),
         child: Scaffold(
@@ -59,7 +59,7 @@ class LoginView extends GetView<LoginController> {
         }
       },
       validator: (value) =>
-          Validators.passwords(value, controller.passwordC.text),
+          AppValidators.passwords(value, controller.passwordC.text),
     );
 
     var passwordField = BangInputField(
@@ -67,7 +67,7 @@ class LoginView extends GetView<LoginController> {
       nextNode: confirmPasswordField.focusNode,
       hint: AppStrings.password.tr,
       validator: (value) =>
-          Validators.passwords(value, controller.confirmPasswordC.text),
+          AppValidators.passwords(value, controller.confirmPasswordC.text),
       onSubmit: () => confirmPasswordField.focusNode.nextFocus(),
       isPassword: true,
     );
@@ -84,7 +84,7 @@ class LoginView extends GetView<LoginController> {
           width: 225,
           height: 225,
           child: Image.asset(
-            AssetPaths.bangLogo,
+            AppAssetPaths.bangLogo,
             fit: BoxFit.fill,
           ),
         ),
@@ -144,7 +144,7 @@ class LoginView extends GetView<LoginController> {
         width: 225,
         height: 225,
         child: Image.asset(
-          AssetPaths.bangLogo,
+          AppAssetPaths.bangLogo,
           fit: BoxFit.fill,
         ),
       ),

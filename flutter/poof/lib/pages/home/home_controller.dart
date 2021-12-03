@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bang/cards/widgets/button.dart';
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/lobby_service.dart';
 import 'package:bang/services/shared_preference_service.dart';

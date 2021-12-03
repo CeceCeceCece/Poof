@@ -1,4 +1,4 @@
-import 'package:bang/core/constants.dart';
+import 'package:bang/core/app_constants.dart';
 import 'package:bang/models/login_response.dart';
 import 'package:bang/services/shared_preference_service.dart';
 import 'package:get/get.dart';
@@ -9,7 +9,7 @@ abstract class NetworkProvider extends GetConnect {
   final storage = GetStorage();
   @override
   void onInit() {
-    httpClient.baseUrl = Constants.BASE_URL;
+    httpClient.baseUrl = AppConstants.BASE_URL;
 
     httpClient.addRequestModifier<dynamic>((request) async {
       if (request is Request<

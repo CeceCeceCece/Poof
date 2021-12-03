@@ -6,7 +6,7 @@ import 'package:bang/cards/model/non_playable_cards/role_card.dart';
 import 'package:bang/cards/widgets/bang_card_widget.dart';
 import 'package:bang/cards/widgets/card_widget_helpers.dart';
 import 'package:bang/cards/widgets/non_playable_card_widget.dart';
-import 'package:bang/core/colors.dart';
+import 'package:bang/core/app_colors.dart';
 import 'package:bang/pages/game/widgets/hand_of_cards.dart';
 import 'package:bang/services/game_service.dart';
 import 'package:flutter/material.dart';
@@ -96,9 +96,9 @@ class PlayerView extends StatelessWidget {
                                                   border: Border.all(
                                                       width: 1,
                                                       color:
-                                                          BangColors.darkBrown),
+                                                          AppColors.darkBrown),
                                                   gradient:
-                                                      BangColors.buttonGradient,
+                                                      AppColors.buttonGradient,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           200)),
@@ -155,8 +155,8 @@ class PlayerView extends StatelessWidget {
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                                 width: 1,
-                                                color: BangColors.darkBrown),
-                                            gradient: BangColors.buttonGradient,
+                                                color: AppColors.darkBrown),
+                                            gradient: AppColors.buttonGradient,
                                             borderRadius:
                                                 BorderRadius.circular(200)),
                                         child: Center(

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/network/user_provider.dart';
 import 'package:bang/pages/login/login_controller.dart';
 import 'package:bang/routes/routes.dart';

@@ -1,8 +1,8 @@
 import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/cards/widgets/input_field.dart';
-import 'package:bang/core/colors.dart';
-import 'package:bang/core/constants.dart';
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/app_constants.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/pages/lobby/lobby_controller.dart';
 import 'package:bang/services/auth_service.dart';
 import 'package:bang/services/lobby_service.dart';
@@ -28,7 +28,7 @@ class LobbyView extends GetView<LobbyController> {
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-                  AssetPaths.backgroundPath,
+                  AppAssetPaths.backgroundPath,
                 ),
                 fit: BoxFit.fitHeight)),
         child: Scaffold(
@@ -69,7 +69,7 @@ class LobbyView extends GetView<LobbyController> {
                             ),
                             Text(
                                 AppStrings.players.tr +
-                                    '${controller.users().length}/ ${Constants.MAX_USER_NUMBER}',
+                                    '${controller.users().length}/ ${AppConstants.MAX_USER_NUMBER}',
                                 style: GoogleFonts.graduate(
                                     textStyle: TextStyle(
                                         fontSize: 18,
@@ -266,14 +266,14 @@ class LobbyView extends GetView<LobbyController> {
                             child: Ink(
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      width: 1, color: BangColors.darkBrown),
-                                  gradient: BangColors.buttonGradient,
+                                      width: 1, color: AppColors.darkBrown),
+                                  gradient: AppColors.buttonGradient,
                                   borderRadius: BorderRadius.circular(200)),
                               child: IconButton(
                                 onPressed: () {
                                   showModalBottomSheet(
                                     isScrollControlled: true,
-                                    backgroundColor: BangColors.background,
+                                    backgroundColor: AppColors.background,
                                     elevation: 10,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
@@ -384,7 +384,7 @@ class LobbyView extends GetView<LobbyController> {
                                                                                     overflow: TextOverflow.ellipsis,
                                                                                     maxLines: 1,
                                                                                     style: TextStyle(
-                                                                                      color: BangColors.background,
+                                                                                      color: AppColors.background,
                                                                                       fontWeight: FontWeight.bold,
                                                                                     ),
                                                                                   )
@@ -392,7 +392,7 @@ class LobbyView extends GetView<LobbyController> {
                                                                             Container(
                                                                               child: Padding(
                                                                                 padding: const EdgeInsets.only(left: 3, top: 5, right: 3),
-                                                                                child: Text('${message.text}', overflow: TextOverflow.ellipsis, maxLines: 4, style: sentBySelf ? TextStyle(color: BangColors.background) : null
+                                                                                child: Text('${message.text}', overflow: TextOverflow.ellipsis, maxLines: 4, style: sentBySelf ? TextStyle(color: AppColors.background) : null
                                                                                     //softWrap: false,
                                                                                     ),
                                                                               ),
@@ -469,7 +469,7 @@ class LobbyView extends GetView<LobbyController> {
                                 },
                                 icon: Icon(
                                   Icons.chat,
-                                  color: BangColors.background,
+                                  color: AppColors.background,
                                 ),
                               ),
                             ),

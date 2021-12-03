@@ -1,4 +1,4 @@
-import 'package:bang/core/colors.dart';
+import 'package:bang/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class BangButton extends StatefulWidget {
@@ -32,18 +32,18 @@ class _BangButtonState extends State<BangButton> {
           padding: EdgeInsets.zero,
           primary: widget.isLoading
               ? Colors.transparent
-              : BangColors.buttonGradientColors.last,
+              : AppColors.buttonGradientColors.last,
           elevation: widget.isNormal && !widget.isLoading ? 10 : 0,
           shadowColor: widget.isNormal && !widget.isLoading
               ? null
-              : BangColors.buttonShadowColor,
+              : AppColors.buttonShadowColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(200))),
       child: Ink(
         decoration: BoxDecoration(
             gradient: widget.onPressed != null
-                ? BangColors.buttonGradient
-                : BangColors.disabledButtonGradient,
+                ? AppColors.buttonGradient
+                : AppColors.disabledButtonGradient,
             borderRadius: BorderRadius.circular(200)),
         child: Container(
           width: widget.isLoading ? widget.height : widget.width + 4,
@@ -53,12 +53,12 @@ class _BangButtonState extends State<BangButton> {
               ? BoxDecoration(
                   borderRadius: BorderRadius.circular(200),
                   //color: Colors.white,
-                  border: Border.all(width: 1, color: BangColors.darkBrown))
+                  border: Border.all(width: 1, color: AppColors.darkBrown))
               : BoxDecoration(
                   borderRadius: BorderRadius.circular(200),
                   color: Colors.white,
                   border: Border.all(
-                      width: 3, color: BangColors.buttonGradientColors.first)),
+                      width: 3, color: AppColors.buttonGradientColors.first)),
           child: widget.isLoading
               ? SizedBox(
                   width: 25,
@@ -71,7 +71,7 @@ class _BangButtonState extends State<BangButton> {
                   widget.text,
                   style: widget.isNormal
                       ? null
-                      : TextStyle(color: BangColors.buttonShadowColor),
+                      : TextStyle(color: AppColors.buttonShadowColor),
                 ),
         ),
       ),

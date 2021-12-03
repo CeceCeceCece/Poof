@@ -1,5 +1,5 @@
 import 'package:bang/cards/widgets/button.dart';
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/user_dto.dart';
 import 'package:bang/routes/routes.dart';

@@ -1,8 +1,8 @@
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 
-abstract class Validators {
+abstract class AppValidators {
   static String? passwords(String? value, String otherValue) {
     if (value == null || value.isEmpty) {
       return AppStrings.field_cannot_be_empty.tr;

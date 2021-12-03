@@ -1,4 +1,4 @@
-abstract class BangAnimations {
+abstract class AppAnimations {
   static const _prefix = 'assets/animations/';
   static const _fileFormat = '.json';
 

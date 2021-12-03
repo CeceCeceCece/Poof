@@ -7,7 +7,7 @@ import 'package:bang/cards/model/action_cards/weapon_card.dart';
 import 'package:bang/cards/model/bang_card.dart';
 import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/widgets/bang_card_widget.dart';
-import 'package:bang/core/constants.dart';
+import 'package:bang/core/app_constants.dart';
 import 'package:bang/models/card_dto.dart';
 import 'package:bang/models/game_event_dto.dart';
 import 'package:bang/models/life_point_dto.dart';
@@ -256,7 +256,7 @@ class GameService extends ServiceBase {
   Future<void> initWebsocket() async {
     _connection = HubConnectionBuilder()
         .withUrl(
-          Constants.BASE_URL + Constants.GAME_HUB,
+          AppConstants.BASE_URL + AppConstants.GAME_HUB,
           HttpConnectionOptions(
             transport: HttpTransportType.longPolling,
             logging: (level, message) => print('GAME SIGNALR ---- $message'),

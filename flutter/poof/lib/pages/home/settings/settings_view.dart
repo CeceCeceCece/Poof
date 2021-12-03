@@ -1,7 +1,7 @@
 import 'package:bang/cards/widgets/button.dart';
-import 'package:bang/core/colors.dart';
-import 'package:bang/core/constants.dart';
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/app_constants.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/pages/home/settings/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +14,7 @@ class SettingsView extends GetView<SettingsController> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(
-                AssetPaths.backgroundPath,
+                AppAssetPaths.backgroundPath,
               ),
               fit: BoxFit.fitHeight)),
       child: Scaffold(
@@ -27,7 +27,7 @@ class SettingsView extends GetView<SettingsController> {
                 width: 225,
                 height: 225,
                 child: Image.asset(
-                  AssetPaths.bangLogo,
+                  AppAssetPaths.bangLogo,
                   fit: BoxFit.fill,
                 ),
               ),
@@ -83,7 +83,7 @@ class SettingsView extends GetView<SettingsController> {
                               ),
                               Spacer(),
                               Switch(
-                                activeColor: BangColors.buttonColor,
+                                activeColor: AppColors.buttonColor,
                                 value: controller.isMusicPlayingEnabled(),
                                 onChanged: (val) =>
                                     controller.changeMusicSettings(val),
@@ -107,7 +107,7 @@ class SettingsView extends GetView<SettingsController> {
                               ),
                               Spacer(),
                               Switch(
-                                activeColor: BangColors.buttonColor,
+                                activeColor: AppColors.buttonColor,
                                 value: controller.isSFXEnabled(),
                                 onChanged: (val) =>
                                     controller.changeSFXSettings(val),

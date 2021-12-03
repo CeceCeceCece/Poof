@@ -1,4 +1,5 @@
-import 'package:bang/core/colors.dart';
+import 'package:bang/core/app_colors.dart';
+
 import '../bang_card.dart';
 import '../card_constants.dart';
 
@@ -16,6 +17,6 @@ class EquipmentCard extends BangCard {
           name: name,
           type: type,
         ) {
-    borderColor = BangColors.equipmentCardColor;
+    borderColor = AppColors.equipmentCardColor;
   }
 }

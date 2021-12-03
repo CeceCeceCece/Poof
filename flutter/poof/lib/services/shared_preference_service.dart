@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bang/core/constants.dart';
+import 'package:bang/core/app_constants.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/service_base.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,14 +12,14 @@ class SharedPreferenceService extends ServiceBase {
 
   static String get token {
     if (_token == null || _token == '') {
-      _token = _preferences.getString(Constants.TOKEN) ?? '';
+      _token = _preferences.getString(AppConstants.TOKEN) ?? '';
     }
     return _token!;
   }
 
   static String get name {
     if (_name == null || _name == '') {
-      _name = _preferences.getString(Constants.NAME) ?? '';
+      _name = _preferences.getString(AppConstants.NAME) ?? '';
     }
     return _name!;
   }
@@ -32,35 +32,35 @@ class SharedPreferenceService extends ServiceBase {
 
   static void saveCredentials(String username, String pw) {
     name = username;
-    _preferences.setString(Constants.PASSWORD, pw);
+    _preferences.setString(AppConstants.PASSWORD, pw);
   }
 
-  static String? get password => _preferences.getString(Constants.PASSWORD);
+  static String? get password => _preferences.getString(AppConstants.PASSWORD);
 
   static set name(String name) {
-    _preferences.setString(Constants.NAME, name);
+    _preferences.setString(AppConstants.NAME, name);
     _name = name;
   }
 
   static set token(String token) {
-    _preferences.setString(Constants.TOKEN, token);
+    _preferences.setString(AppConstants.TOKEN, token);
     _token = token;
   }
 
   static bool get music {
-    return _preferences.getBool(Constants.MUSIC) ?? true;
+    return _preferences.getBool(AppConstants.MUSIC) ?? true;
   }
 
   static bool get sfx {
-    return _preferences.getBool(Constants.SFX) ?? true;
+    return _preferences.getBool(AppConstants.SFX) ?? true;
   }
 
   static set music(bool music) {
-    _preferences.setBool(Constants.MUSIC, music);
+    _preferences.setBool(AppConstants.MUSIC, music);
     music ? AudioService.playMenuSong() : AudioService.stopAll();
   }
 
-  static set sfx(bool sfx) => _preferences.setBool(Constants.SFX, sfx);
+  static set sfx(bool sfx) => _preferences.setBool(AppConstants.SFX, sfx);
   @override
   Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();

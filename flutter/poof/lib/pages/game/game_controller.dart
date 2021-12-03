@@ -1,5 +1,5 @@
 import 'package:bang/cards/widgets/button.dart';
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

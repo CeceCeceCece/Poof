@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bang/core/constants.dart';
-import 'package:bang/core/lang/strings.dart';
+import 'package:bang/core/app_constants.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/models/lobby_dto.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/user_dto.dart';
@@ -31,7 +31,7 @@ class LobbyService extends ServiceBase {
   Future<void> initWebsocket() async {
     _connection = HubConnectionBuilder()
         .withUrl(
-          Constants.BASE_URL + Constants.LOBBY_HUB,
+          AppConstants.BASE_URL + AppConstants.LOBBY_HUB,
           HttpConnectionOptions(
             transport: HttpTransportType.longPolling,
             logging: (level, message) => print('SIGNALR ---- $message'),
