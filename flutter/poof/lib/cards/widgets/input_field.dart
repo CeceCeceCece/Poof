@@ -1,5 +1,6 @@
 import 'package:bang/core/colors.dart';
 import 'package:bang/core/constants.dart';
+import 'package:bang/core/helpers/validators.dart';
 import 'package:flutter/material.dart';
 
 class BangInputField extends StatefulWidget {
@@ -25,7 +26,7 @@ class BangInputField extends StatefulWidget {
       this.color = Colors.white,
       this.hintColor = BangColors.hintColor,
       this.onChanged = Constants.defaultOnChanged,
-      this.validator = Constants.defaultValidator,
+      this.validator = Validators.defaultValidator,
       Key? key,
       this.onSubmit,
       this.nextNode})

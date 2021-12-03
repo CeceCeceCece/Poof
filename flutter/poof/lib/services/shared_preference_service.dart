@@ -32,10 +32,10 @@ class SharedPreferenceService extends ServiceBase {
 
   static void saveCredentials(String username, String pw) {
     name = username;
-    _preferences.setString('password', pw);
+    _preferences.setString(Constants.PASSWORD, pw);
   }
 
-  static String? get password => _preferences.getString('password');
+  static String? get password => _preferences.getString(Constants.PASSWORD);
 
   static set name(String name) {
     _preferences.setString(Constants.NAME, name);
@@ -55,19 +55,12 @@ class SharedPreferenceService extends ServiceBase {
     return _preferences.getBool(Constants.SFX) ?? true;
   }
 
-  static bool get noti {
-    return _preferences.getBool(Constants.NOTIFICATIONS) ?? true;
-  }
-
   static set music(bool music) {
     _preferences.setBool(Constants.MUSIC, music);
     music ? AudioService.playMenuSong() : AudioService.stopAll();
   }
 
   static set sfx(bool sfx) => _preferences.setBool(Constants.SFX, sfx);
-  static set noti(bool noti) =>
-      _preferences.setBool(Constants.NOTIFICATIONS, noti);
-
   @override
   Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();

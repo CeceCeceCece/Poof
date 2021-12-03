@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bang/cards/widgets/button.dart';
+import 'package:bang/core/lang/strings.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/lobby_service.dart';
 import 'package:bang/services/shared_preference_service.dart';
@@ -38,13 +39,13 @@ class HomeController extends GetxController {
 
   void readQR() {
     Get.defaultDialog(
-        title: 'Olvasd be a kódot!',
+        title: AppStrings.read_the_code.tr,
         onCancel: () {
           controller?.dispose();
           log('contoller disposed');
         },
         cancel: BangButton(
-          text: 'Vissza',
+          text: AppStrings.back.tr,
           height: 50,
           width: 90,
           isNormal: false,
@@ -80,7 +81,7 @@ class HomeController extends GetxController {
     Get.back();
     controller?.dispose();
     joinRoom(qrValue);
-    Fluttertoast.showToast(msg: 'Csatlakozás a "$qrValue" szobához');
+    Fluttertoast.showToast(msg: AppStrings.joining_room.tr + qrValue);
   }
 
   void createGame(String? lobbyName) {

@@ -6,13 +6,11 @@ class SettingsController extends GetxController {
   void onInit() {
     isMusicPlayingEnabled(SharedPreferenceService.music);
     isSFXEnabled(SharedPreferenceService.sfx);
-    isNotificationRecievingEnabled(SharedPreferenceService.noti);
     super.onInit();
   }
 
   var isMusicPlayingEnabled = true.obs;
   var isSFXEnabled = true.obs;
-  var isNotificationRecievingEnabled = true.obs;
 
   void changeMusicSettings(bool val) {
     isMusicPlayingEnabled(val);
@@ -22,10 +20,5 @@ class SettingsController extends GetxController {
   void changeSFXSettings(bool val) {
     isSFXEnabled(val);
     SharedPreferenceService.sfx = val;
-  }
-
-  void changeNotificationSettings(bool val) {
-    isNotificationRecievingEnabled(val);
-    SharedPreferenceService.noti = val;
   }
 }

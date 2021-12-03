@@ -1,13 +1,13 @@
 import 'dart:developer';
 
-import 'package:bang/core/colors.dart';
 import 'package:bang/core/constants.dart';
-import 'package:bang/core/strings.dart';
+import 'package:bang/core/lang/app_translations.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'core/app_theme.dart';
+import 'core/lang/strings.dart';
 import 'routes/routes.dart';
 
 class App extends StatefulWidget {
@@ -17,9 +17,23 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with WidgetsBindingObserver {
   @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: AppStrings.app_name.tr,
+      getPages: Pages.routes,
+      initialRoute: Pages.initial,
+      locale: AppTranslations.locale,
+      fallbackLocale: AppTranslations.fallbackLocale,
+      translations: AppTranslations(),
+      theme: AppTheme.basic,
+      home: Scaffold(),
+    );
+  }
+
+  @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance!.addObserver(this);
   }
 
@@ -31,7 +45,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   void didChangeDependencies() {
-    precacheImage(AssetImage(Constants.backgroundPath), context);
+    precacheImage(
+        AssetImage(
+          AssetPaths.backgroundPath,
+        ),
+        context);
     super.didChangeDependencies();
   }
 
@@ -39,35 +57,5 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     log('APP LIFECYCLE STATE CHANGED, NEW STATE: $state');
     AudioService.handleLifecycleChange(state);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: BangStrings.appname,
-      getPages: Pages.routes,
-      initialRoute: Pages.initial,
-      theme: ThemeData(
-        primarySwatch: Colors.brown,
-        primaryColor: BangColors.buttonGradientColors.first,
-        backgroundColor: BangColors.background,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            textStyle: MaterialStateProperty.all<TextStyle>(
-                GoogleFonts.graduate(
-                    textStyle: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: BangColors.buttonShadowColor))),
-            foregroundColor:
-                MaterialStateProperty.all<Color>(BangColors.background),
-          ),
-        ),
-      ),
-      home: Scaffold(
-        backgroundColor: BangColors.background,
-      ),
-    );
   }
 }

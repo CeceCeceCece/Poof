@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bang/core/lang/strings.dart';
 import 'package:bang/network/user_provider.dart';
 import 'package:bang/pages/login/login_controller.dart';
 import 'package:bang/routes/routes.dart';
@@ -40,8 +41,7 @@ class AuthService extends ServiceBase {
         SharedPreferenceService.saveCredentials(username, password);
         success = true;
       } else {
-        Fluttertoast.showToast(
-            msg: 'Hiba a bejelentkezéskor. Kérlek próbáld újra!');
+        Fluttertoast.showToast(msg: AppStrings.error_while_login.tr);
         success = false;
       }
     } catch (error) {

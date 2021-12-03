@@ -2,6 +2,7 @@ import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/cards/widgets/input_field.dart';
 import 'package:bang/core/colors.dart';
 import 'package:bang/core/constants.dart';
+import 'package:bang/core/lang/strings.dart';
 import 'package:bang/pages/home/home_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
@@ -20,7 +21,7 @@ class HomeView extends GetView<HomeController> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(
-                Constants.backgroundPath,
+                AssetPaths.backgroundPath,
               ),
               fit: BoxFit.fitHeight)),
       child: Scaffold(
@@ -36,7 +37,7 @@ class HomeView extends GetView<HomeController> {
                     width: 275,
                     height: 275,
                     child: Image.asset(
-                      'assets/icons/bang_logo.png',
+                      AssetPaths.bangLogo,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -66,7 +67,7 @@ class HomeView extends GetView<HomeController> {
                   Positioned(
                     top: 235,
                     child: Text(
-                      'Van lövésed, kivel vagy?',
+                      AppStrings.slogan.tr,
                       style: GoogleFonts.graduate(
                         textStyle: TextStyle(
                           fontSize: 22,
@@ -93,26 +94,26 @@ class HomeView extends GetView<HomeController> {
                         if (_formKey.currentState!.validate())
                           Get.back(result: textController.text);
                       },
-                      hint: 'Szobanév',
+                      hint: AppStrings.room_name.tr,
                       validator: (code) {
                         if (code == null || code.length == 0)
-                          return 'Nem lehet ilyen szobanév!';
+                          return AppStrings.room_name_error.tr;
                       },
                       controller: textController,
                     ),
                   );
                   controller.roomCodeToJoin = (await Get.defaultDialog<String>(
-                          title: 'Írd be a szoba nevét!',
+                          title: AppStrings.enter_room_name.tr,
                           content: content,
                           cancel: BangButton(
-                            text: 'Mégse',
+                            text: AppStrings.cancel.tr,
                             isNormal: false,
                             onPressed: Get.back,
                             height: 35,
                             width: 60,
                           ),
                           confirm: BangButton(
-                              text: 'Ok',
+                              text: AppStrings.ok.tr,
                               height: 35,
                               width: 60,
                               onPressed: () {
@@ -131,12 +132,12 @@ class HomeView extends GetView<HomeController> {
                       .obs;
                   controller.joinRoom();
                 },
-                text: 'Csatlakozás kóddal',
+                text: AppStrings.join_with_code.tr,
               ),
               SizedBox(height: 10),
               BangButton(
                 onPressed: controller.readQR,
-                text: 'QR beolvasás',
+                text: AppStrings.reading_qr.tr,
               ),
               Spacer(),
               BangButton(
@@ -159,27 +160,27 @@ class HomeView extends GetView<HomeController> {
                         if (_formKey.currentState!.validate())
                           Get.back(result: textController.text);
                       },
-                      hint: 'Szobakód',
+                      hint: AppStrings.room_name.tr,
                       validator: (code) {
                         if (code == null || code.length == 0)
-                          return 'Nem lehet ilyen név!';
+                          return AppStrings.room_name_error.tr;
                       },
                       controller: textController,
                     ),
                   );
 
                   var lobbyName = await Get.defaultDialog<String>(
-                      title: 'Adj nevet a szobának!',
+                      title: AppStrings.give_name_to_room.tr,
                       content: content,
                       cancel: BangButton(
-                        text: 'Mégse',
+                        text: AppStrings.cancel.tr,
                         isNormal: false,
                         onPressed: Get.back,
                         height: 35,
                         width: 60,
                       ),
                       confirm: BangButton(
-                          text: 'Ok',
+                          text: AppStrings.ok.tr,
                           height: 35,
                           width: 60,
                           onPressed: () {
@@ -197,7 +198,7 @@ class HomeView extends GetView<HomeController> {
                       });
                   controller.createGame(lobbyName);
                 },
-                text: 'Szoba létrehozása',
+                text: AppStrings.create_room.tr,
               ),
               Spacer(),
               Spacer(),
@@ -209,7 +210,7 @@ class HomeView extends GetView<HomeController> {
                     width: 90,
                     height: 40,
                     onPressed: () => SystemNavigator.pop(animated: true),
-                    text: 'Kilépés',
+                    text: AppStrings.exit.tr,
                   ),
                 ),
               ),

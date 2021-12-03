@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/core/animations.dart';
+import 'package:bang/core/lang/strings.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -68,11 +69,11 @@ class ConnectivityService extends ServiceBase {
             cancel: BangButton(
               width: 60,
               height: 35,
-              text: 'Ok',
+              text: AppStrings.ok.tr,
               isNormal: false,
               onPressed: Get.back,
             ),
-            title: 'Nincs internet',
+            title: AppStrings.no_internet.tr,
             onCancel: _closeDialog,
             content: Lottie.asset(BangAnimations.noInternet,
                 height: 200, width: 250))

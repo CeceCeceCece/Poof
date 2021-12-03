@@ -22,7 +22,7 @@ class GameView extends GetView<GameController> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(
-                Constants.backgroundPath,
+                AssetPaths.backgroundPath,
               ),
               fit: BoxFit.fitHeight)),
       child: WillPopScope(
@@ -252,7 +252,9 @@ class GameView extends GetView<GameController> {
               )),
         ];
       default:
-        return [Text('default')];
+        return [
+          Container(),
+        ];
     }
   }
 }

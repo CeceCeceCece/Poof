@@ -1,4 +1,5 @@
 import 'package:bang/cards/widgets/button.dart';
+import 'package:bang/core/lang/strings.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,25 +10,25 @@ class GameController extends GetxController {
 
   Future<bool> showBackPopupForResult() async {
     await Get.defaultDialog<bool>(
-      title: 'Megerősítés szükséges',
+      title: AppStrings.assert_required.tr,
       onWillPop: () => Future.value(false),
       onConfirm: _exit,
       onCancel: () => Future.value(false),
       cancel: BangButton(
-        text: 'Mégse',
+        text: AppStrings.cancel.tr,
         onPressed: Get.back,
         height: 35,
         width: 60,
       ),
       confirm: BangButton(
-        text: 'Értem, kilépek!',
+        text: AppStrings.still_exit.tr,
         onPressed: _exit,
         height: 40,
         width: 150,
         isNormal: false,
       ),
       content: Text(
-        'Biztosan ki akarsz lépni a játékból?\n\nTöbbszöri kilépés szankciókat vonhat maga után!',
+        AppStrings.error_message_upon_game_exit.tr,
         textAlign: TextAlign.center,
       ),
     );

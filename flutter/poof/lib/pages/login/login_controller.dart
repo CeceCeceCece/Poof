@@ -6,7 +6,7 @@ class LoginController extends GetxController {
   var loading = false.obs;
   final usernameC = TextEditingController(text: 'Cece');
   final passwordC = TextEditingController(text: 'admin');
-  final confirmPasswordC = TextEditingController(text: 'admin');
+  final confirmPasswordC = TextEditingController();
 
   var isLoginPage = true.obs;
 
@@ -28,14 +28,15 @@ class LoginController extends GetxController {
 
   void goToRegister() {
     isLoginPage.value = false;
-    usernameC.clear();
-    passwordC.clear();
-    confirmPasswordC.clear();
+    clearTextFields();
   }
 
   void goToLogin() {
     isLoginPage.value = true;
+    clearTextFields();
+  }
 
+  void clearTextFields() {
     usernameC.clear();
     passwordC.clear();
     confirmPasswordC.clear();

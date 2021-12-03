@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bang/core/constants.dart';
+import 'package:bang/core/lang/strings.dart';
 import 'package:bang/models/lobby_dto.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/user_dto.dart';
@@ -180,7 +181,7 @@ class LobbyService extends ServiceBase {
   void _lobbyDeleted(String lobbyName) {
     log('Arrived:$lobbyName');
     Fluttertoast.showToast(
-      msg: 'A $lobbyName szobát törölték!',
+      msg: AppStrings.room_deleted.trParams({'roomName': lobbyName}),
       toastLength: Toast.LENGTH_SHORT,
     );
     Get.back();
@@ -217,8 +218,7 @@ class LobbyService extends ServiceBase {
     });
 
     Fluttertoast.showToast(
-      msg: '${user.name} csatlakozott a szobához!',
-      toastLength: Toast.LENGTH_SHORT,
+      msg: AppStrings.user_connected.trParams({'userName': user.name}),
     );
   }
 
@@ -232,8 +232,10 @@ class LobbyService extends ServiceBase {
     var controller = Get.find<LobbyController>();
     controller.messages.add(message);
     onMessageArrivedCallback?.call(() {});
-    controller.modalSheetScrollController.animateTo(controller.modalSheetScrollController.position.maxScrollExtent + 100,
-        curve: Curves.fastLinearToSlowEaseIn, duration: Duration(milliseconds: 300));
+    controller.modalSheetScrollController.animateTo(
+        controller.modalSheetScrollController.position.maxScrollExtent + 100,
+        curve: Curves.fastLinearToSlowEaseIn,
+        duration: Duration(milliseconds: 300));
     controller.refreshUI();
   }
 

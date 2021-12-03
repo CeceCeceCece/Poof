@@ -1,4 +1,5 @@
 import 'package:bang/cards/widgets/button.dart';
+import 'package:bang/core/lang/strings.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/user_dto.dart';
 import 'package:bang/routes/routes.dart';
@@ -27,7 +28,8 @@ class LobbyController extends GetxController {
   bool get playerIsLobbyAdmin => admin() == Get.find<AuthService>().player;
   @override
   void onInit() async {
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: []);
     super.onInit();
   }
 
@@ -36,10 +38,10 @@ class LobbyController extends GetxController {
     if (qrValue == null) return;
     showingQr.value = true;
     Get.defaultDialog(
-      title: 'Olvasd be a kódot!',
+      title: AppStrings.read_the_code.tr,
       onCancel: resetQRBoolean,
       cancel: BangButton(
-          text: 'Vissza',
+          text: AppStrings.back.tr,
           height: 50,
           width: 90,
           isNormal: false,
@@ -91,16 +93,12 @@ class LobbyController extends GetxController {
       back();
     else
       Fluttertoast.showToast(
-        msg: '${userThatLeft.name} kilépett a szobából!',
+        msg: userThatLeft.name + AppStrings.user_left_room.tr,
         toastLength: Toast.LENGTH_SHORT,
       );
   }
 
   bool isAdmin(UserDto user) => user.name == admin.value;
-
-  void toggleAdmin(UserDto user) {
-    Fluttertoast.showToast(msg: '${user.name} is now admin', gravity: ToastGravity.BOTTOM);
-  }
 
   void refreshUI() {
     refresh();

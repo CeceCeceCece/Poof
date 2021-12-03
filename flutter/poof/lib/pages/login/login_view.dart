@@ -1,6 +1,8 @@
 import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/cards/widgets/input_field.dart';
 import 'package:bang/core/constants.dart';
+import 'package:bang/core/helpers/validators.dart';
+import 'package:bang/core/lang/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +19,7 @@ class LoginView extends GetView<LoginController> {
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-                  Constants.backgroundPath,
+                  AssetPaths.backgroundPath,
                 ),
                 fit: BoxFit.fitHeight)),
         child: Scaffold(
@@ -49,49 +51,30 @@ class LoginView extends GetView<LoginController> {
   Column _buildRegistration(BuildContext context) {
     var confirmPasswordField = BangInputField(
       controller: controller.confirmPasswordC,
-      hint: 'Jelszó újra',
+      hint: AppStrings.password_again.tr,
       isPassword: true,
       onSubmit: () {
         if (_formKey.currentState!.validate()) {
           controller.register();
-          //controller.login();
         }
       },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Ez a mező nem lehet üres';
-        }
-        if (value.removeAllWhitespace != value) {
-          return 'Spacekkel sem versz át!';
-        }
-        if (controller.confirmPasswordC.text != controller.passwordC.text) {
-          return 'A két jelszó nem egyezik!';
-        }
-      },
+      validator: (value) =>
+          Validators.passwords(value, controller.passwordC.text),
     );
 
     var passwordField = BangInputField(
       controller: controller.passwordC,
       nextNode: confirmPasswordField.focusNode,
-      hint: 'Jelszó',
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Ez a mező nem lehet üres';
-        }
-        if (value.removeAllWhitespace != value) {
-          return 'Spacekkel sem versz át!';
-        }
-        if (controller.confirmPasswordC.text != controller.passwordC.text) {
-          return 'A két jelszó nem egyezik!';
-        }
-      },
+      hint: AppStrings.password.tr,
+      validator: (value) =>
+          Validators.passwords(value, controller.confirmPasswordC.text),
       onSubmit: () => confirmPasswordField.focusNode.nextFocus(),
       isPassword: true,
     );
 
     var usernameField = BangInputField(
       controller: controller.usernameC,
-      hint: 'Felhasználónév',
+      hint: AppStrings.username.tr,
       nextNode: passwordField.focusNode,
       onSubmit: () => passwordField.focusNode.nextFocus(),
     );
@@ -101,7 +84,7 @@ class LoginView extends GetView<LoginController> {
           width: 225,
           height: 225,
           child: Image.asset(
-            'assets/icons/bang_logo.png',
+            AssetPaths.bangLogo,
             fit: BoxFit.fill,
           ),
         ),
@@ -120,10 +103,9 @@ class LoginView extends GetView<LoginController> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               controller.register();
-              //controller.login();
             }
           },
-          text: 'Regisztráció!',
+          text: AppStrings.registration.tr,
         ),
         SizedBox(height: 20),
         BangButton(
@@ -133,7 +115,7 @@ class LoginView extends GetView<LoginController> {
             FocusScope.of(context).unfocus();
           },
           isLoading: controller.loading(),
-          text: 'Már van fiókom...',
+          text: AppStrings.already_have_account.tr,
         ),
       ],
     );
@@ -142,7 +124,7 @@ class LoginView extends GetView<LoginController> {
   Widget _buildLogin(BuildContext context) {
     var passwordField = BangInputField(
       controller: controller.passwordC,
-      hint: 'Jelszó',
+      hint: AppStrings.password.tr,
       onSubmit: () {
         if (_formKey.currentState!.validate()) controller.login();
       },
@@ -151,7 +133,7 @@ class LoginView extends GetView<LoginController> {
 
     var usernameField = BangInputField(
         controller: controller.usernameC,
-        hint: 'Felhasználónév',
+        hint: AppStrings.username.tr,
         nextNode: passwordField.focusNode,
         onSubmit: () {
           passwordField.focusNode.nextFocus();
@@ -162,7 +144,7 @@ class LoginView extends GetView<LoginController> {
         width: 225,
         height: 225,
         child: Image.asset(
-          'assets/icons/bang_logo.png',
+          AssetPaths.bangLogo,
           fit: BoxFit.fill,
         ),
       ),
@@ -176,7 +158,7 @@ class LoginView extends GetView<LoginController> {
         onPressed: () {
           if (_formKey.currentState!.validate()) controller.login();
         },
-        text: 'Bejelentkezés',
+        text: AppStrings.login.tr,
         isLoading: controller.loading(),
       ),
       SizedBox(height: 20),
@@ -188,7 +170,7 @@ class LoginView extends GetView<LoginController> {
 
           FocusScope.of(context).unfocus();
         },
-        text: 'Még nincs fiókom',
+        text: AppStrings.dont_have_an_account.tr,
       ),
     ]);
   }

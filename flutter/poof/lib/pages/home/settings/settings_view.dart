@@ -1,6 +1,7 @@
 import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/core/colors.dart';
 import 'package:bang/core/constants.dart';
+import 'package:bang/core/lang/strings.dart';
 import 'package:bang/pages/home/settings/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,7 +14,7 @@ class SettingsView extends GetView<SettingsController> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(
-                Constants.backgroundPath,
+                AssetPaths.backgroundPath,
               ),
               fit: BoxFit.fitHeight)),
       child: Scaffold(
@@ -26,7 +27,7 @@ class SettingsView extends GetView<SettingsController> {
                 width: 225,
                 height: 225,
                 child: Image.asset(
-                  'assets/icons/bang_logo.png',
+                  AssetPaths.bangLogo,
                   fit: BoxFit.fill,
                 ),
               ),
@@ -42,7 +43,7 @@ class SettingsView extends GetView<SettingsController> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Beállítások',
+                      AppStrings.settings,
                       style: GoogleFonts.graduate(
                         textStyle: TextStyle(
                             fontSize: 25,
@@ -71,7 +72,7 @@ class SettingsView extends GetView<SettingsController> {
                           child: Row(
                             children: [
                               Text(
-                                'Zene',
+                                AppStrings.music.tr,
                                 style: GoogleFonts.graduate(
                                   textStyle: TextStyle(
                                       fontSize: 15,
@@ -95,7 +96,7 @@ class SettingsView extends GetView<SettingsController> {
                           child: Row(
                             children: [
                               Text(
-                                'SFX',
+                                AppStrings.sfx.tr,
                                 style: GoogleFonts.graduate(
                                   textStyle: TextStyle(
                                       fontSize: 15,
@@ -114,31 +115,6 @@ class SettingsView extends GetView<SettingsController> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                          child: Row(
-                            children: [
-                              Text(
-                                'Értesítések',
-                                style: GoogleFonts.graduate(
-                                  textStyle: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.brown),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Spacer(),
-                              Switch(
-                                activeColor: BangColors.buttonColor,
-                                value:
-                                    controller.isNotificationRecievingEnabled(),
-                                onChanged: (val) =>
-                                    controller.changeNotificationSettings(val),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -150,7 +126,7 @@ class SettingsView extends GetView<SettingsController> {
                 child: BangButton(
                   height: 40,
                   width: 90,
-                  text: 'Vissza',
+                  text: AppStrings.back.tr,
                   onPressed: Get.back,
                 ),
               ),
