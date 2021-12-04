@@ -8,12 +8,14 @@ class BangBackground extends StatelessWidget {
     required this.child,
     this.backgroundColor = Colors.transparent,
     this.resizeToAvoidBottomInset,
+    this.safeAreaTop = true,
   }) : super(key: key);
 
   final Future<bool> Function()? onWillPop;
   final Widget child;
   final Color backgroundColor;
   final bool? resizeToAvoidBottomInset;
+  final bool safeAreaTop;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class BangBackground extends StatelessWidget {
       child: WillPopScope(
         onWillPop: onWillPop,
         child: SafeArea(
+          top: safeAreaTop,
           child: Scaffold(
             resizeToAvoidBottomInset: resizeToAvoidBottomInset,
             backgroundColor: backgroundColor,

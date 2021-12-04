@@ -14,21 +14,13 @@ class HomeController extends GetxController {
   final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
 
-  Rx<String?> roomCodeToJoin = ''.obs;
+  void joinRoom(String roomId) => _initalizeLobbyService()
+      .then((service) => service.joinLobby(lobbyName: roomId));
 
-  void joinRoom([String? roomId]) {
-    var roomID = roomId ?? roomCodeToJoin.value;
-    if (roomID == null) return;
-    findOrPutLobbyService()
-        .then((service) => service.joinLobby(lobbyName: roomID));
-  }
-
-  Future<LobbyService> findOrPutLobbyService() async {
+  Future<LobbyService> _initalizeLobbyService() async {
     var service = Get.find<LobbyService>();
-    if (service.isPlayerInsideLobby) await service.disconnect();
-    service.isPlayerInsideLobby = false;
+    await service.disconnect();
     await service.initWebsocket();
-
     return service;
   }
 
@@ -81,12 +73,10 @@ class HomeController extends GetxController {
     Get.back();
     controller?.dispose();
     joinRoom(qrValue);
-    Fluttertoast.showToast(msg: AppStrings.joining_room.tr + qrValue);
+    Fluttertoast.showToast(
+        msg: AppStrings.joining_room.trParams({'lobbyName': qrValue}));
   }
 
-  void createGame(String? lobbyName) {
-    if (lobbyName == null) return;
-    findOrPutLobbyService()
-        .then((service) => service.createLobby(lobbyName: lobbyName));
-  }
+  void createGame(String lobbyName) => _initalizeLobbyService()
+      .then((service) => service.createLobby(lobbyName: lobbyName));
 }

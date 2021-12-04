@@ -36,4 +36,12 @@ abstract class AppTheme {
       color: Colors.white38,
       border: Border.all(color: Colors.white, width: 1.5),
       borderRadius: BorderRadius.circular(30));
+
+  static TextStyle get slogan => GoogleFonts.graduate(
+        textStyle: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: AppColors.darkBrown,
+        ),
+      );
 }

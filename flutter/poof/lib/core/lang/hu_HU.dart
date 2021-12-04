@@ -12,7 +12,7 @@ const Map<String, String> hu_HU = {
   AppStrings.sfx: 'Hangeffektek',
   AppStrings.back: 'Vissza',
   AppStrings.read_the_code: 'Olvasd be a kódot!',
-  AppStrings.joining_room: 'Csatlakozás ehhez a szobához: ',
+  AppStrings.joining_room: 'Csatlakozás a @lobbyName szobához',
   AppStrings.slogan: 'Van lövésed, kivel vagy?',
   AppStrings.room_name: 'Szobanév',
   AppStrings.room_name_error: 'Nem lehet ilyen szobanév!',

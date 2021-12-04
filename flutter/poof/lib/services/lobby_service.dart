@@ -146,14 +146,8 @@ class LobbyService extends ServiceBase {
 
   void _lobbyJoined(LobbyDto lobby) {
     log('$lobby');
-    if (!isPlayerInsideLobby) {
-      //var gameService = Get.put(GameService());
-      AudioService.playBackgroundMusic();
-      Get.toNamed(Routes.LOBBY);
-
-      //gameService.roomId = lobby.name.obs;
-    }
-    isPlayerInsideLobby = true;
+    AudioService.playBackgroundMusic();
+    Get.toNamed(Routes.LOBBY);
     Future.delayed(delay, () {
       var lobbyController = Get.find<LobbyController>();
       lobbyController.admin.value = lobby.owner;
