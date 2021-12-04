@@ -4,11 +4,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'app.dart';
+import 'firebase/firebase_client.dart';
 import 'services/app_services.dart';
 
 void main() async {
-  //FirebaseTests.runTests();
-  WidgetsFlutterBinding.ensureInitialized();
+  await FirebaseClient.initServices();
   await AppServices.initAudio();
   AppServices.init();
   await GetStorage.init();

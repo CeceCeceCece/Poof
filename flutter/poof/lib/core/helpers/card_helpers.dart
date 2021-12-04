@@ -1,11 +1,5 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 abstract class CardHelpers {
   static const sizeScale = 0.85;
@@ -97,16 +91,6 @@ abstract class CardHelpers {
         return '3';
       case CardValue.Two:
         return '2';
-    }
-  }
-
-  static void saveAndShareImage(Uint8List? image) async {
-    if (image != null) {
-      final directory = await getApplicationDocumentsDirectory();
-      final imagePath = await File('${directory.path}/bang_card.png').create();
-      await imagePath.writeAsBytes(image);
-      await Share.shareFiles([imagePath.path]);
-      ImageGallerySaver.saveImage(image, quality: 100, name: 'bang_card');
     }
   }
 }
