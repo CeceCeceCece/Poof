@@ -23,7 +23,7 @@ const Map<String, String> hu_HU = {
   AppStrings.give_name_to_room: 'Adj nevet a szobának!',
   AppStrings.create_room: 'Szoba létrehozása',
   AppStrings.exit: 'Kilépés',
-  AppStrings.user_left_room: ' kilépett a szobából!',
+  AppStrings.user_left_room: '@player kilépett a szobából!',
   AppStrings.start_game: 'Játék indítása!',
   AppStrings.show_qr_code: 'QR kód mutatása',
   AppStrings.send: 'Küldés',

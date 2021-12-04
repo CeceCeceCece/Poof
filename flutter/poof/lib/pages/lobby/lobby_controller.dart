@@ -16,11 +16,11 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class LobbyController extends GetxController {
   var lobbyService = Get.find<LobbyService>();
-  String? get roomID => lobbyService.roomID;
+  var lobbyName = ''.obs;
+  var admin = ''.obs;
   var modalSheetScrollController = ScrollController();
 
   var showingQr = false.obs;
-  var admin = 'default_playername'.obs;
 
   var messages = <MessageDto>[].obs;
   var users = <UserDto>[].obs;
@@ -28,14 +28,18 @@ class LobbyController extends GetxController {
   bool get playerIsLobbyAdmin => admin() == Get.find<AuthService>().player;
   @override
   void onInit() async {
+    admin = lobbyService.admin;
+    messages = lobbyService.messages;
+    users = lobbyService.users;
+    lobbyName = lobbyService.lobbyName;
+
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: []);
     super.onInit();
   }
 
-  void showQR([String? data]) {
-    var qrValue = data ?? (roomID ?? null);
-    if (qrValue == null) return;
+  void showQR() {
+    var qrValue = lobbyName();
     showingQr.value = true;
     Get.defaultDialog(
       title: AppStrings.read_the_code.tr,
@@ -73,7 +77,7 @@ class LobbyController extends GetxController {
 
   void join() {
     var gameService = Get.put(GameService());
-    gameService.roomId.value = roomID;
+    gameService.roomId.value = lobbyName();
     Get.offAndToNamed(Routes.GAME);
   }
 
@@ -82,18 +86,16 @@ class LobbyController extends GetxController {
   }
 
   void removeUser(UserDto user) {
-    lobbyService.removeUser(user.id);
+    if (user.name != Get.find<AuthService>().player)
+      lobbyService.removeUser(user.id);
   }
 
-  void removeUserCallback(String userId) {
-    var userThatLeft = users.firstWhere((user) => user.id == userId);
-
-    users.removeWhere((element) => element.id == userId);
-    if (userThatLeft.name == SharedPreferenceService.name)
+  void removeUserCallback(String username) {
+    if (username == SharedPreferenceService.name)
       back();
     else
       Fluttertoast.showToast(
-        msg: userThatLeft.name + AppStrings.user_left_room.tr,
+        msg: AppStrings.user_left_room.trParams({'player': username}),
         toastLength: Toast.LENGTH_SHORT,
       );
   }
@@ -105,8 +107,8 @@ class LobbyController extends GetxController {
   }
 
   void back() async {
-    Get.back();
     await lobbyService.disconnectLobby();
+    Get.back();
     AudioService.playMenuSong();
   }
 }

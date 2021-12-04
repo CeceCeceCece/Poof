@@ -49,7 +49,7 @@ class SettingsView extends GetView<SettingsController> {
                         child: Row(
                           children: [
                             Text(AppStrings.music.tr,
-                                style: AppTheme.smallerBrown),
+                                style: AppTheme.smallBrown),
                             Spacer(),
                             Switch(
                               activeColor: AppColors.buttonColor,
@@ -66,7 +66,7 @@ class SettingsView extends GetView<SettingsController> {
                           children: [
                             Text(
                               AppStrings.sfx.tr,
-                              style: AppTheme.smallerBrown,
+                              style: AppTheme.smallBrown,
                               textAlign: TextAlign.center,
                             ),
                             Spacer(),

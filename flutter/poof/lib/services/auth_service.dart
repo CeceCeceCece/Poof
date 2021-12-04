@@ -35,7 +35,7 @@ class AuthService extends ServiceBase {
       final response = await _userProvider.login(body);
       if (response.statusCode == 200) {
         SharedPreferenceService.token = response.body!.token!;
-
+        log('Bearer ${SharedPreferenceService.token}');
         Get.offAndToNamed(Routes.HOME);
 
         SharedPreferenceService.saveCredentials(username, password);
@@ -55,8 +55,7 @@ class AuthService extends ServiceBase {
   }
 
   void register(String username, String password) async {
-    Get.offAndToNamed(Routes.HOME);
-    /* try {
+    try {
       final response = await _userProvider.register(username, password);
       if (response.statusCode == 200) {
         login(username, password);
@@ -64,7 +63,7 @@ class AuthService extends ServiceBase {
     } catch (error) {
       log('$error');
     } finally {
-      Get.find<LoginController>().loading.value = false;
-    }*/
+      Get.find<LoginAndRegisterController>().loading.value = false;
+    }
   }
 }

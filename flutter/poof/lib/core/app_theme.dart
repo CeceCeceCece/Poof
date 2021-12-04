@@ -27,9 +27,14 @@ abstract class AppTheme {
             fontSize: 25, fontWeight: FontWeight.bold, color: Colors.brown),
       );
 
-  static TextStyle get smallerBrown => GoogleFonts.graduate(
+  static TextStyle get smallBrown => GoogleFonts.graduate(
         textStyle: TextStyle(
             fontSize: 15, fontWeight: FontWeight.bold, color: Colors.brown),
+      );
+
+  static TextStyle get medium => GoogleFonts.graduate(
+        textStyle: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.brown),
       );
 
   static BoxDecoration get whiteBackgroundAndBorder => BoxDecoration(

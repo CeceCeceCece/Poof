@@ -20,12 +20,15 @@ import 'package:signalr_core/signalr_core.dart';
 import 'audio_service.dart';
 
 class LobbyService extends ServiceBase {
-  var isPlayerInsideLobby = false;
   var delay = Duration(milliseconds: 150);
   var statusInterval = Duration(seconds: 10);
-  String? roomID;
   Timer? statusTimer;
   StateSetter? onMessageArrivedCallback;
+  var admin = ''.obs;
+  var users = <UserDto>[].obs;
+  var messages = <MessageDto>[].obs;
+  var lobbyName = ''.obs;
+  var _connectionInitialized = false;
 
   late HubConnection _connection;
   Future<void> initWebsocket() async {
@@ -56,9 +59,10 @@ class LobbyService extends ServiceBase {
         .build();
     try {
       await _connection.start();
+      _connectionInitialized = true;
     } catch (error) {
       log('$error');
-      _connection.start();
+      _connectionInitialized = true;
     }
     _connection.onreconnected((connectionId) {
       log('RECONNECTED');
@@ -148,13 +152,10 @@ class LobbyService extends ServiceBase {
     log('$lobby');
     AudioService.playBackgroundMusic();
     Get.toNamed(Routes.LOBBY);
-    Future.delayed(delay, () {
-      var lobbyController = Get.find<LobbyController>();
-      lobbyController.admin.value = lobby.owner;
-      lobbyController.users.value = lobby.users;
-      roomID = lobby.name;
-      lobbyController.refreshUI();
-    });
+
+    admin.value = lobby.owner;
+    users.value = lobby.users;
+    lobbyName.value = lobby.name;
   }
 
   void _lobbyCreated(LobbyDto lobby) async {
@@ -163,13 +164,9 @@ class LobbyService extends ServiceBase {
     AudioService.playBackgroundMusic();
     Get.toNamed(Routes.LOBBY);
     statusTimer = Timer.periodic(statusInterval, (_) => _status());
-    Future.delayed(delay, () {
-      var lobbyController = Get.find<LobbyController>();
-      lobbyController.admin.value = lobby.owner;
-      lobbyController.users.value = lobby.users;
-      roomID = lobby.name;
-      lobbyController.refreshUI();
-    });
+    admin.value = lobby.owner;
+    users.value = lobby.users;
+    lobbyName.value = lobby.name;
   }
 
   void _lobbyDeleted(String lobbyName) {
@@ -188,11 +185,11 @@ class LobbyService extends ServiceBase {
 
   void _setMessages(List<MessageDto> lobbyMessages) {
     log('Arrived:${lobbyMessages.toString()}');
-    Get.find<LobbyController>().messages.value = lobbyMessages;
+    messages.value = lobbyMessages;
   }
 
   void _status() {
-    _connection.invoke('Status', args: [roomID]);
+    _connection.invoke('Status', args: [lobbyName()]);
   }
 
   void _onStatus() {
@@ -203,7 +200,7 @@ class LobbyService extends ServiceBase {
     log('Arrived:${user.name}');
     Future.delayed(delay, () {
       var controller = Get.find<LobbyController>();
-      controller.users.add(user);
+      users.add(user);
       if (controller.showingQr()) {
         controller.resetQRBoolean();
         Get.back();
@@ -218,13 +215,15 @@ class LobbyService extends ServiceBase {
 
   void _userLeft(String userId) {
     log('Arrived:$userId');
-    Get.find<LobbyController>().removeUserCallback(userId);
+    var userThatLeft = users.firstWhere((user) => user.id == userId);
+    Get.find<LobbyController>().removeUserCallback(userThatLeft.name);
+    users.removeWhere((element) => element.id == userId);
   }
 
   void _recieveMessage(MessageDto message) {
     log('Arrived:$message');
     var controller = Get.find<LobbyController>();
-    controller.messages.add(message);
+    messages.add(message);
     onMessageArrivedCallback?.call(() {});
     controller.modalSheetScrollController.animateTo(
         controller.modalSheetScrollController.position.maxScrollExtent + 100,
@@ -261,7 +260,7 @@ class LobbyService extends ServiceBase {
     if (message.isNotEmpty) {
       await _connection.invoke('SendMessage', args: [
         message,
-        roomID,
+        lobbyName(),
       ]).then(
         (value) => print('MESSAGE SENT!'),
       );
@@ -270,7 +269,7 @@ class LobbyService extends ServiceBase {
 
   Future<void> disconnect() async {
     statusTimer?.cancel();
-    await _connection.stop();
+    if (_connectionInitialized) await _connection.stop();
   }
 
   @override
