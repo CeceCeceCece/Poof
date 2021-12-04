@@ -1,4 +1,5 @@
 import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/app_theme.dart';
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/pages/settings/settings_controller.dart';
 import 'package:bang/widgets/bang_background.dart';
@@ -6,7 +7,6 @@ import 'package:bang/widgets/bang_button.dart';
 import 'package:bang/widgets/bang_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SettingsView extends GetView<SettingsController> {
   @override
@@ -22,21 +22,15 @@ class SettingsView extends GetView<SettingsController> {
               child: Container(
                 height: 60,
                 width: 300,
-                decoration: BoxDecoration(
-                    color: Colors.white38,
-                    border: Border.all(color: Colors.white, width: 1.5),
-                    borderRadius: BorderRadius.circular(30)),
+                decoration: AppTheme.whiteBackgroundAndBorder,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    AppStrings.settings.tr,
-                    style: GoogleFonts.graduate(
-                      textStyle: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.brown),
+                  child: Center(
+                    child: Text(
+                      AppStrings.settings.tr,
+                      style: AppTheme.bigBrown,
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
@@ -45,10 +39,7 @@ class SettingsView extends GetView<SettingsController> {
             Padding(
               padding: EdgeInsets.only(left: 25, right: 25),
               child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white38,
-                    border: Border.all(color: Colors.white, width: 1.5),
-                    borderRadius: BorderRadius.circular(30)),
+                decoration: AppTheme.whiteBackgroundAndBorder,
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Column(
@@ -57,16 +48,8 @@ class SettingsView extends GetView<SettingsController> {
                         padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                         child: Row(
                           children: [
-                            Text(
-                              AppStrings.music.tr,
-                              style: GoogleFonts.graduate(
-                                textStyle: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.brown),
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+                            Text(AppStrings.music.tr,
+                                style: AppTheme.smallerBrown),
                             Spacer(),
                             Switch(
                               activeColor: AppColors.buttonColor,
@@ -83,12 +66,7 @@ class SettingsView extends GetView<SettingsController> {
                           children: [
                             Text(
                               AppStrings.sfx.tr,
-                              style: GoogleFonts.graduate(
-                                textStyle: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.brown),
-                              ),
+                              style: AppTheme.smallerBrown,
                               textAlign: TextAlign.center,
                             ),
                             Spacer(),

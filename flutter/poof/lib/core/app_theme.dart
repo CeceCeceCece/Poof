@@ -21,4 +21,19 @@ abstract class AppTheme {
           ),
         ),
       );
+
+  static TextStyle get bigBrown => GoogleFonts.graduate(
+        textStyle: TextStyle(
+            fontSize: 25, fontWeight: FontWeight.bold, color: Colors.brown),
+      );
+
+  static TextStyle get smallerBrown => GoogleFonts.graduate(
+        textStyle: TextStyle(
+            fontSize: 15, fontWeight: FontWeight.bold, color: Colors.brown),
+      );
+
+  static BoxDecoration get whiteBackgroundAndBorder => BoxDecoration(
+      color: Colors.white38,
+      border: Border.all(color: Colors.white, width: 1.5),
+      borderRadius: BorderRadius.circular(30));
 }
