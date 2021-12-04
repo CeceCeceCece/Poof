@@ -8,6 +8,7 @@ import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player.dart';
 import 'package:bang/widgets/bang_background.dart';
+import 'package:bang/widgets/bang_chat.dart';
 import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class GameView extends GetView<GameController> {
     var width = MediaQuery.of(context).size.width;
     return BangBackground(
       onWillPop: controller.showBackPopupForResult,
+      resizeToAvoidBottomInset: false,
       child: Center(
         child: Stack(
           alignment: Alignment.center,
@@ -30,7 +32,7 @@ class GameView extends GetView<GameController> {
             _buildDrawPile(height),
             _buildDiscardPile(height),
             ..._buildLayout(height, width),
-            _buildChat(),
+            _buildChatButton(context),
             _buildCloseButton(),
           ],
         ),
@@ -100,34 +102,12 @@ class GameView extends GetView<GameController> {
             )),
       );
 
-  Widget _buildChat() => Positioned(
+  Widget _buildChatButton(BuildContext context) => Positioned(
         top: 5,
         left: 20,
         child: IconButton(
           iconSize: 28,
-          onPressed: () {
-            Get.bottomSheet(
-              Container(
-                  height: 200,
-                  child: Column(
-                    children: [
-                      Text('Hii 1', textScaleFactor: 2),
-                      Text('Hii 2', textScaleFactor: 2),
-                      Text('Hii 3', textScaleFactor: 2),
-                      Text('Hii 4', textScaleFactor: 2),
-                    ],
-                  )),
-              barrierColor: Colors.transparent,
-              isDismissible: true,
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(35),
-              ),
-              enableDrag: true,
-              enterBottomSheetDuration: Duration(milliseconds: 300),
-              exitBottomSheetDuration: Duration(milliseconds: 300),
-            );
-          },
+          onPressed: () => _buildChat(context),
           icon: Icon(
             Icons.chat,
             color: AppColors.background,
@@ -438,4 +418,148 @@ class GameView extends GetView<GameController> {
           ),
         ));
   }
+
+  void _buildChat(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: AppColors.background,
+      elevation: 10,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            controller.onMessageArrivedCallback = setState;
+
+            controller.modalSheetScrollController = ScrollController();
+            return BangChat(
+                scrollController: controller.modalSheetScrollController,
+                send: controller.sendMessage,
+                textController: controller.chatTextController,
+                playerName: controller.playerName,
+                messages: controller.messages());
+            /*return Padding(
+                padding: EdgeInsets.only(
+                  top: 10,
+                  left: 15,
+                  right: 15,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildMessageList(),
+                    _buildMessageField(context),
+                  ],
+                ));*/
+          },
+        );
+      },
+    );
+    controller.scrollToBottom();
+  }
+
+  /* void _send() => controller.sendMessage();
+
+  Widget _buildMessageField(
+    BuildContext context,
+  ) =>
+      Padding(
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10, top: 10),
+        child: Container(
+          child: Row(
+            children: [
+              Container(
+                width: 230,
+                height: 50,
+                child: BangInputField(
+                    onSubmit: _send,
+                    controller: controller.chatTextController,
+                    hint: AppStrings.message.tr),
+              ),
+              Spacer(),
+              BangButton(
+                text: AppStrings.send.tr,
+                width: 90,
+                height: 50,
+                onPressed: _send,
+              )
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildMessageList() => Container(
+        height: 300,
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          controller: controller.modalSheetScrollController,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ...controller.messages.map(
+                (message) {
+                  var sentBySelf =
+                      Get.find<AuthService>().player == message.sender;
+                  return Padding(
+                    padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
+                    child: _buildMessage(sentBySelf, message),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Align _buildMessage(bool sentBySelf, MessageDto message) {
+    return Align(
+      alignment: sentBySelf ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: sentBySelf ? Colors.brown : Colors.white,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: sentBySelf
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+              children: [
+                _buildMessageHeader(sentBySelf, message),
+                _buildMessageText(message, sentBySelf),
+              ]),
+        ),
+      ),
+    );
+  }
+
+  Container _buildMessageText(MessageDto message, bool sentBySelf) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 3, top: 5, right: 3),
+        child: Text(message.text,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 4,
+            style: sentBySelf ? TextStyle(color: AppColors.background) : null),
+      ),
+    );
+  }
+
+  Text _buildMessageHeader(bool sentBySelf, MessageDto message) {
+    return Text(
+      sentBySelf
+          ? '${AppStrings.you.tr} - ${DateFormat('kk:mm').format(message.postedDate)}'
+          : '${DateFormat('kk:mm').format(message.postedDate)} - ${message.sender}:',
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      style: TextStyle(
+        color: AppColors.background,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }*/
 }

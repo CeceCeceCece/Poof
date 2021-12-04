@@ -18,24 +18,46 @@ class LobbyController extends GetxController {
   var lobbyService = Get.find<LobbyService>();
   var lobbyName = ''.obs;
   var admin = ''.obs;
+
   var modalSheetScrollController = ScrollController();
-
-  var showingQr = false.obs;
-
+  var chatTextController = TextEditingController();
+  StateSetter? onMessageArrivedCallback;
   var messages = <MessageDto>[].obs;
+  var showingQr = false.obs;
   var users = <UserDto>[].obs;
+  late String playerName;
 
-  bool get playerIsLobbyAdmin => admin() == Get.find<AuthService>().player;
+  bool get playerIsLobbyAdmin => admin() == playerName;
   @override
   void onInit() async {
     admin = lobbyService.admin;
     messages = lobbyService.messages;
     users = lobbyService.users;
     lobbyName = lobbyService.lobbyName;
-
+    playerName = Get.find<AuthService>().player;
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: []);
     super.onInit();
+  }
+
+  void scrollToBottom() {
+    Future.delayed(
+      Duration(milliseconds: 100),
+      () {
+        onMessageArrivedCallback?.call(() {});
+        modalSheetScrollController.animateTo(
+          modalSheetScrollController.position.maxScrollExtent + 100,
+          curve: Curves.fastLinearToSlowEaseIn,
+          duration: Duration(milliseconds: 300),
+        );
+      },
+    );
+  }
+
+  void sendMessage() {
+    var message = chatTextController.text;
+    lobbyService.sendMessage(message: message);
+    chatTextController.clear();
   }
 
   void showQR() {

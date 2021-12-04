@@ -6,7 +6,10 @@ import 'package:bang/cards/model/playable_cards/equipment_card.dart';
 import 'package:bang/cards/model/playable_cards/weapon_card.dart';
 import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/core/lang/app_strings.dart';
+import 'package:bang/models/message_dto.dart';
 import 'package:bang/services/audio_service.dart';
+import 'package:bang/services/auth_service.dart';
+import 'package:bang/services/game_service.dart';
 import 'package:bang/widgets/bang_button.dart';
 import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +24,18 @@ class GameController extends GetxController {
   var drawPileAmount = 80.obs;
   var discardedPileAmount = 20.obs;
   Random random = Random();
+  var gameService = Get.find<GameService>();
+  var modalSheetScrollController = ScrollController();
+  var chatTextController = TextEditingController();
+  StateSetter? onMessageArrivedCallback;
+  var messages = <MessageDto>[].obs;
+  late String playerName;
+
+  void sendMessage() {
+    var message = chatTextController.text;
+    gameService.sendMessage(message: message);
+    chatTextController.clear();
+  }
 
   void toggleExpandedHand() {
     isHandExpanded.value = !isHandExpanded();
@@ -41,6 +56,8 @@ class GameController extends GetxController {
 
   @override
   void onInit() {
+    playerName = Get.find<AuthService>().player;
+    messages = gameService.messages;
     handWidgets = [
       for (int i = 0; i < hand().length; i++)
         PlayableCard(
@@ -53,6 +70,20 @@ class GameController extends GetxController {
         ),
     ].obs;
     super.onInit();
+  }
+
+  void scrollToBottom() {
+    Future.delayed(
+      Duration(milliseconds: 100),
+      () {
+        onMessageArrivedCallback?.call(() {});
+        modalSheetScrollController.animateTo(
+          modalSheetScrollController.position.maxScrollExtent + 100,
+          curve: Curves.fastLinearToSlowEaseIn,
+          duration: Duration(milliseconds: 300),
+        );
+      },
+    );
   }
 
   void removeCard(int idx) async {

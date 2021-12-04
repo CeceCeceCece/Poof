@@ -10,7 +10,6 @@ import 'package:bang/pages/lobby/lobby_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/service_base.dart';
 import 'package:bang/services/shared_preference_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -23,7 +22,7 @@ class LobbyService extends ServiceBase {
   var delay = Duration(milliseconds: 150);
   var statusInterval = Duration(seconds: 10);
   Timer? statusTimer;
-  StateSetter? onMessageArrivedCallback;
+
   var admin = ''.obs;
   var users = <UserDto>[].obs;
   var messages = <MessageDto>[].obs;
@@ -222,14 +221,8 @@ class LobbyService extends ServiceBase {
 
   void _recieveMessage(MessageDto message) {
     log('Arrived:$message');
-    var controller = Get.find<LobbyController>();
     messages.add(message);
-    onMessageArrivedCallback?.call(() {});
-    controller.modalSheetScrollController.animateTo(
-        controller.modalSheetScrollController.position.maxScrollExtent + 100,
-        curve: Curves.fastLinearToSlowEaseIn,
-        duration: Duration(milliseconds: 300));
-    controller.refreshUI();
+    Get.find<LobbyController>().scrollToBottom();
   }
 
   void _gameCreated(String gameId) {

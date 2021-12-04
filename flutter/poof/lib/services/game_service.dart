@@ -7,10 +7,14 @@ import 'package:bang/models/game_event_dto.dart';
 import 'package:bang/models/life_point_dto.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/option_dto.dart';
+import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/services/service_base.dart';
 import 'package:bang/services/shared_preference_service.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:signalr_core/signalr_core.dart';
+
+import 'auth_service.dart';
 
 class GameService extends ServiceBase {
   Rx<String?> roomId = Rx(null);
@@ -19,6 +23,7 @@ class GameService extends ServiceBase {
   var statusInterval = Duration(seconds: 10);
 
   Timer? statusTimer;
+  var messages = <MessageDto>[].obs;
 
   late HubConnection _connection;
 
@@ -200,7 +205,11 @@ class GameService extends ServiceBase {
 
   void _cardUnequipped(CardDto card) {}
 
-  void _recieveMessage(MessageDto message) {}
+  void _recieveMessage(MessageDto message) {
+    log('Arrived:$message');
+    messages.add(message);
+    Get.find<GameController>().scrollToBottom();
+  }
 
   void _cardsEquipped(String characterId, CardDto card) {}
   void _cardsAdded(List<CardDto> cards) {}
@@ -212,14 +221,18 @@ class GameService extends ServiceBase {
   void _cardsReceived(List<CardDto> list) {}
 
   void sendMessage({required String message}) async {
-    if (message.isNotEmpty) {
+    _recieveMessage(MessageDto(
+        sender: Get.find<AuthService>().player,
+        text: message,
+        postedDate: DateTime.now()));
+    /*if (message.isNotEmpty) {
       await _connection.invoke('SendMessage', args: [
         gameId,
         message,
       ]).then(
         (value) => print('MESSAGE SENT!'),
       );
-    }
+    }*/
   }
 
   void answerCard({required OptionDto option}) async {

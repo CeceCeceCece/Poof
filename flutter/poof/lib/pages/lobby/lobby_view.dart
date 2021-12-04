@@ -4,21 +4,14 @@ import 'package:bang/core/app_theme.dart';
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/models/user_dto.dart';
 import 'package:bang/pages/lobby/lobby_controller.dart';
-import 'package:bang/services/auth_service.dart';
-import 'package:bang/services/lobby_service.dart';
 import 'package:bang/widgets/bang_background.dart';
 import 'package:bang/widgets/bang_button.dart';
-import 'package:bang/widgets/bang_input_field.dart';
+import 'package:bang/widgets/bang_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class LobbyView extends GetView<LobbyController> {
-  void _sendMessage(String message) {
-    Get.find<LobbyService>().sendMessage(message: message);
-  }
-
   @override
   Widget build(BuildContext context) {
     return BangBackground(
@@ -174,21 +167,28 @@ class LobbyView extends GetView<LobbyController> {
         }),
         onDismissed: (_) => controller.removeUser(user),
         key: UniqueKey(),
-        background: _buildDismissibleBackground(Alignment.centerLeft),
-        secondaryBackground: _buildDismissibleBackground(Alignment.centerRight),
+        background: _buildDismissibleBackground(left: true),
+        secondaryBackground: _buildDismissibleBackground(left: false),
         child: _buildStaticTile(user),
       );
 
-  Container _buildDismissibleBackground(AlignmentGeometry alignment) {
+  Container _buildDismissibleBackground({required bool left}) {
     return Container(
-      alignment: alignment,
+      alignment: left ? Alignment.centerLeft : Alignment.centerRight,
       color: Colors.transparent,
       child: Row(
         children: [
-          SizedBox(
-            width: 30,
-          ),
+          left
+              ? SizedBox(
+                  width: 30,
+                )
+              : Container(),
           Icon(Icons.highlight_remove_sharp, color: Colors.white),
+          !left
+              ? SizedBox(
+                  width: 30,
+                )
+              : Container(),
         ],
       ),
     );
@@ -205,9 +205,13 @@ class LobbyView extends GetView<LobbyController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                      AppStrings.room_name_with_code
-                          .trParams({'lobbyName': controller.lobbyName()}),
-                      style: AppTheme.medium),
+                    AppStrings.room_name_with_code
+                        .trParams({'lobbyName': controller.lobbyName()}),
+                    style: AppTheme.medium,
+                    overflow: TextOverflow.clip,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -222,7 +226,7 @@ class LobbyView extends GetView<LobbyController> {
         ],
       );
 
-  _buildChat(BuildContext context) {
+  void _buildChat(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: AppColors.background,
@@ -232,162 +236,20 @@ class LobbyView extends GetView<LobbyController> {
       builder: (context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            Get.find<LobbyService>().onMessageArrivedCallback = setState;
-            var username = Get.find<AuthService>().player;
-            var textController = TextEditingController();
-            ScrollController scrollController = ScrollController();
+            controller.onMessageArrivedCallback = setState;
+            controller.modalSheetScrollController = ScrollController();
 
-            controller.modalSheetScrollController = scrollController;
-            var field = BangInputField(
-                onSubmit: () async {
-                  _sendMessage(
-                    textController.text,
-                  );
-                  textController.clear();
-                },
-                controller: textController,
-                hint: AppStrings.message.tr);
-            setState(() {});
-
-            return Padding(
-                padding: EdgeInsets.only(
-                  top: 10,
-                  left: 15,
-                  right: 15,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: 300,
-                      child: SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
-                        controller: scrollController,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ...controller.messages.map(
-                              (message) {
-                                var sentBySelf = username == message.sender;
-                                return Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
-                                  child: Align(
-                                    alignment: sentBySelf
-                                        ? Alignment.centerRight
-                                        : Alignment.centerLeft,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: sentBySelf
-                                            ? Colors.brown
-                                            : Colors.white,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment: sentBySelf
-                                                ? CrossAxisAlignment.end
-                                                : CrossAxisAlignment.start,
-                                            children: [
-                                              sentBySelf
-                                                  ? Text(
-                                                      '${AppStrings.you.tr} - ${DateFormat('kk:mm').format(message.postedDate)}',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                        color: AppColors
-                                                            .background,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    )
-                                                  : Text(
-                                                      '${DateFormat('kk:mm').format(message.postedDate)} - ${message.sender}:',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                              Container(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 3,
-                                                          top: 5,
-                                                          right: 3),
-                                                  child: Text('${message.text}',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 4,
-                                                      style: sentBySelf
-                                                          ? TextStyle(
-                                                              color: AppColors
-                                                                  .background)
-                                                          : null),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 20,
-                                              )
-                                            ]),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom + 10,
-                          top: 10),
-                      child: Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 230,
-                              height: 50,
-                              child: field,
-                            ),
-                            Spacer(),
-                            BangButton(
-                              text: AppStrings.send.tr,
-                              width: 90,
-                              height: 50,
-                              onPressed: () async {
-                                _sendMessage(
-                                  textController.text,
-                                );
-                                textController.clear();
-
-                                setState(() {});
-                              },
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ));
+            return BangChat(
+              scrollController: controller.modalSheetScrollController,
+              send: controller.sendMessage,
+              textController: controller.chatTextController,
+              playerName: controller.playerName,
+              messages: controller.messages(),
+            );
           },
         );
       },
     );
-    Future.delayed(
-      Duration(milliseconds: 100),
-      () => controller.modalSheetScrollController.animateTo(
-        controller.modalSheetScrollController.position.maxScrollExtent + 50,
-        curve: Curves.fastLinearToSlowEaseIn,
-        duration: Duration(milliseconds: 500),
-      ),
-    );
+    controller.scrollToBottom();
   }
 }
