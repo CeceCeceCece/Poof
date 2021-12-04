@@ -31,7 +31,7 @@ const Map<String, String> hu_HU = {
   AppStrings.message: 'üzenet',
   AppStrings.wait_for_room_admin:
       'Várj, hogy a szoba létrehozója elindítsa a játékot!',
-  AppStrings.players: 'Játékosok: ',
+  AppStrings.players: 'Játékosok: @current/@max',
   AppStrings.field_cannot_be_empty: 'Ez a mező nem lehet üres!',
   AppStrings.passwords_dont_match: 'A két jelszó nem egyezik!',
   AppStrings.password: 'Jelszó',
@@ -44,4 +44,6 @@ const Map<String, String> hu_HU = {
   AppStrings.error_while_login: 'Hiba a bejelentkezéskor. Kérlek próbáld újra!',
   AppStrings.room_deleted: 'A @roomName nevű szobát törölték!',
   AppStrings.user_connected: '@userName csatlakozott a szobához!',
+  AppStrings.room_name_with_code: 'Szobanév: @lobbyName',
+  AppStrings.not_valid_target: 'Nem megfelelő célpont!',
 };

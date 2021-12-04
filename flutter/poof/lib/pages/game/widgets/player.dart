@@ -1,21 +1,21 @@
 import 'dart:math';
 
 import 'package:animated_icon_button/animated_icon_button.dart';
-import 'package:bang/cards/model/bang_card.dart';
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/cards/model/non_playable_cards/role_card.dart';
-import 'package:bang/cards/widgets/bang_card_widget.dart';
-import 'package:bang/cards/widgets/card_widget_helpers.dart';
-import 'package:bang/cards/widgets/non_playable_card_widget.dart';
+import 'package:bang/cards/model/playable_card_base.dart';
 import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/pages/game/widgets/hand.dart';
+import 'package:bang/widgets/non_playable_card_widget.dart';
+import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/material.dart';
 
-class PlayerView extends StatelessWidget {
+class Player extends StatelessWidget {
   final CharacterCard characterCard;
   final RoleCard roleCard;
-  final pixelPerHealth = (CardWidgetHelpers.cardHeight * 0.4 - 2 * 8) / 5;
-  PlayerView({
+  final pixelPerHealth = (CardHelpers.cardHeight * 0.4 - 2 * 8) / 5;
+  Player({
     required this.characterCard,
     required this.roleCard,
     required this.isHandViewExpanded,
@@ -33,8 +33,8 @@ class PlayerView extends StatelessWidget {
   final bool isEquipmentViewExpanded;
   final VoidCallback toggleEquipmentView;
   final VoidCallback handDoubleTap;
-  final List<BangCard> equipment;
-  final List<BangCard> temporaryEffects;
+  final List<PlayableCardBase> equipment;
+  final List<PlayableCardBase> temporaryEffects;
   final List<Widget> cardsInHand;
   final int highlightedIndexInHand;
   final int health;
@@ -83,14 +83,14 @@ class PlayerView extends StatelessWidget {
                           milliseconds: 250,
                         ),
                         bottom: 20,
-                        right: 2 * CardWidgetHelpers.cardWidth * 0.4 +
+                        right: 2 * CardHelpers.cardWidth * 0.4 +
                             14 -
                             health -
                             (5 - health) * pixelPerHealth -
                             85,
                         child: Transform.rotate(
                           angle: pi / 2,
-                          child: NonPlayableCardWidget(
+                          child: NonPlayableCard(
                             scale: 0.9,
                             showBackPermanently: true,
                             card: characterCard,
@@ -100,7 +100,7 @@ class PlayerView extends StatelessWidget {
                       ),
                       Positioned(
                         bottom: 20,
-                        child: NonPlayableCardWidget(
+                        child: NonPlayableCard(
                           scale: 0.95,
                           card: characterCard,
                         ),
@@ -108,7 +108,7 @@ class PlayerView extends StatelessWidget {
                       Positioned(
                         bottom: 20,
                         left: 10,
-                        child: NonPlayableCardWidget(
+                        child: NonPlayableCard(
                           card: roleCard,
                           scale: 0.95,
                         ),
@@ -184,7 +184,7 @@ class PlayerView extends StatelessWidget {
                 bottom: bottomOffset,
                 child: Transform.rotate(
                   angle: (pi / 180) * (random.nextInt(7) - 3),
-                  child: BangCardWidget(
+                  child: PlayableCard(
                     card: temporaryEffects[i],
                     scale: 0.55,
                     highlightMultiplier: 6.3 / 5,
@@ -197,7 +197,7 @@ class PlayerView extends StatelessWidget {
                 right: (equipment.length - 1) * 54 - 54 * i.toDouble() + 5,
                 child: Transform.rotate(
                   angle: (pi / 180) * (random.nextInt(7) - 3),
-                  child: BangCardWidget(
+                  child: PlayableCard(
                     card: equipment[i],
                     scale: 0.55,
                     highlightMultiplier: 6.3 / 5,

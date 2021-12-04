@@ -1,12 +1,12 @@
 import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
 
-import '../bang_card.dart';
-import '../card_constants.dart';
+import '../playable_card_base.dart';
 
-class WeaponCard extends BangCard {
+class ActionCard extends PlayableCardBase {
   final int range;
 
-  WeaponCard(
+  ActionCard(
       {required this.range,
       required String background,
       required String name,
@@ -20,6 +20,6 @@ class WeaponCard extends BangCard {
           name: name,
           type: type,
         ) {
-    borderColor = AppColors.equipmentCardColor;
+    borderColor = AppColors.actionCardColor;
   }
 }

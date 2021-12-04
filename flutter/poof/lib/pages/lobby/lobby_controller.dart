@@ -1,4 +1,3 @@
-import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/user_dto.dart';
@@ -8,6 +7,7 @@ import 'package:bang/services/auth_service.dart';
 import 'package:bang/services/game_service.dart';
 import 'package:bang/services/lobby_service.dart';
 import 'package:bang/services/shared_preference_service.dart';
+import 'package:bang/widgets/bang_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';

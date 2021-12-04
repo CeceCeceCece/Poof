@@ -1,7 +1,7 @@
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
-import 'package:bang/cards/widgets/bang_card_widget.dart';
-import 'package:bang/cards/widgets/non_playable_card_widget.dart';
 import 'package:bang/core/app_colors.dart';
+import 'package:bang/widgets/non_playable_card_widget.dart';
+import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,8 +27,8 @@ class EnemyPlayer extends StatelessWidget {
   final int health;
   final String characterName;
 
-  final List<BangCardWidget> temporaryEffects;
-  final List<BangCardWidget> equipment;
+  final List<PlayableCard> temporaryEffects;
+  final List<PlayableCard> equipment;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +112,7 @@ class EnemyPlayer extends StatelessWidget {
       alignment: Alignment.bottomLeft,
       children: [
         Positioned(
-          child: NonPlayableCardWidget(
+          child: NonPlayableCard(
             scale: 0.5,
             highlightMultiplier: 1.5,
             card: CharacterCard(
@@ -128,7 +128,7 @@ class EnemyPlayer extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        BangCardWidget.back(),
+        PlayableCard.back(),
         Container(
           height: 30,
           width: 30,

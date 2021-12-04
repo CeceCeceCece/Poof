@@ -1,17 +1,17 @@
 import 'dart:math';
 
-import 'package:bang/cards/model/action_cards/action_card.dart';
-import 'package:bang/cards/model/bang_card.dart';
-import 'package:bang/cards/model/card_constants.dart';
+import 'package:bang/cards/model/playable_card_base.dart';
+import 'package:bang/cards/model/playable_cards/action_card.dart';
+import 'package:bang/core/app_constants.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:screenshot/screenshot.dart';
 
-import 'card_widget_helpers.dart';
-
-class BangCardWidget extends StatefulWidget {
-  final BangCard card;
+class PlayableCard extends StatefulWidget {
+  final PlayableCardBase card;
 
   final double scale;
   final bool canBeFocused;
@@ -22,7 +22,7 @@ class BangCardWidget extends StatefulWidget {
 
   final bool showBackPermanently;
 
-  BangCardWidget({
+  PlayableCard({
     Key? key,
     required this.card,
     this.canBeDragged = false,
@@ -43,10 +43,10 @@ class BangCardWidget extends StatefulWidget {
   final VoidCallback? handCallbackInverse;
 
   @override
-  _BangCardWidgetState createState() => _BangCardWidgetState();
+  _PlayableCardState createState() => _PlayableCardState();
 
   static back({bool isDrawPile = false, double extraElevation = 3}) =>
-      BangCardWidget(
+      PlayableCard(
         scale: 0.5,
         showBackPermanently: true,
         canBeFocused: false,
@@ -62,20 +62,16 @@ class BangCardWidget extends StatefulWidget {
       );
 }
 
-class _BangCardWidgetState extends State<BangCardWidget>
+class _PlayableCardState extends State<PlayableCard>
     with TickerProviderStateMixin {
   bool showBack = false;
   double downSizeRatio = 0.4;
-  late double height =
-      CardWidgetHelpers.cardHeight * downSizeRatio * widget.scale;
-  late double width =
-      CardWidgetHelpers.cardWidth * downSizeRatio * widget.scale;
+  late double height = CardHelpers.cardHeight * downSizeRatio * widget.scale;
+  late double width = CardHelpers.cardWidth * downSizeRatio * widget.scale;
   final _cardFlipDuration = Duration(milliseconds: 300);
   final _cardFocusingDuration = Duration(milliseconds: 100);
   bool isElevated = false;
   double angle = 0;
-
-  final ScreenshotController screenshotController = ScreenshotController();
 
   void _toggleCardFocus() {
     setState(() {
@@ -108,7 +104,6 @@ class _BangCardWidgetState extends State<BangCardWidget>
       onLongPressStart: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
       onLongPressEnd: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
       //onDoubleTap: _flipCard,
-      //onScaleEnd: _screenShot,
       child: TweenAnimationBuilder(
         tween: Tween<double>(begin: 0, end: angle),
         duration: _cardFlipDuration,
@@ -145,30 +140,28 @@ class _BangCardWidgetState extends State<BangCardWidget>
             transform: Matrix4.identity()
               ..setEntry(3, 2, 0.001)
               ..rotateY(val),
-            child: Screenshot(
-                controller: screenshotController,
-                child: widget.canBeDragged
-                    ? Draggable<String>(
-                        onDragCompleted: widget.onDragSuccessCallback,
-                        onDragEnd: (DraggableDetails details) =>
-                            !details.wasAccepted
-                                ? Fluttertoast.showToast(
-                                    msg: 'Ez nem egy valid célpont!')
-                                : {},
-                        data: widget.card.toString(),
-                        feedback: Image.asset('assets/icons/aim.png',
-                            width: 50, height: 50),
-                        childWhenDragging: ColorFiltered(
-                          child: AnimatedOpacity(
-                            opacity: 0.8,
-                            child: card,
-                            duration: Duration(milliseconds: 500),
-                          ),
-                          colorFilter: ColorFilter.mode(
-                              Colors.red.shade100, BlendMode.modulate),
-                        ),
-                        child: card)
-                    : card),
+            child: widget.canBeDragged
+                ? Draggable<String>(
+                    onDragCompleted: widget.onDragSuccessCallback,
+                    onDragEnd: (DraggableDetails details) =>
+                        !details.wasAccepted
+                            ? Fluttertoast.showToast(
+                                msg: AppStrings.not_valid_target.tr)
+                            : {},
+                    data: widget.card.toString(),
+                    feedback: Image.asset(AppAssetPaths.crossHairPath,
+                        width: 50, height: 50),
+                    childWhenDragging: ColorFiltered(
+                      child: AnimatedOpacity(
+                        opacity: 0.8,
+                        child: card,
+                        duration: Duration(milliseconds: 500),
+                      ),
+                      colorFilter: ColorFilter.mode(
+                          Colors.red.shade100, BlendMode.modulate),
+                    ),
+                    child: card)
+                : card,
           );
         },
       ),
@@ -187,13 +180,11 @@ class _BangCardWidgetState extends State<BangCardWidget>
     }
   }
 
-  String get _valueString =>
-      CardWidgetHelpers.cardValueToString(widget.card.value);
+  String get _valueString => CardHelpers.cardValueToString(widget.card.value);
 
-  String get _suitString =>
-      CardWidgetHelpers.cardSuitToString(widget.card.suit);
+  String get _suitString => CardHelpers.cardSuitToString(widget.card.suit);
 
-  Color get _suitColor => CardWidgetHelpers.cardSuitColor(widget.card.suit);
+  Color get _suitColor => CardHelpers.cardSuitColor(widget.card.suit);
 
   Widget _buildLeftCornerData() {
     var text = Text(
@@ -246,7 +237,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
     return !showBack
         ? Stack(
             children: [
-              CardWidgetHelpers.getAsset(
+              CardHelpers.getAsset(
                   name: widget.card.name,
                   type: widget.card.type,
                   scale: widget.scale),
@@ -256,7 +247,7 @@ class _BangCardWidgetState extends State<BangCardWidget>
               ),
             ],
           )
-        : CardWidgetHelpers.getCardBack(widget.card.type, widget.scale);
+        : CardHelpers.getCardBack(widget.card.type, widget.scale);
   }
 
   Widget _buildCorner() => Padding(
@@ -276,13 +267,4 @@ class _BangCardWidgetState extends State<BangCardWidget>
               )),
         ),
       );
-  void _screenShot(ScaleEndDetails details) async {
-    screenshotController
-        .capture(pixelRatio: MediaQuery.of(context).devicePixelRatio)
-        .then((image) async {
-      CardWidgetHelpers.saveAndShareImage(image);
-    }).then((result) {
-      Fluttertoast.showToast(msg: 'captured');
-    });
-  }
 }

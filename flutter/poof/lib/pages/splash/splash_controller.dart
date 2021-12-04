@@ -30,7 +30,7 @@ class SplashController extends GetxController {
     if (!success) {
       await _splashDuration.delay();
       log('login not successful');
-      Get.offAllNamed(Routes.LOGIN);
+      Get.offAllNamed(Routes.LOGIN_AND_REGISTER);
     }
   }
 }

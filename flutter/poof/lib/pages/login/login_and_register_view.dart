@@ -1,14 +1,14 @@
-import 'package:bang/cards/widgets/button.dart';
-import 'package:bang/cards/widgets/input_field.dart';
 import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/helpers/app_validators.dart';
 import 'package:bang/core/lang/app_strings.dart';
+import 'package:bang/widgets/bang_button.dart';
+import 'package:bang/widgets/bang_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'login_controller.dart';
+import 'login_and_register_controller.dart';
 
-class LoginView extends GetView<LoginController> {
+class LoginAndRegisterView extends GetView<LoginAndRegisterController> {
   final _formKey = GlobalKey<FormState>();
 
   @override

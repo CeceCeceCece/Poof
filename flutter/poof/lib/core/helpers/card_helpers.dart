@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:bang/cards/model/card_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-abstract class CardWidgetHelpers {
+abstract class CardHelpers {
   static const sizeScale = 0.85;
   static double get cardHeight => sizeScale * 389;
   static double get cardWidth => sizeScale * 250;
@@ -18,8 +18,8 @@ abstract class CardWidgetHelpers {
   static Widget getAsset(
       {required String name, required CardType type, double scale = 1.0}) {
     return Container(
-        width: CardWidgetHelpers.cardWidth,
-        height: CardWidgetHelpers.cardHeight,
+        width: CardHelpers.cardWidth,
+        height: CardHelpers.cardHeight,
         child: Padding(
           padding: EdgeInsets.all(3.0 * scale),
           child: Image.asset(
@@ -109,4 +109,56 @@ abstract class CardWidgetHelpers {
       ImageGallerySaver.saveImage(image, quality: 100, name: 'bang_card');
     }
   }
+}
+
+enum CardValue {
+  @JsonValue(0)
+  Two,
+  @JsonValue(1)
+  Three,
+  @JsonValue(2)
+  Four,
+  @JsonValue(3)
+  Five,
+  @JsonValue(4)
+  Six,
+  @JsonValue(5)
+  Seven,
+  @JsonValue(6)
+  Eight,
+  @JsonValue(7)
+  Nine,
+  @JsonValue(8)
+  Ten,
+  @JsonValue(9)
+  Jack,
+  @JsonValue(10)
+  Queen,
+  @JsonValue(11)
+  King,
+  @JsonValue(12)
+  Ace,
+}
+
+enum CardSuit {
+  @JsonValue(0)
+  Spades,
+  @JsonValue(1)
+  Hearts,
+  @JsonValue(2)
+  Clubs,
+  @JsonValue(3)
+  Diamonds,
+}
+
+enum CardType {
+  @JsonValue(0)
+  Equipment,
+  @JsonValue(1)
+  Weapon,
+  @JsonValue(2)
+  Action,
+  Back,
+  Role,
+  Character,
 }

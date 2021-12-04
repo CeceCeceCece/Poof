@@ -1,14 +1,11 @@
 import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
 
-import '../bang_card.dart';
-import '../card_constants.dart';
+import '../playable_card_base.dart';
 
-class ActionCard extends BangCard {
-  final int range;
-
-  ActionCard(
-      {required this.range,
-      required String background,
+class EquipmentCard extends PlayableCardBase {
+  EquipmentCard(
+      {required String background,
       required String name,
       required CardValue value,
       required CardType type,
@@ -20,6 +17,6 @@ class ActionCard extends BangCard {
           name: name,
           type: type,
         ) {
-    borderColor = AppColors.actionCardColor;
+    borderColor = AppColors.equipmentCardColor;
   }
 }

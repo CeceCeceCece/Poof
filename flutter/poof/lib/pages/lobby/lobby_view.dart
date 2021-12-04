@@ -1,11 +1,11 @@
-import 'package:bang/cards/widgets/button.dart';
-import 'package:bang/cards/widgets/input_field.dart';
 import 'package:bang/core/app_colors.dart';
 import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/pages/lobby/lobby_controller.dart';
 import 'package:bang/services/auth_service.dart';
 import 'package:bang/services/lobby_service.dart';
+import 'package:bang/widgets/bang_button.dart';
+import 'package:bang/widgets/bang_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -57,8 +57,8 @@ class LobbyView extends GetView<LobbyController> {
                         Column(
                           children: [
                             Text(
-                                AppStrings.room_name.tr +
-                                    ': ${controller.roomID}',
+                                AppStrings.room_name_with_code.trParams(
+                                    {'lobbyName': controller.roomID ?? ''}),
                                 style: GoogleFonts.graduate(
                                     textStyle: TextStyle(
                                         fontSize: 20,
@@ -68,8 +68,11 @@ class LobbyView extends GetView<LobbyController> {
                               height: 10,
                             ),
                             Text(
-                                AppStrings.players.tr +
-                                    '${controller.users().length}/ ${AppConstants.MAX_USER_NUMBER}',
+                                AppStrings.players.trParams({
+                                  'current':
+                                      controller.users().length.toString(),
+                                  'max': AppConstants.MAX_USER_NUMBER.toString()
+                                }),
                                 style: GoogleFonts.graduate(
                                     textStyle: TextStyle(
                                         fontSize: 18,

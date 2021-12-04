@@ -1,10 +1,10 @@
 import 'dart:developer';
 
-import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/lobby_service.dart';
 import 'package:bang/services/shared_preference_service.dart';
+import 'package:bang/widgets/bang_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -33,7 +33,7 @@ class HomeController extends GetxController {
   }
 
   void logout() {
-    Get.offAndToNamed(Routes.LOGIN);
+    Get.offAndToNamed(Routes.LOGIN_AND_REGISTER);
     SharedPreferenceService.removeCredentials();
   }
 

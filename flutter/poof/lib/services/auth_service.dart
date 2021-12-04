@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/network/user_provider.dart';
-import 'package:bang/pages/login/login_controller.dart';
+import 'package:bang/pages/login/login_and_register_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/service_base.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -48,7 +48,8 @@ class AuthService extends ServiceBase {
       success = false;
       log('$error');
     } finally {
-      if (!enhancedLogin) Get.find<LoginController>().loading.value = false;
+      if (!enhancedLogin)
+        Get.find<LoginAndRegisterController>().loading.value = false;
       return success;
     }
   }

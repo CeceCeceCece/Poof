@@ -1,4 +1,5 @@
-import 'package:bang/cards/model/card_constants.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
+
 import 'non_playable_card_base.dart';
 
 class RoleCard extends NonPlayableCardBase {

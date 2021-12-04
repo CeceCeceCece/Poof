@@ -1,15 +1,15 @@
+import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:flutter/material.dart';
 
 import 'card_base.dart';
-import 'card_constants.dart';
 
-abstract class BangCard extends CardBase {
+abstract class PlayableCardBase extends CardBase {
   CardValue value;
   CardSuit suit;
   Color borderColor = Colors.white;
   CardType type;
 
-  BangCard(
+  PlayableCardBase(
       {required String background,
       required String name,
       required this.suit,

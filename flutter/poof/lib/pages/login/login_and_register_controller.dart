@@ -2,7 +2,7 @@ import 'package:bang/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginController extends GetxController {
+class LoginAndRegisterController extends GetxController {
   var loading = false.obs;
   final usernameC = TextEditingController(text: 'Cece');
   final passwordC = TextEditingController(text: 'admin');

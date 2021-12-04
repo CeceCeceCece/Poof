@@ -1,5 +1,3 @@
-import 'package:bang/cards/widgets/button.dart';
-import 'package:bang/cards/widgets/input_field.dart';
 import 'package:bang/core/app_colors.dart';
 import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/lang/app_strings.dart';
@@ -7,6 +5,8 @@ import 'package:bang/pages/home/home_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/game_service.dart';
+import 'package:bang/widgets/bang_button.dart';
+import 'package:bang/widgets/bang_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

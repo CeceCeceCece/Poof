@@ -12,6 +12,7 @@ abstract class AppStrings {
   static const joining_room = 'joining_room';
   static const slogan = 'slogan';
   static const room_name = 'room_name';
+  static const room_name_with_code = 'room_name_with_code';
   static const room_name_error = 'room_name_error';
   static const enter_room_name = 'enter_room_name';
   static const ok = 'ok';
@@ -41,4 +42,5 @@ abstract class AppStrings {
   static const no_internet = 'no_internet';
   static const room_deleted = 'room_deleted';
   static const user_connected = 'user_connected';
+  static const not_valid_target = 'not_valid_target';
 }

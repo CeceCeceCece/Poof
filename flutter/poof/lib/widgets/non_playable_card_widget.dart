@@ -1,13 +1,10 @@
 import 'dart:math';
 
 import 'package:bang/cards/model/non_playable_cards/non_playable_card_base.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:screenshot/screenshot.dart';
 
-import 'card_widget_helpers.dart';
-
-class NonPlayableCardWidget extends StatefulWidget {
+class NonPlayableCard extends StatefulWidget {
   final NonPlayableCardBase card;
 
   final double scale;
@@ -15,7 +12,7 @@ class NonPlayableCardWidget extends StatefulWidget {
   final bool canBeFocused;
 
   final bool showBackPermanently;
-  const NonPlayableCardWidget({
+  const NonPlayableCard({
     Key? key,
     required this.card,
     this.canBeFocused = true,
@@ -31,20 +28,16 @@ class NonPlayableCardWidget extends StatefulWidget {
   _BangCardWidgetState createState() => _BangCardWidgetState();
 }
 
-class _BangCardWidgetState extends State<NonPlayableCardWidget>
+class _BangCardWidgetState extends State<NonPlayableCard>
     with TickerProviderStateMixin {
   bool showBack = false;
   double downSizeRatio = 0.4;
-  late double height =
-      CardWidgetHelpers.cardHeight * downSizeRatio * widget.scale;
-  late double width =
-      CardWidgetHelpers.cardWidth * downSizeRatio * widget.scale;
+  late double height = CardHelpers.cardHeight * downSizeRatio * widget.scale;
+  late double width = CardHelpers.cardWidth * downSizeRatio * widget.scale;
   final _cardFlipDuration = Duration(milliseconds: 300);
   final _cardFocusingDuration = Duration(milliseconds: 100);
   bool isElevated = false;
   double angle = 0;
-
-  final screenShotController = ScreenshotController();
 
   void _toggleCardFocus() => setState(() {
         if (isElevated) {
@@ -62,23 +55,12 @@ class _BangCardWidgetState extends State<NonPlayableCardWidget>
         angle = (angle + pi) % (2 * pi);
       });
 
-  void _screenShot(ScaleEndDetails details) async {
-    screenShotController
-        .capture(pixelRatio: MediaQuery.of(context).devicePixelRatio)
-        .then((image) async {
-      CardWidgetHelpers.saveAndShareImage(image);
-    }).then((result) {
-      Fluttertoast.showToast(msg: 'captured');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTapCallback,
       onLongPressStart: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
       onLongPressEnd: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
-      // onScaleEnd: _screenShot,
       //onDoubleTap: _flipCard,
       child: TweenAnimationBuilder(
         tween: Tween<double>(begin: 0, end: angle),
@@ -90,35 +72,32 @@ class _BangCardWidgetState extends State<NonPlayableCardWidget>
             transform: Matrix4.identity()
               ..setEntry(3, 2, 0.001)
               ..rotateY(val),
-            child: Screenshot(
-              controller: screenShotController,
-              child: showBack
-                  ? Material(
-                      borderRadius: BorderRadius.circular(10 * widget.scale),
-                      elevation: isElevated ? 40 : 0,
-                      child: AnimatedContainer(
-                        height: height,
-                        width: width,
-                        duration: _cardFocusingDuration,
-                        child: render(),
-                      ),
-                    )
-                  : Material(
-                      borderRadius: BorderRadius.circular(10),
-                      elevation: isElevated ? 40 : 0,
-                      child: Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.identity()
-                          ..rotateY(
-                              pi), // it will flip horizontally the container
-                        child: AnimatedContainer(
-                            height: height,
-                            width: width,
-                            duration: _cardFocusingDuration,
-                            child: render(showBack: true)),
-                      ),
+            child: showBack
+                ? Material(
+                    borderRadius: BorderRadius.circular(10 * widget.scale),
+                    elevation: isElevated ? 40 : 0,
+                    child: AnimatedContainer(
+                      height: height,
+                      width: width,
+                      duration: _cardFocusingDuration,
+                      child: render(),
                     ),
-            ),
+                  )
+                : Material(
+                    borderRadius: BorderRadius.circular(10),
+                    elevation: isElevated ? 40 : 0,
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()
+                        ..rotateY(
+                            pi), // it will flip horizontally the container
+                      child: AnimatedContainer(
+                          height: height,
+                          width: width,
+                          duration: _cardFocusingDuration,
+                          child: render(showBack: true)),
+                    ),
+                  ),
           );
         },
       ),
@@ -139,8 +118,8 @@ class _BangCardWidgetState extends State<NonPlayableCardWidget>
 
   Widget render({bool showBack = false}) {
     return !showBack
-        ? CardWidgetHelpers.getAsset(
+        ? CardHelpers.getAsset(
             name: widget.card.name, type: widget.card.type, scale: widget.scale)
-        : CardWidgetHelpers.getCardBack(widget.card.type, widget.scale);
+        : CardHelpers.getCardBack(widget.card.type, widget.scale);
   }
 }

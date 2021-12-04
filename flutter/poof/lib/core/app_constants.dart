@@ -15,4 +15,5 @@ abstract class AppConstants {
 abstract class AppAssetPaths {
   static const backgroundPath = 'assets/background/bg2.jpg';
   static const bangLogo = 'assets/icons/bang_logo.png';
+  static const crossHairPath = 'assets/icons/aim.png';
 }

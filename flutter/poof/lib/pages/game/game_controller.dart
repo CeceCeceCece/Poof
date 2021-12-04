@@ -1,14 +1,14 @@
 import 'dart:math';
 
-import 'package:bang/cards/model/action_cards/action_card.dart';
-import 'package:bang/cards/model/action_cards/equipment_card.dart';
-import 'package:bang/cards/model/action_cards/weapon_card.dart';
-import 'package:bang/cards/model/bang_card.dart';
-import 'package:bang/cards/model/card_constants.dart';
-import 'package:bang/cards/widgets/bang_card_widget.dart';
-import 'package:bang/cards/widgets/button.dart';
+import 'package:bang/cards/model/playable_card_base.dart';
+import 'package:bang/cards/model/playable_cards/action_card.dart';
+import 'package:bang/cards/model/playable_cards/equipment_card.dart';
+import 'package:bang/cards/model/playable_cards/weapon_card.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/services/audio_service.dart';
+import 'package:bang/widgets/bang_button.dart';
+import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +27,7 @@ class GameController extends GetxController {
     isEquipmentViewExpanded.value = false;
   }
 
-  var handWidgets = <BangCardWidget>[].obs;
+  var handWidgets = <PlayableCard>[].obs;
 
   void toggleEquipmentView() =>
       isEquipmentViewExpanded.value = !isEquipmentViewExpanded();
@@ -43,7 +43,7 @@ class GameController extends GetxController {
   void onInit() {
     handWidgets = [
       for (int i = 0; i < hand().length; i++)
-        BangCardWidget(
+        PlayableCard(
           scale: 0.85,
           card: hand[i],
           canBeDragged: true,
@@ -197,7 +197,7 @@ class GameController extends GetxController {
   void _exitDone() => _exitConfirmed = false;
 
   final equipmentCards = [
-    BangCardWidget(
+    PlayableCard(
       card: EquipmentCard(
           background: 'barrel',
           name: 'barrel',
@@ -208,7 +208,7 @@ class GameController extends GetxController {
       scale: 0.25,
       highlightMultiplier: 1.5,
     ),
-    BangCardWidget(
+    PlayableCard(
       card: EquipmentCard(
           background: 'barrel',
           name: 'barrel',
@@ -219,7 +219,7 @@ class GameController extends GetxController {
       scale: 0.25,
       highlightMultiplier: 1.5,
     ),
-    BangCardWidget(
+    PlayableCard(
       card: EquipmentCard(
           background: 'barrel',
           name: 'barrel',
@@ -230,7 +230,7 @@ class GameController extends GetxController {
       scale: 0.25,
       highlightMultiplier: 1.5,
     ),
-    BangCardWidget(
+    PlayableCard(
       card: EquipmentCard(
           background: 'barrel',
           name: 'barrel',
@@ -243,7 +243,7 @@ class GameController extends GetxController {
     ),
   ];
   final temporaryEffectCards = [
-    BangCardWidget(
+    PlayableCard(
       card: EquipmentCard(
           background: 'dynamite',
           name: 'dynamite',
@@ -254,7 +254,7 @@ class GameController extends GetxController {
       scale: 0.25,
       highlightMultiplier: 1.5,
     ),
-    BangCardWidget(
+    PlayableCard(
       card: EquipmentCard(
           background: 'jail',
           name: 'jail',
@@ -267,7 +267,7 @@ class GameController extends GetxController {
     ),
   ];
 
-  var equipmentList = <BangCard>[
+  var equipmentList = <PlayableCardBase>[
     WeaponCard(
       background: 'remington',
       name: 'remington',
@@ -301,7 +301,7 @@ class GameController extends GetxController {
       type: CardType.Weapon,
     ),
   ].obs;
-  var temporaryEffectList = <BangCard>[
+  var temporaryEffectList = <PlayableCardBase>[
     EquipmentCard(
       background: 'jail',
       name: 'jail',

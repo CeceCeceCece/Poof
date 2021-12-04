@@ -1,14 +1,14 @@
 import 'dart:math';
 
-import 'package:bang/cards/model/action_cards/equipment_card.dart';
-import 'package:bang/cards/model/card_constants.dart' as Bang;
 import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/cards/model/non_playable_cards/role_card.dart';
-import 'package:bang/cards/widgets/bang_card_widget.dart';
+import 'package:bang/cards/model/playable_cards/equipment_card.dart';
 import 'package:bang/core/app_colors.dart';
 import 'package:bang/core/app_constants.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/pages/game/game_controller.dart';
-import 'package:bang/pages/game/widgets/player_view.dart';
+import 'package:bang/pages/game/widgets/player.dart';
+import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,7 +58,7 @@ class GameView extends GetView<GameController> {
               children: [
                 for (int i = 0; i < controller.drawPileAmount() / 5; i++)
                   _buildDummyCardBack(),
-                BangCardWidget.back(isDrawPile: true, extraElevation: 2),
+                PlayableCard.back(isDrawPile: true, extraElevation: 2),
                 Container(
                   height: 30,
                   width: 30,
@@ -88,7 +88,7 @@ class GameView extends GetView<GameController> {
             controller.random.nextInt(5) - 2, controller.random.nextInt(5) - 2),
         child: Transform.rotate(
           angle: (pi / 180) * (controller.random.nextInt(7) - 3),
-          child: BangCardWidget.back(isDrawPile: true, extraElevation: 2),
+          child: PlayableCard.back(isDrawPile: true, extraElevation: 2),
         ),
       );
 
@@ -98,13 +98,13 @@ class GameView extends GetView<GameController> {
               children: [
                 for (int i = 0; i < controller.discardedPileAmount() / 5; i++)
                   _buildDummyCardBack(),
-                BangCardWidget(
+                PlayableCard(
                   card: EquipmentCard(
                       background: 'barrel',
                       name: 'barrel',
-                      value: Bang.CardValue.Ten,
-                      type: Bang.CardType.Equipment,
-                      suit: Bang.CardSuit.Diamonds),
+                      value: CardValue.Ten,
+                      type: CardType.Equipment,
+                      suit: CardSuit.Diamonds),
                   canBeFocused: true,
                   scale: 0.5,
                   highlightMultiplier: 1.3,
@@ -435,7 +435,7 @@ class GameView extends GetView<GameController> {
   Widget _buildPlayer() {
     return Obx(() => Align(
           alignment: Alignment.bottomCenter,
-          child: PlayerView(
+          child: Player(
             health: 3,
             characterCard: CharacterCard(
                 background: 'willythekid', health: 4, name: 'willythekid'),

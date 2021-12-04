@@ -1,11 +1,14 @@
 import 'package:bang/core/app_colors.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
 
-import '../bang_card.dart';
-import '../card_constants.dart';
+import '../playable_card_base.dart';
 
-class EquipmentCard extends BangCard {
-  EquipmentCard(
-      {required String background,
+class WeaponCard extends PlayableCardBase {
+  final int range;
+
+  WeaponCard(
+      {required this.range,
+      required String background,
       required String name,
       required CardValue value,
       required CardType type,

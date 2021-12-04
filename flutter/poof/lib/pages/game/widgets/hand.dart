@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:bang/cards/widgets/card_widget_helpers.dart';
+import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:flutter/material.dart';
 
 class Hand extends StatelessWidget {
@@ -97,7 +97,7 @@ class Hand extends StatelessWidget {
                 (1.8 / (handSize + 2)) *
                 (rotationStep * index + rotationStart) +
             width / 2 -
-            (CardWidgetHelpers.cardWidth / 2) * 0.4,
+            (CardHelpers.cardWidth / 2) * 0.4,
         bottom: (isExpanded ? 1 : 0.3) *
                 (rotationStep * index + rotationStart).abs() *
                 -0.5 +

@@ -1,8 +1,8 @@
-import 'package:bang/cards/widgets/button.dart';
 import 'package:bang/core/app_colors.dart';
 import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/lang/app_strings.dart';
-import 'package:bang/pages/home/settings/settings_controller.dart';
+import 'package:bang/pages/settings/settings_controller.dart';
+import 'package:bang/widgets/bang_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
