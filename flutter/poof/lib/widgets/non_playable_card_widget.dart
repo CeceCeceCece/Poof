@@ -10,7 +10,8 @@ class NonPlayableCard extends StatefulWidget {
   final double scale;
   final double highlightMultiplier;
   final bool canBeFocused;
-
+  final bool currentRoundGlow;
+  final bool nextActionGlow;
   final bool showBackPermanently;
   const NonPlayableCard({
     Key? key,
@@ -20,6 +21,8 @@ class NonPlayableCard extends StatefulWidget {
     this.scale = 1.0,
     this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
+    this.currentRoundGlow = true,
+    this.nextActionGlow = true,
   }) : super(key: key);
 
   final void Function()? onTapCallback;
@@ -37,6 +40,7 @@ class _BangCardWidgetState extends State<NonPlayableCard>
   final _cardFlipDuration = Duration(milliseconds: 300);
   final _cardFocusingDuration = Duration(milliseconds: 100);
   bool isElevated = false;
+
   double angle = 0;
 
   void _toggleCardFocus() => setState(() {
@@ -54,6 +58,37 @@ class _BangCardWidgetState extends State<NonPlayableCard>
   void _flipCard() => setState(() {
         angle = (angle + pi) % (2 * pi);
       });
+
+  List<BoxShadow> _setGlow() {
+    if (isElevated) return [];
+    if (widget.nextActionGlow)
+      return [
+        BoxShadow(
+          color: Colors.amber.shade700,
+          spreadRadius: 1,
+          blurRadius: 5,
+        ),
+        BoxShadow(
+          color: Colors.amber.shade700,
+          spreadRadius: -1,
+          blurRadius: 5,
+        )
+      ];
+    if (widget.currentRoundGlow)
+      return [
+        BoxShadow(
+          color: Colors.amber.shade100,
+          spreadRadius: 4,
+          blurRadius: 10,
+        ),
+        BoxShadow(
+          color: Colors.amber.shade100,
+          spreadRadius: -4,
+          blurRadius: 5,
+        )
+      ];
+    return [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +114,10 @@ class _BangCardWidgetState extends State<NonPlayableCard>
                     child: AnimatedContainer(
                       height: height,
                       width: width,
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(10 * widget.scale),
+                          boxShadow: _setGlow()),
                       duration: _cardFocusingDuration,
                       child: render(),
                     ),

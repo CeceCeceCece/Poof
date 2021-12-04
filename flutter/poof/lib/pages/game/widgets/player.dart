@@ -10,6 +10,7 @@ import 'package:bang/pages/game/widgets/hand.dart';
 import 'package:bang/widgets/non_playable_card_widget.dart';
 import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Player extends StatelessWidget {
   final CharacterCard characterCard;
@@ -68,6 +69,18 @@ class Player extends StatelessWidget {
     );
   }
 
+  Widget _buildSmallCharacterCard() => isHandViewExpanded
+      ? Positioned(
+          top: 150,
+          right: 10,
+          child: NonPlayableCard(
+            scale: 0.4,
+            card: characterCard,
+            canBeFocused: false,
+          ),
+        )
+      : Container();
+
   Widget _buildRoleHealthCharacter() => Expanded(
         child: Container(
           child: isHandViewExpanded
@@ -77,6 +90,7 @@ class Player extends StatelessWidget {
                   fit: StackFit.passthrough,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   children: [
+                      _buildNextPlayerButton(),
                       AnimatedPositioned(
                         curve: Curves.bounceInOut,
                         duration: Duration(
@@ -119,11 +133,41 @@ class Player extends StatelessWidget {
         flex: isHandViewExpanded ? 0 : 22,
       );
 
+  Widget _buildDiscardButton() => Positioned(
+        bottom: 15,
+        right: 10,
+        child: Material(
+          elevation: 20,
+          clipBehavior: Clip.hardEdge,
+          shape: CircleBorder(),
+          color: Colors.transparent,
+          child: Ink(
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: AppColors.darkBrown),
+                  gradient: AppColors.buttonGradient,
+                  borderRadius: BorderRadius.circular(200)),
+              child: Center(
+                child: SizedBox(
+                  height: 38,
+                  width: 38,
+                  child: IconButton(
+                      icon: FaIcon(
+                        FontAwesomeIcons.trashAlt,
+                      ),
+                      iconSize: 18,
+                      color: Colors.white,
+                      onPressed: () {}),
+                ),
+              )),
+        ),
+      );
+
   Widget _buildHand() => Expanded(
         child: Stack(
           children: [
             ..._buildEquipmentView(
                 isEquipmentViewExpanded && isHandViewExpanded, 208),
+            _buildSmallCharacterCard(),
             Hand(
               indexOfFocusedCard: highlightedIndexInHand,
               cards: cardsInHand,
@@ -134,6 +178,7 @@ class Player extends StatelessWidget {
             isHandViewExpanded
                 ? _buildEquipmentViewTogglerButton()
                 : Container(),
+            _buildDiscardButton(),
           ],
         ),
         flex: isHandViewExpanded ? 30 : 8,
@@ -170,6 +215,35 @@ class Player extends StatelessWidget {
                   ]),
             ),
           ),
+        ),
+      );
+  Widget _buildNextPlayerButton() => AnimatedPositioned(
+        top: isEquipmentViewExpanded ? 35 : 115,
+        duration: Duration(milliseconds: 200),
+        left: 10,
+        child: Material(
+          elevation: 20,
+          clipBehavior: Clip.hardEdge,
+          shape: CircleBorder(),
+          color: Colors.transparent,
+          child: Ink(
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: AppColors.darkBrown),
+                  gradient: AppColors.buttonGradient,
+                  borderRadius: BorderRadius.circular(200)),
+              child: Center(
+                child: SizedBox(
+                  height: 38,
+                  width: 38,
+                  child: IconButton(
+                      icon: FaIcon(
+                        FontAwesomeIcons.handPointUp,
+                      ),
+                      iconSize: 18,
+                      color: Colors.white,
+                      onPressed: () {}),
+                ),
+              )),
         ),
       );
 
