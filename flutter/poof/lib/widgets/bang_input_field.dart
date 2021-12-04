@@ -14,13 +14,14 @@ class BangInputField extends StatefulWidget {
   final VoidCallback? onSubmit;
   final bool autofocus;
 
-  final focusNode = FocusNode();
+  final FocusNode? focusNode;
 
   final FocusNode? nextNode;
 
   BangInputField(
       {required this.hint,
       this.controller,
+      this.focusNode,
       this.autofocus = false,
       this.isPassword = false,
       this.color = Colors.white,
@@ -59,7 +60,7 @@ class _BangInputFieldState extends State<BangInputField> {
             ? TextInputAction.next
             : TextInputAction.done,
         onFieldSubmitted: (_) {
-          widget.focusNode.unfocus();
+          widget.focusNode?.unfocus();
           widget.onSubmit?.call();
         },
 

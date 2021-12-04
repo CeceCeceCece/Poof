@@ -4,10 +4,10 @@ import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/cards/model/non_playable_cards/role_card.dart';
 import 'package:bang/cards/model/playable_cards/equipment_card.dart';
 import 'package:bang/core/app_colors.dart';
-import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player.dart';
+import 'package:bang/widgets/bang_background.dart';
 import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,32 +20,19 @@ class GameView extends GetView<GameController> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(
-                AppAssetPaths.backgroundPath,
-              ),
-              fit: BoxFit.fitHeight)),
-      child: WillPopScope(
-        onWillPop: controller.showBackPopupForResult,
-        child: SafeArea(
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Center(
-              child: Stack(
-                alignment: Alignment.center,
-                fit: StackFit.passthrough,
-                children: [
-                  _buildDrawPile(height),
-                  _buildDiscardPile(height),
-                  ..._buildLayout(height, width),
-                  _buildChat(),
-                  _buildCloseButton(),
-                ],
-              ),
-            ),
-          ),
+    return BangBackground(
+      onWillPop: controller.showBackPopupForResult,
+      child: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          fit: StackFit.passthrough,
+          children: [
+            _buildDrawPile(height),
+            _buildDiscardPile(height),
+            ..._buildLayout(height, width),
+            _buildChat(),
+            _buildCloseButton(),
+          ],
         ),
       ),
     );

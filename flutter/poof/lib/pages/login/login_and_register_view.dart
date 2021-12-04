@@ -1,8 +1,9 @@
-import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/helpers/app_validators.dart';
 import 'package:bang/core/lang/app_strings.dart';
+import 'package:bang/widgets/bang_background.dart';
 import 'package:bang/widgets/bang_button.dart';
 import 'package:bang/widgets/bang_input_field.dart';
+import 'package:bang/widgets/bang_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,21 +11,17 @@ import 'login_and_register_controller.dart';
 
 class LoginAndRegisterView extends GetView<LoginAndRegisterController> {
   final _formKey = GlobalKey<FormState>();
+  final _passwordNode = FocusNode();
+  final _confirmPasswordNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                  AppAssetPaths.backgroundPath,
-                ),
-                fit: BoxFit.fitHeight)),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: BangBackground(
+          child: SingleChildScrollView(
             child: Center(
               child: Container(
                 width: MediaQuery.of(context).size.width - 60,
@@ -52,12 +49,9 @@ class LoginAndRegisterView extends GetView<LoginAndRegisterController> {
     var confirmPasswordField = BangInputField(
       controller: controller.confirmPasswordC,
       hint: AppStrings.password_again.tr,
+      focusNode: _confirmPasswordNode,
       isPassword: true,
-      onSubmit: () {
-        if (_formKey.currentState!.validate()) {
-          controller.register();
-        }
-      },
+      onSubmit: _register,
       validator: (value) =>
           AppValidators.passwords(value, controller.passwordC.text),
     );
@@ -65,10 +59,11 @@ class LoginAndRegisterView extends GetView<LoginAndRegisterController> {
     var passwordField = BangInputField(
       controller: controller.passwordC,
       nextNode: confirmPasswordField.focusNode,
+      focusNode: _passwordNode,
       hint: AppStrings.password.tr,
       validator: (value) =>
           AppValidators.passwords(value, controller.confirmPasswordC.text),
-      onSubmit: () => confirmPasswordField.focusNode.nextFocus(),
+      onSubmit: () => _confirmPasswordNode.nextFocus(),
       isPassword: true,
     );
 
@@ -76,18 +71,11 @@ class LoginAndRegisterView extends GetView<LoginAndRegisterController> {
       controller: controller.usernameC,
       hint: AppStrings.username.tr,
       nextNode: passwordField.focusNode,
-      onSubmit: () => passwordField.focusNode.nextFocus(),
+      onSubmit: () => _passwordNode.nextFocus(),
     );
     return Column(
       children: [
-        Container(
-          width: 225,
-          height: 225,
-          child: Image.asset(
-            AppAssetPaths.bangLogo,
-            fit: BoxFit.fill,
-          ),
-        ),
+        BangLogo(),
         usernameField,
         SizedBox(
           height: 10,
@@ -100,20 +88,12 @@ class LoginAndRegisterView extends GetView<LoginAndRegisterController> {
         SizedBox(height: 20),
         BangButton(
           isLoading: controller.loading(),
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              controller.register();
-            }
-          },
+          onPressed: _register,
           text: AppStrings.registration.tr,
         ),
         SizedBox(height: 20),
         BangButton(
-          onPressed: () {
-            _formKey.currentState?.reset();
-            controller.goToLogin();
-            FocusScope.of(context).unfocus();
-          },
+          onPressed: () => _goToLogin(context),
           isLoading: controller.loading(),
           text: AppStrings.already_have_account.tr,
         ),
@@ -121,33 +101,47 @@ class LoginAndRegisterView extends GetView<LoginAndRegisterController> {
     );
   }
 
+  void _register() {
+    if (_formKey.currentState!.validate()) {
+      controller.register();
+    }
+  }
+
+  void _goToLogin(BuildContext context) {
+    _formKey.currentState?.reset();
+    controller.goToLogin();
+    FocusScope.of(context).unfocus();
+  }
+
+  void _goToRegister(BuildContext context) {
+    _formKey.currentState?.reset();
+    controller.goToRegister();
+
+    FocusScope.of(context).unfocus();
+  }
+
+  void _login() {
+    if (_formKey.currentState!.validate()) controller.login();
+  }
+
   Widget _buildLogin(BuildContext context) {
     var passwordField = BangInputField(
       controller: controller.passwordC,
+      focusNode: _passwordNode,
       hint: AppStrings.password.tr,
-      onSubmit: () {
-        if (_formKey.currentState!.validate()) controller.login();
-      },
+      onSubmit: _login,
       isPassword: true,
     );
 
     var usernameField = BangInputField(
-        controller: controller.usernameC,
-        hint: AppStrings.username.tr,
-        nextNode: passwordField.focusNode,
-        onSubmit: () {
-          passwordField.focusNode.nextFocus();
-        });
+      controller: controller.usernameC,
+      hint: AppStrings.username.tr,
+      nextNode: passwordField.focusNode,
+      onSubmit: _passwordNode.nextFocus,
+    );
 
     return Column(children: [
-      Container(
-        width: 225,
-        height: 225,
-        child: Image.asset(
-          AppAssetPaths.bangLogo,
-          fit: BoxFit.fill,
-        ),
-      ),
+      BangLogo(),
       usernameField,
       SizedBox(
         height: 10,
@@ -155,21 +149,14 @@ class LoginAndRegisterView extends GetView<LoginAndRegisterController> {
       passwordField,
       SizedBox(height: 80),
       BangButton(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) controller.login();
-        },
+        onPressed: _login,
         text: AppStrings.login.tr,
         isLoading: controller.loading(),
       ),
       SizedBox(height: 20),
       BangButton(
         isLoading: controller.loading(),
-        onPressed: () {
-          _formKey.currentState?.reset();
-          controller.goToRegister();
-
-          FocusScope.of(context).unfocus();
-        },
+        onPressed: () => _goToRegister(context),
         text: AppStrings.dont_have_an_account.tr,
       ),
     ]);
