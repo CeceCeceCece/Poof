@@ -1,11 +1,5 @@
 ﻿using Application.Exceptions;
 using Application.Models.CardLogic;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
@@ -29,7 +23,6 @@ namespace Domain.Entities
             "Stagecoach" => new StagecoachCardLogic(card),
             "Duel" => new DuelCardLogic(card),
             "Gatling" => new GatlingCardLogic(card),
-            "General Store" => new GeneralStoreCardLogic(card),
             "Indians!" => new IndiansCardLogic(card),
             "Missed!" => new MissedCardLogic(card),
             "Panic!" => new PanicCardLogic(card),

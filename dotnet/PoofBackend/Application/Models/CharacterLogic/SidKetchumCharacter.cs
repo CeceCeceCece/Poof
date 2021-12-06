@@ -17,7 +17,7 @@ namespace Application.Models.CharacterLogic
             await base.DropCardsFromDeckAsync(cardIds);
             if(cardIds.Count > 2) 
             {
-                await DecreaseLifepointAsync(1);
+                await IncreaseLifePontAsync(1);
             }
         }
 

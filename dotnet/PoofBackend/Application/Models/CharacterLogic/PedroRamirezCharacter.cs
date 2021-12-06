@@ -1,14 +1,9 @@
-﻿using Application.Constants;
-using Application.Exceptions;
-using Application.Models.DTOs;
+﻿using Application.Models.DTOs;
 using Application.SignalR;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models.CharacterLogic
@@ -53,6 +48,8 @@ namespace Application.Models.CharacterLogic
                 await DrawAsync(cards);
 
                 //HUB az eldobott lapok tetején új lap az alsó
+                var last = Character.Game.DiscardPile.LastOrDefault();
+                await Hub.Clients.Group(Character.Game.Name).SetDiscardPile(last is null ? null : new CardViewModel(last.Id, last.Card.Name, last.Card.Type, last.Card.Suite, last.Card.Value));
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Constants.Enums;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,6 @@ namespace Application.Models.GameModels.WinModels
 {
     public interface IWinLogic
     {
-        public Task CheckWinAsync(Game game);
-        public Task CheckDeadAsync(Game game);
+        public Task<bool> CheckWinAsync(Game game, out RoleType winner);
     }
 }

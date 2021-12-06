@@ -126,10 +126,29 @@ namespace Application.Models.CharacterLogic
                 await Hub.Clients.Group(Character.Game.Name).SetLifePoint(new LifePointViewModel(Character.Id, Character.LifePoint));
         }
 
-        protected virtual Task DeadAsync()
+        protected virtual async Task DeadAsync()
         {
-            //TODO: hub
-            return Task.CompletedTask;
+            foreach (var card in Character.Deck)
+            {
+                await Character.Game.AddToDiscardPileAsync(Hub, card);
+            }
+            foreach (var card in Character.EquipedCards)
+            {
+                await Character.Game.AddToDiscardPileAsync(Hub, card);
+            }
+            if (Character.Weapon is not null)
+                await Character.Game.AddToDiscardPileAsync(Hub, Character.Weapon);
+
+            Character.Deck.Clear();
+            Character.EquipedCards.Clear();
+            Character.Weapon = null;
+
+            if (Hub is not null)
+                await Hub.Clients.Group(Character.Game.Name).PlayerDied(Character.Id);
+
+            Character.Game.Characters.Remove(Character);
+
+            await Character.Game.CheckWinAsync(Hub);
         }
 
         public virtual async Task IncreaseLifePontAsync(int point)
@@ -160,7 +179,7 @@ namespace Application.Models.CharacterLogic
             if(deckCard is not null) 
             {
                 Character.Deck.Remove(deckCard);
-                game.DiscardPile.Add(deckCard);
+                await game.AddToDiscardPileAsync(Hub, deckCard);
 
                 if (Hub is not null)
                     await Hub.Clients.Group(Character.Game.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
@@ -168,7 +187,7 @@ namespace Application.Models.CharacterLogic
             else if(Character.Weapon != null && Character.Weapon.Id == cardId) 
             {
                 await Character.Weapon.Map().DeactivateAsync(this);
-                game.DiscardPile.Add(Character.Weapon);
+                await game.AddToDiscardPileAsync(Hub, Character.Weapon);
                 Character.Weapon = null;
 
                 if (Hub is not null)
@@ -179,15 +198,11 @@ namespace Application.Models.CharacterLogic
                 var equipedCard = Character.EquipedCards.SingleOrDefault(x => x.Id == cardId) ?? throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
                 await equipedCard.Map().DeactivateAsync(this);
                 Character.EquipedCards.Remove(equipedCard);
-                game.DiscardPile.Add(equipedCard);
+                await game.AddToDiscardPileAsync(Hub, equipedCard);
 
                 if (Hub is not null)
                     await Hub.Clients.Group(Character.Game.Name).CardUnequiped(new CardIdViewModel(cardId, Character.Id));
             }
-            var last = Character.Game.DiscardPile.Last();
-
-            if (Hub is not null)
-                await Hub.Clients.Group(Character.Game.Name).SetDiscardPile(new CardViewModel(last.Id, last.Card.Name, last.Card.Type, last.Card.Suite, last.Card.Value));
         }
 
         public virtual async Task UnequipeCard(string cardId) 

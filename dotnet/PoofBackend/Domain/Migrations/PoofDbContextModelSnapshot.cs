@@ -46,7 +46,7 @@ namespace Domain.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8ab8d52c-c328-4eb4-aa76-116ff31e65d8",
+                            Id = "45f79e52-0595-412e-a51a-f05d7991d998",
                             Description = "The Barrel allows you to “draw!” when you are the target of a BANG! if you draw a Heart card, you are Missed! (just like if you played a Missed! card)-otherwise nothing happens.",
                             Name = "Barrel",
                             Suite = 0,
@@ -55,7 +55,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "3d91db27-d066-44be-a1a8-c5032d50d327",
+                            Id = "30351639-08d8-4d8c-8f2b-139e173eceb2",
                             Description = "The Barrel allows you to “draw!” when you are the target of a BANG! if you draw a Heart card, you are Missed! (just like if you played a Missed! card)-otherwise nothing happens.",
                             Name = "Barrel",
                             Suite = 0,
@@ -64,7 +64,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "00a9e537-b114-4ad9-b099-991d540ab994",
+                            Id = "1ddbd9f6-8fe0-4777-b5f2-64a10e87120f",
                             Description = "Play this card in front of you: the Dynamite will stay there for a whole turn. When you start your next turn(you have the Dynamite already in play), before the first phase you must draw! if you draw a card showing Spades and a number between 2 and 9, the Dynamite explodes! Discard it and lose 3 life points; otherwise, pass the Dynamite to the player on your left(who will draw! on his turn, etc)..Players keep passing the Dynamite around until it explodes, with the effect explained above, or it is drawn or discarded by a Panic!or a Cat Balou.If you have both the Dynamite and a Jail in play, check the Dynamite first. If you are damaged(or even eliminated!) by a Dynamite, this damage is not considered to be caused by any player.",
                             Name = "Dynamite",
                             Suite = 1,
@@ -73,7 +73,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "97a54798-dbb0-417c-971c-4eaf6b3e3264",
+                            Id = "b1aa8189-1f0c-423a-a44a-10cb43010b7c",
                             Description = "Play this card in front of you: the Dynamite will stay there for a whole turn. When you start your next turn(you have the Dynamite already in play), before the first phase you must draw! if you draw a card showing Spades and a number between 2 and 9, the Dynamite explodes! Discard it and lose 3 life points; otherwise, pass the Dynamite to the player on your left(who will draw! on his turn, etc)..Players keep passing the Dynamite around until it explodes, with the effect explained above, or it is drawn or discarded by a Panic!or a Cat Balou.If you have both the Dynamite and a Jail in play, check the Dynamite first. If you are damaged(or even eliminated!) by a Dynamite, this damage is not considered to be caused by any player.",
                             Name = "Dynamite",
                             Suite = 1,
@@ -82,7 +82,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "e0837842-4379-43f6-bd23-a5cdf6bf57bc",
+                            Id = "eec256e3-3b35-4052-b0a2-d0348989c6de",
                             Description = "Play this card in front of any player regardless of the distance: you put him in jail! If you are in jail, you must draw! before the beginning of your turn: if you draw a Heart card, you escape from jail: discard the Jail, and continue your turn as normal otherwise discard the Jail and skip your turn. If you are in Jail you remain a possible target for BANG! cards and can still play response cards (e.g. Missed! and Beer) out of your turn, if necessary. Jail cannot be played on the Sheriff.",
                             Name = "Jail",
                             Suite = 0,
@@ -91,7 +91,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "734ec77d-a104-4f43-9f60-443ea924a24d",
+                            Id = "3fa2b409-d4c7-419d-a48b-a0f14a900ea0",
                             Description = "Play this card in front of any player regardless of the distance: you put him in jail! If you are in jail, you must draw! before the beginning of your turn: if you draw a Heart card, you escape from jail: discard the Jail, and continue your turn as normal otherwise discard the Jail and skip your turn. If you are in Jail you remain a possible target for BANG! cards and can still play response cards (e.g. Missed! and Beer) out of your turn, if necessary. Jail cannot be played on the Sheriff.",
                             Name = "Jail",
                             Suite = 1,
@@ -100,7 +100,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "4feefb20-55e0-4d88-953b-b544926c1dab",
+                            Id = "37a7e551-fcd2-4ef0-8ee7-3322bbe35ccf",
                             Description = "Play this card in front of any player regardless of the distance: you put him in jail! If you are in jail, you must draw! before the beginning of your turn: if you draw a Heart card, you escape from jail: discard the Jail, and continue your turn as normal otherwise discard the Jail and skip your turn. If you are in Jail you remain a possible target for BANG! cards and can still play response cards (e.g. Missed! and Beer) out of your turn, if necessary. Jail cannot be played on the Sheriff.",
                             Name = "Jail",
                             Suite = 0,
@@ -109,7 +109,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "bbad3b48-6391-4676-af6a-58f0915c79a8",
+                            Id = "35a08511-afd3-4c4b-ba7d-6eb87df11a00",
                             Description = "When you have a Mustang horse in play the distance between other players and you is increased by 1. However, you still see the other players at the normal distance.",
                             Name = "Mustang",
                             Suite = 1,
@@ -118,7 +118,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "6cb057d9-9424-4999-a787-cfc698b595b2",
+                            Id = "ad05e863-a14f-416d-9cfe-867033aa085b",
                             Description = "When you have a Mustang horse in play the distance between other players and you is increased by 1. However, you still see the other players at the normal distance.",
                             Name = "Mustang",
                             Suite = 1,
@@ -127,7 +127,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "1dc762eb-bc2f-41e9-a153-cbcbf416d203",
+                            Id = "9abf73b3-7788-4e02-bc87-218a000a634f",
                             Description = "",
                             Name = "Remington",
                             Suite = 2,
@@ -136,7 +136,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "9a83f13a-c34f-4b9b-a16d-5ac76a321e46",
+                            Id = "868f00ef-2eea-4ae9-ad29-0038059f1642",
                             Description = "",
                             Name = "Carabine",
                             Suite = 2,
@@ -145,7 +145,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "8e17da52-5718-4b77-bd9f-fba6eb0e808b",
+                            Id = "a5563e73-fa16-4b98-aa37-57493f67ba50",
                             Description = "",
                             Name = "Schofield",
                             Suite = 2,
@@ -154,7 +154,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "59100acb-a7e4-474d-9c41-f2a39335f11a",
+                            Id = "78f2db17-af0e-4200-80a2-b9ca6561d763",
                             Description = "",
                             Name = "Schofield",
                             Suite = 2,
@@ -163,7 +163,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "9113c8da-845d-4a4a-a58d-d7f32bbf62c4",
+                            Id = "93087b57-8f57-439e-8aaa-afb33b0930cd",
                             Description = "",
                             Name = "Schofield",
                             Suite = 2,
@@ -172,7 +172,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "0d8c6caf-f933-41ea-8203-c0aff547695d",
+                            Id = "79c45b27-7e89-48ab-9829-5a70c7cad80f",
                             Description = "",
                             Name = "Volcanic",
                             Suite = 2,
@@ -181,7 +181,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "432b72bd-8ed8-4fb7-95d7-fcd7eed92867",
+                            Id = "b0e9a4c7-7be2-4874-8440-153f2a882ea7",
                             Description = "",
                             Name = "Volcanic",
                             Suite = 0,
@@ -190,7 +190,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "5504e073-c632-4d0f-89de-e7b2f65e8aa7",
+                            Id = "3f03b4c4-22e8-4582-8d3b-64ec4752bfc8",
                             Description = "",
                             Name = "Winchester",
                             Suite = 2,
@@ -199,7 +199,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "5549e5e7-03f0-424b-a96f-77d4e4d147a9",
+                            Id = "ea3b6123-5c7f-47d2-ba6d-b3d504797599",
                             Description = "When you have a Scope in play, you see all the other players at a distance decreased by 1.",
                             Name = "Scope",
                             Suite = 0,
@@ -208,7 +208,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "6049aeaa-40a6-43e6-9a85-7168b6026809",
+                            Id = "d6d3defa-1fed-40f9-a792-bab72c269e50",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 0,
@@ -217,7 +217,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "bbf50ea9-4da6-486d-9689-92ce324b1eac",
+                            Id = "ac335306-ffc0-43f3-8c92-f90970e411f8",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -226,7 +226,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "d723cefe-5af1-406e-a366-b0f228b4657b",
+                            Id = "70f7f637-d77b-4aa9-a3bf-86d4f7a3f09e",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -235,7 +235,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "3cd3f4d0-5460-4c70-aba4-d40e8a746351",
+                            Id = "85dfd984-7ee2-491b-87ef-59b2946eaca5",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -244,7 +244,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "419a5422-fc45-4c90-8174-b5ab6ad3e1d2",
+                            Id = "a049ddfa-7e7b-4556-9c1a-ca42d2126807",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -253,7 +253,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "e7a321cc-1793-4f6c-9283-d25ad84cdcba",
+                            Id = "061f8e70-712f-42c9-9dff-c2fc7ce61f44",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -262,7 +262,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "3e911bd3-ad42-438c-bc1c-99ddae893b2a",
+                            Id = "aa6ce42d-db9e-453b-aba9-301dff0bd5dd",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -271,7 +271,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "3d7b9a8c-6909-4548-80c2-7fa0af29021e",
+                            Id = "d78a4596-6cbf-4803-a879-9e8404010857",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -280,7 +280,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "489e1852-124b-485e-8174-840f88bfc2b6",
+                            Id = "09909e72-cd1d-432a-9677-54e50f78c2d7",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -289,7 +289,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "6a686a73-7464-4e13-b9dd-babe5da84cc2",
+                            Id = "fba7e820-06e3-46c2-92cd-3194a29e1704",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -298,7 +298,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "01a8b64f-4495-4b47-b9be-b515f28a09c2",
+                            Id = "f6eaac6c-40bc-456f-bb7a-91fe296ee7f0",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -307,7 +307,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "91d28053-a725-4fda-b36f-9f9d9989635c",
+                            Id = "aa218ec5-32ff-43a4-b552-79688e29b964",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -316,7 +316,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "685b2e22-dd1d-4c5f-abe0-12489b5ab5bc",
+                            Id = "b2d9aeab-2464-4ba5-ac55-550f1b9041d7",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -325,7 +325,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "1d8cfeff-97fb-4f2f-acf3-11089614f545",
+                            Id = "715035f1-ec26-4da4-b218-1f74d4ab3b3c",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 3,
@@ -334,7 +334,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "fb804c15-9486-4006-a822-5be7411a40e1",
+                            Id = "3a6cd64b-31e3-4340-943b-b8ebf66be663",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 2,
@@ -343,7 +343,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "666f0e7c-75a4-4c09-ae91-592c3bfc8533",
+                            Id = "c2ee7a6d-be74-4b9a-8b47-07c66ba918e5",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 2,
@@ -352,7 +352,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "7c91f175-315c-4d81-bee5-98b6569bf2e4",
+                            Id = "6eae4432-ea9e-49d0-add7-62046354afce",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 2,
@@ -361,7 +361,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "f02e2f65-fcc1-425a-9b8d-86cff121f63f",
+                            Id = "f4c87b67-82a5-49c4-ba47-1960d4ec95c9",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 2,
@@ -370,7 +370,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "8fae6e39-56ea-4b4f-b76d-b3c4d589b6da",
+                            Id = "99fa6c44-df12-4dd7-bc59-d16734c374e3",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 2,
@@ -379,7 +379,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "a94b7c2d-1ce5-41f7-8ca8-bf44c50be37d",
+                            Id = "80f929b9-b1c6-471f-a603-009a6601f10a",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 2,
@@ -388,7 +388,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "92698c35-6ec9-43ee-b67e-656fb704160e",
+                            Id = "803ba610-5380-4524-90de-62d5a349dab5",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 2,
@@ -397,7 +397,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "2a3f955e-7bf9-4373-8c2b-ce2d17e03687",
+                            Id = "06798780-7939-4aac-aafd-08b2d18cdee3",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 2,
@@ -406,7 +406,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "b96d9513-abe3-42cc-8b7e-bf02ffad7d90",
+                            Id = "8bd49c33-3bdb-432c-93c0-7f3269290121",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 1,
@@ -415,7 +415,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "83ede1f4-3fa6-46cc-9b38-52e87b547aa2",
+                            Id = "77a2d69a-e221-49c1-a7f7-c0a2bc41e144",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 1,
@@ -424,7 +424,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "d0699642-de35-4dfe-8eb7-e1f3bafcd191",
+                            Id = "aa3acb0a-3380-410a-92b1-d762d366b330",
                             Description = "BANG! cards are the main method to reduce other players' ife points. If you want to play a BANG! card to hit one of the players, determine: what the distance to that player is; and if your weapon is capable of reaching that distance.",
                             Name = "Bang!",
                             Suite = 1,
@@ -433,7 +433,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "3197c353-2f60-4a18-bcb4-c078044974e5",
+                            Id = "b454476a-9ed3-456b-84fa-ead14b219c68",
                             Description = "This card lets you regain one life point - take a bullet from the pile. You cannot gain more life points than your starting amount! The Beer cannot be used to help other players. The Beer can be played in two ways: as usual, during your turn and out of turn, but only if you have just received a hit that is lethal (i.e. a hit that takes away your last life point), and not if you are simply hit. Beer has no effect if there are only 2 players left in the game; in other words, if you play a Beer you do not gain any life point.",
                             Name = "Beer",
                             Suite = 1,
@@ -442,7 +442,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "21b234d4-8945-44a1-a445-a3dd9596c2ce",
+                            Id = "00ac6f02-e705-423e-ac4e-76c72fa4c4cb",
                             Description = "This card lets you regain one life point - take a bullet from the pile. You cannot gain more life points than your starting amount! The Beer cannot be used to help other players. The Beer can be played in two ways: as usual, during your turn and out of turn, but only if you have just received a hit that is lethal (i.e. a hit that takes away your last life point), and not if you are simply hit. Beer has no effect if there are only 2 players left in the game; in other words, if you play a Beer you do not gain any life point.",
                             Name = "Beer",
                             Suite = 1,
@@ -451,7 +451,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "d69d8294-fbba-43ed-9efa-36399304d520",
+                            Id = "84c50233-4338-4a2d-a7ac-6be36f1d72cb",
                             Description = "This card lets you regain one life point - take a bullet from the pile. You cannot gain more life points than your starting amount! The Beer cannot be used to help other players. The Beer can be played in two ways: as usual, during your turn and out of turn, but only if you have just received a hit that is lethal (i.e. a hit that takes away your last life point), and not if you are simply hit. Beer has no effect if there are only 2 players left in the game; in other words, if you play a Beer you do not gain any life point.",
                             Name = "Beer",
                             Suite = 1,
@@ -460,7 +460,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "48f24887-2667-4450-b4da-3fbd17f2a81c",
+                            Id = "2c4feb12-0634-48df-b1f2-2f229f92f043",
                             Description = "This card lets you regain one life point - take a bullet from the pile. You cannot gain more life points than your starting amount! The Beer cannot be used to help other players. The Beer can be played in two ways: as usual, during your turn and out of turn, but only if you have just received a hit that is lethal (i.e. a hit that takes away your last life point), and not if you are simply hit. Beer has no effect if there are only 2 players left in the game; in other words, if you play a Beer you do not gain any life point.",
                             Name = "Beer",
                             Suite = 1,
@@ -469,7 +469,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "e79d1a0e-c3bb-4a52-8759-119d1288f431",
+                            Id = "362c92a4-0b33-43f4-8b58-c5d1d49169fe",
                             Description = "This card lets you regain one life point - take a bullet from the pile. You cannot gain more life points than your starting amount! The Beer cannot be used to help other players. The Beer can be played in two ways: as usual, during your turn and out of turn, but only if you have just received a hit that is lethal (i.e. a hit that takes away your last life point), and not if you are simply hit. Beer has no effect if there are only 2 players left in the game; in other words, if you play a Beer you do not gain any life point.",
                             Name = "Beer",
                             Suite = 1,
@@ -478,7 +478,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "94a516a0-3c6f-44b8-bde0-940c0bb488f5",
+                            Id = "f3ce6436-394d-4b8d-9432-9104a48cb219",
                             Description = "This card lets you regain one life point - take a bullet from the pile. You cannot gain more life points than your starting amount! The Beer cannot be used to help other players. The Beer can be played in two ways: as usual, during your turn and out of turn, but only if you have just received a hit that is lethal (i.e. a hit that takes away your last life point), and not if you are simply hit. Beer has no effect if there are only 2 players left in the game; in other words, if you play a Beer you do not gain any life point.",
                             Name = "Beer",
                             Suite = 1,
@@ -487,7 +487,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "b6afb876-1659-402e-9593-6bea08145570",
+                            Id = "2cc9c3d9-6a4e-4c6c-b2d0-e54994230122",
                             Description = "Force any one player to discard a card, regardless of the distance.",
                             Name = "Cat Balou",
                             Suite = 1,
@@ -496,7 +496,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "09ee83e6-eecf-4ef2-b428-fb98e84b2f29",
+                            Id = "3c9a684d-5a97-4421-9c3b-949636b1fe1e",
                             Description = "Force any one player to discard a card, regardless of the distance.",
                             Name = "Cat Balou",
                             Suite = 3,
@@ -505,7 +505,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "ba93c9d7-f6b1-487d-a3b5-7889911741bf",
+                            Id = "5a6dfa9a-2eec-4aa9-906a-b6f5023fc4b5",
                             Description = "Force any one player to discard a card, regardless of the distance.",
                             Name = "Cat Balou",
                             Suite = 3,
@@ -514,7 +514,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "d0b745d4-8ad8-4553-a406-87b2fdd4044a",
+                            Id = "5e17bb99-ec1e-4c26-b17a-8b03fb684a05",
                             Description = "Force any one player to discard a card, regardless of the distance.",
                             Name = "Cat Balou",
                             Suite = 3,
@@ -523,7 +523,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "7503ad9c-a386-47e9-8c6f-312a699cc89d",
+                            Id = "b23b8275-2536-45e4-a414-180ea81bb347",
                             Description = "Draw two cards from the top of the deck",
                             Name = "Stagecoach",
                             Suite = 0,
@@ -532,7 +532,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "0145dd1c-6d99-482f-b6c0-8004e8acf5c0",
+                            Id = "c00e0aca-aeb3-4ce0-9a82-7c3286b8034f",
                             Description = "Draw two cards from the top of the deck",
                             Name = "Stagecoach",
                             Suite = 0,
@@ -541,7 +541,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "338ca7fc-898c-45bf-a890-6700a74b962a",
+                            Id = "3b116735-0276-4886-aea6-b6f4d4c42bf8",
                             Description = "With this card you can challenge any other player (staring him in the eyes!), regardless of the distance. The challenged player may discard a BANG! card (even though it is not his turn!). If he does, you may discard a BANG! card, and so on: the first player failing to discard a BANG! card loses one life point, and the duel is I over. You cannot play Missed! or use the Barrel during a duel. The Duel is not a BANG! card. BANG! cards discarded during a Duel are not accounted towards the one BANG! card limitation.",
                             Name = "Duel",
                             Suite = 3,
@@ -550,7 +550,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "e9b4fff4-16ed-4a4b-8783-0a552facabc9",
+                            Id = "2af70a2b-e2af-4d73-b667-5f21cc0edcea",
                             Description = "With this card you can challenge any other player (staring him in the eyes!), regardless of the distance. The challenged player may discard a BANG! card (even though it is not his turn!). If he does, you may discard a BANG! card, and so on: the first player failing to discard a BANG! card loses one life point, and the duel is I over. You cannot play Missed! or use the Barrel during a duel. The Duel is not a BANG! card. BANG! cards discarded during a Duel are not accounted towards the one BANG! card limitation.",
                             Name = "Duel",
                             Suite = 0,
@@ -559,7 +559,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "b05cdd60-f91b-4871-97a0-21853bb6d6bc",
+                            Id = "dfb36793-9b21-488f-b16d-0185db1eeb01",
                             Description = "With this card you can challenge any other player (staring him in the eyes!), regardless of the distance. The challenged player may discard a BANG! card (even though it is not his turn!). If he does, you may discard a BANG! card, and so on: the first player failing to discard a BANG! card loses one life point, and the duel is I over. You cannot play Missed! or use the Barrel during a duel. The Duel is not a BANG! card. BANG! cards discarded during a Duel are not accounted towards the one BANG! card limitation.",
                             Name = "Duel",
                             Suite = 2,
@@ -568,7 +568,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "c4e101ab-d5e8-4982-8e64-8e81158f937e",
+                            Id = "9d9c0cca-354d-49e3-b01d-d06bd7bd9a1b",
                             Description = "The Gatling shoots a BANG! to all the other players, regardless of the distance. Even though the Gatling shoots a BANG! to all the other players, it is not considered a BANG! card. During your turn you can play any number of Gatling, but only one BANG! card.",
                             Name = "Gatling",
                             Suite = 1,
@@ -577,25 +577,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "dc1152eb-32c7-4d52-b732-fd7be3b3761b",
-                            Description = "When you play this card, turn as many cards from the deck face up as the players still playing. Starting with you and proceeding clockwise, each player chooses one of those cards and puts it in his hands.",
-                            Name = "General Store",
-                            Suite = 2,
-                            Type = 2,
-                            Value = 7
-                        },
-                        new
-                        {
-                            Id = "4047564d-611d-4251-91a2-1c9f55f47f5e",
-                            Description = "When you play this card, turn as many cards from the deck face up as the players still playing. Starting with you and proceeding clockwise, each player chooses one of those cards and puts it in his hands.",
-                            Name = "General Store",
-                            Suite = 0,
-                            Type = 2,
-                            Value = 10
-                        },
-                        new
-                        {
-                            Id = "0b182fb2-5e42-4907-bae9-1b24a1705dc0",
+                            Id = "7787a481-55d5-4828-a8b4-762bf2ec5324",
                             Description = "Each player, excluding the one who played this card, may discard a BANG! card, or lose one life point. Neither Missed! nor Barrel have effect in this case.",
                             Name = "Indians!",
                             Suite = 3,
@@ -604,7 +586,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "834acd5c-9b73-4ec6-9d10-2ee44103b681",
+                            Id = "9662b781-33b7-4edf-9ccc-b318f25b3528",
                             Description = "Each player, excluding the one who played this card, may discard a BANG! card, or lose one life point. Neither Missed! nor Barrel have effect in this case.",
                             Name = "Indians!",
                             Suite = 3,
@@ -613,7 +595,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "561879e9-9191-496a-bd33-23bb64e92349",
+                            Id = "a4ffbdb8-b076-4364-ae95-89d4b6dc76ce",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 2,
@@ -622,7 +604,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "fb4a9642-7698-4fc1-80a2-4727e97094b8",
+                            Id = "4ea2f2da-3358-4612-b697-2504ea3c4241",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 2,
@@ -631,7 +613,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "a9bff813-642b-4eee-aa82-be9cb87f074f",
+                            Id = "1b730627-2128-4994-9bfa-e338cb3b25b2",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 2,
@@ -640,7 +622,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "f4d17cac-2070-45eb-9623-6d9cda224033",
+                            Id = "8f26a167-e8b6-47b5-8480-d19bbeae8644",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 2,
@@ -649,7 +631,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "468fe60c-2cb5-4796-b269-d0d1f1a51243",
+                            Id = "2a730800-3bca-4b2c-ac53-0460c1c7c5a3",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 2,
@@ -658,7 +640,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "e11e5d60-83f5-4980-8a4c-e940269d6469",
+                            Id = "47212c40-0901-4fa6-a2d0-9785aa06b916",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 0,
@@ -667,7 +649,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "dbe74a8c-bc24-4212-999f-9a21bde2081f",
+                            Id = "73c82a41-3f6b-412a-b2c6-cc6b54998785",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 0,
@@ -676,7 +658,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "42acd740-a179-4abd-9ada-2bb8c3f41a69",
+                            Id = "c744c2c2-5c69-4a59-93a7-2d6d86b085ba",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 0,
@@ -685,7 +667,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "d5c74f8b-38a3-4982-ad83-612fcba235e3",
+                            Id = "b7f44a3e-e74c-458c-8baf-f1d9f96cf157",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 0,
@@ -694,7 +676,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "79824782-9ce7-466c-b3df-b7f9b63acf2f",
+                            Id = "ed1caf31-b5fc-4c96-8a62-aeda17f0ebd9",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 0,
@@ -703,7 +685,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "9933ac2d-70c6-40c6-995a-51b43ce051b8",
+                            Id = "1f1c6f9f-84b9-4a7d-ae51-d1e4d1bcf97d",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 0,
@@ -712,7 +694,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "79067734-cec1-42ca-9b5e-d135e33124f7",
+                            Id = "a054c90a-788c-46b6-a6c5-61556c408ea7",
                             Description = "If you are hit by a BANG! you may immediately play a Missed! - even though it is not your turn! - to cancel the shot. If you do not, you lose one life point (discard a bullet). Discarded bullet go into a pile in the middle of the table.",
                             Name = "Missed!",
                             Suite = 0,
@@ -721,7 +703,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "306feb61-1c82-4df5-946a-482db3c647e5",
+                            Id = "6fe65725-9ac8-431e-83c6-113a05260dcf",
                             Description = "The symbols state: Draw a card from a player at distance 1. Remember that this distance is not modified by weapons, but only by cards such as Mustang and/or Scope.",
                             Name = "Panic!",
                             Suite = 1,
@@ -730,7 +712,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "748dd8cf-eb4d-4534-a949-3a9e044cbedf",
+                            Id = "f4c1d2f8-43e3-4aba-bf63-79a3e126c247",
                             Description = "The symbols state: Draw a card from a player at distance 1. Remember that this distance is not modified by weapons, but only by cards such as Mustang and/or Scope.",
                             Name = "Panic!",
                             Suite = 1,
@@ -739,7 +721,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "412398af-6c60-4e6e-b644-ca70661de169",
+                            Id = "2f3304a8-4094-459b-ac07-9c72c584e959",
                             Description = "The symbols state: Draw a card from a player at distance 1. Remember that this distance is not modified by weapons, but only by cards such as Mustang and/or Scope.",
                             Name = "Panic!",
                             Suite = 1,
@@ -748,7 +730,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "d1948ac3-4565-4dc7-9f3e-4edac9b71d0a",
+                            Id = "16493f4b-d373-4362-97e7-228efebdcf64",
                             Description = "The symbols state: Draw a card from a player at distance 1. Remember that this distance is not modified by weapons, but only by cards such as Mustang and/or Scope.",
                             Name = "Panic!",
                             Suite = 3,
@@ -757,7 +739,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "38cc612a-2a04-42b6-95e1-fcefbd9deead",
+                            Id = "3bc196bb-bf71-4eda-aa16-94dd063b3db9",
                             Description = "Cards with symbols on two lines have two simultaneous effects, one for each line. Here symbols say: Regain one life point, and this applies to All the other players, and on the next line: [You] regain one life point. The overall effect is that all players in play regain one life point. You cannot play a Saloon out of turn when you are losing your last life point: the Saloon is not a Beer!",
                             Name = "Saloon",
                             Suite = 1,
@@ -766,7 +748,7 @@ namespace Domain.Migrations
                         },
                         new
                         {
-                            Id = "33b709c2-b1d0-49f7-959d-fd57b0e4de79",
+                            Id = "04bfd399-4c44-4c92-95ff-d067256e0755",
                             Description = "Draw three cards from the top of the deck",
                             Name = "Wells Fargo",
                             Suite = 1,
@@ -851,91 +833,77 @@ namespace Domain.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dae8ba37-aaa4-4abc-bed0-61b5d446a87e",
+                            Id = "2bef6851-2a20-4075-9b9f-726099267388",
                             Description = "Each time he is hit, he draws a card",
                             LifePoint = 4,
                             Name = "Bart Cassidy"
                         },
                         new
                         {
-                            Id = "137941ae-99d6-4e2f-834d-0b5924a09da9",
+                            Id = "e2279061-2568-470d-b846-64c7cebf5732",
                             Description = "He shows the second card he draw. On Heart or Diamonds, he draws one more card",
                             LifePoint = 4,
                             Name = "Black Jack"
                         },
                         new
                         {
-                            Id = "3032d0fd-ef9a-43e3-b045-056b17341e06",
-                            Description = "She can use BANG! cards as Missed! cards and vice versa. If she plays a Missed! as a BANG!, she cannot play another BANG! card that turn (unless she has a Volcanic in play).",
-                            LifePoint = 4,
-                            Name = "Calamity Janet"
-                        },
-                        new
-                        {
-                            Id = "706167eb-ce1c-4f66-b1c7-764811a98c79",
+                            Id = "03e31760-36ed-4f50-a29d-b01bd009d202",
                             Description = "Each time he loses a life point due to a card played by another player, he draws a random card from the hands of that player (one card for each life point). If that player has no more cards, too bad!, he does not draw. Note that Dynamite damages are not caused by any player.",
                             LifePoint = 3,
                             Name = "El Gringo"
                         },
                         new
                         {
-                            Id = "4b394d0d-86ce-4726-9605-0b34bce0c4fb",
+                            Id = "f4a610a4-3bb3-4196-95c8-d63a6dc0b02c",
                             Description = "During phase 1 of his turn, he may choose to draw the first card from the deck, or randomly from the hand of any other player. Then he draws the second card from the deck.",
                             LifePoint = 4,
                             Name = "Jesse Jones"
                         },
                         new
                         {
-                            Id = "c6ead2f3-271e-420f-96ef-148d6934ef95",
-                            Description = "He is considered to have a Barrel in play at all times; he can draw! when he is the target of a BANG!, and on a Heart he is missed. If he has another real Barrel card in play, he can count both of them, giving him two chances to cancel the BANG! before playing a Missed!.",
-                            LifePoint = 4,
-                            Name = "Jourdonnais"
-                        },
-                        new
-                        {
-                            Id = "e07ab2d0-d40c-490c-bf8e-745bfc7b7db5",
+                            Id = "50f46a97-e90e-4e34-8156-bd632cc51202",
                             Description = "During phase 1 of his turn, he looks at the top three cards of the deck: he chooses 2 to draw, and puts the other one back on the top of the deck, face down.",
                             LifePoint = 4,
                             Name = "Kit Carlson"
                         },
                         new
                         {
-                            Id = "1d3ae93c-8a8f-40f1-ab2e-4bd66c13ae36",
+                            Id = "f8978699-c8c4-4cef-af56-f8d893e33d44",
                             Description = "he is considered to have a Mustang in play at all times; all other players must add 1 to the distance to him. If he has another real Mustang in play, he can count both of them, increasing all distances to him by a total of 2.",
                             LifePoint = 3,
                             Name = "Paul Regret"
                         },
                         new
                         {
-                            Id = "58841ecd-abfe-4cb4-ad95-c2291b57dd0e",
+                            Id = "718cccee-2347-488c-bf7c-01bc6c96e113",
                             Description = "During phase 1 of his turn, he may choose to draw the first card from the top of the discard pile or from the deck. Then, he draws the second card from the deck.",
                             LifePoint = 4,
                             Name = "Pedro Ramirez"
                         },
                         new
                         {
-                            Id = "173d4941-d975-4e74-9705-f2bc542a3c26",
+                            Id = "5c2c81b1-11bd-4ad0-ba4b-b9f1d7801000",
                             Description = "She is considered to have a Scope in play at all times; she sees the other players at a distance decreased by 1. If she has another real Scope in play, she can count both of them, reducing her distance to all other players by a total of 2.",
                             LifePoint = 4,
                             Name = "Rose Doolan"
                         },
                         new
                         {
-                            Id = "6356a211-0c94-4fae-851b-06ab7f5aeecd",
+                            Id = "af2b3906-81e6-4287-9a26-6d485e4bd817",
                             Description = "At any time, he may discard 2 cards from his hand to regain one life point. If he is willing and able, he can use this ability more than once at a time. But remember: you cannot have more life points than your starting amount!",
                             LifePoint = 4,
                             Name = "Sid Ketchum"
                         },
                         new
                         {
-                            Id = "95273421-f62b-4429-96ff-d64726400850",
+                            Id = "5732a149-a90d-41ed-90da-feba9823ec6e",
                             Description = "As soon as she has no cards in her hand, she draws a card from the draw pile.",
                             LifePoint = 4,
                             Name = "Suzy Lafayette"
                         },
                         new
                         {
-                            Id = "9e48703b-5359-4b69-8a49-413364874bb7",
+                            Id = "31f241e5-44e3-4ff2-aa12-a5fb4fc49118",
                             Description = "He can play any number of BANG! cards during his turn.",
                             LifePoint = 4,
                             Name = "Willy the Kid"

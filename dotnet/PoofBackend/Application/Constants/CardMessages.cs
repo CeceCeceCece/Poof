@@ -19,10 +19,6 @@ namespace Application.Constants
         public static string BANG_ANSWEAR_ERROR = "Csak Missed! kártya használható.";
         public static string BANG_USING_AGAIN = "Ebben a körben több Bang! kártya nem játszható ki.";
         
-        //General store
-        public static string GENERAL_STORE_OPTION = "Ezzel a kártyával mindeki választhat egy lapot.";
-        public static string GENERAL_STORE_ERROR = "Ilyen kártyá nem létezik.";
-        
         //Missed
         public static string MISSED_OPTION = "Ezt a lapot nem lehet kijátszani.";
         public static string MISSED_ERROR = "Ezt a lapot nem lehet kijátszani.";

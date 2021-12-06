@@ -48,7 +48,7 @@ namespace Application.Models.CardLogic
         {
             var target = character.Character.Game.GetReactionCharacter().Map(character.Hub);
 
-            if (dto.CardIds is null || dto.CardIds.Count == 0)
+            if (dto is null || dto.CardIds is null || dto.CardIds.Count == 0)
             {
                 await target.DecreaseLifepointAsync(1);
             }

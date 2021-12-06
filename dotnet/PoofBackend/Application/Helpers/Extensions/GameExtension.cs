@@ -169,7 +169,7 @@ namespace Domain.Entities
 
             //Értesíteni hogy válaszolni kell
             if (hub is not null)
-                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, null, null));
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, game.CurrentUserId, null));
         }
 
         public static Character GetReactionCharacter(this Game game) => game.Event switch
@@ -249,10 +249,45 @@ namespace Domain.Entities
                 await hub.Clients.Client(game.GetReactionCharacter().ConnectionId).ShowOption(option);
         }
 
-        public static async Task CheckWinAsync(this Game game) 
+        public static async Task CheckWinAsync(this Game game, PoofGameHub hub) 
         {
             var winLogic = game.Win.GetWinLogic();
-            await winLogic.CheckWinAsync(game);
+            if(await winLogic.CheckWinAsync(game, out var winner)) 
+            {
+                if (hub is not null)
+                    await hub.Clients.Group(game.Name).WinnerIs(winner);
+
+                game.Win = WinType.None;
+            }
+        }
+
+        public static async Task AddToDiscardPileAsync(this Game game, PoofGameHub hub, GameCard card)
+        {
+            game.DiscardPile.Add(card);
+            if(hub is not null)
+                await hub.Clients.Group(game.Name).SetDiscardPile(new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value));
+        }
+
+        public static async Task EndTurn(this Game game, PoofGameHub hub)
+        {
+            var current = game.GetCurrentCharacter();
+            if (current.Deck.Count > current.LifePoint)
+                throw new PoofException(GameMessages.KOR_VEGE_NEM_LEHETSEGES);
+            await game.EndReactionAsync(hub);
+
+            var next = game.GetNextCharacter().Map(hub);
+            game.Event = GameEvent.Draw;
+            game.CurrentUserId = next.Character.Id;
+            foreach (var card in next.Character.EquipedCards)
+            {
+                await card.Map().OnActiveAsync(next);
+            }
+            if(game.CurrentUserId == next.Character.Id) 
+            {
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(GameEvent.None, game.CurrentUserId, null));
+                await next.DrawAsync();
+            }
+                
         }
     }
 }

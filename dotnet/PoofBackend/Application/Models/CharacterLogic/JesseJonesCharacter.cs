@@ -18,10 +18,10 @@ namespace Application.Models.CharacterLogic
 
         public JesseJonesCharacter(Character character, PoofGameHub hub) : base(character, hub) { }
 
-        public override Task DrawAsync()
+        public override async Task DrawAsync()
         {
             Character.Game.Event = GameEvent.Draw;
-            return Task.CompletedTask;
+            await Hub.Clients.Client(Character.ConnectionId).SetGameEvent(new GameEventViewModel(GameEvent.Draw, Character.Id, null));
             //HUB draw event és válaszolni kell
 
             //return new Option

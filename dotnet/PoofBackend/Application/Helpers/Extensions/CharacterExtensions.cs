@@ -1,25 +1,17 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
-using Application.Models;
 using Application.Models.CharacterLogic;
 using Application.Models.CharacterLogics;
 using Application.SignalR;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public static class CharacterLogicExtensions
+    public static class CharacterExtensions
     {
-        public static BaseCharacterLogic Map(this Character character, PoofGameHub hub) => character.Name switch
+        public static BaseCharacterLogic Map(this Character character, PoofGameHub hub) => character.PersonalCard.Name switch
         {
             "Bart Cassidy" => new BartCassidyCharacter(character, hub),
             "Black Jack" => new BlackJackCharacter(character, hub),
-            "Calamity Janet" => new CalamityJanetCharacter(character, hub),
             "El Gringo" => new ElGringoCharacter(character, hub),
             "Jesse Jones" => new JesseJonesCharacter(character, hub),
             "Kit Carlson" => new KitCarlsonCharacter(character, hub),

@@ -16,5 +16,6 @@ namespace Application.Constants
         public static string MOST_NEM_LEHET_LAPOT_HUZNI = "Most nem lehet lapot húzni";
         public static string NEM_JATSZHATSZ_KI_KARTYAT = "Nem játszhatsz ki kártyát.";
         public static string NEM_REAGALHATSZ = "Nem reagalhatsz!";
+        public static string KOR_VEGE_NEM_LEHETSEGES = "Kör vége nem lehetséges!";
     }
 }

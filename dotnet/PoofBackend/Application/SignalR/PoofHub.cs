@@ -51,7 +51,8 @@ namespace Application.SignalR
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             var lobby = await lobbyService.GetLobbyAsync(lobbyName);
-            await gameService.CreateGameAsync(lobby, this);
+            if(lobby.Connections.Count >= 2)
+                await gameService.CreateGameAsync(lobby, this);
         }
 
         public async Task JoinLobby(string name) 

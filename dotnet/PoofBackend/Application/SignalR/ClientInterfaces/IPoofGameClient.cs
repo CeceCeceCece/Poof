@@ -1,5 +1,6 @@
 ﻿using Application.Models.ViewModels;
 using Application.ViewModels;
+using Domain.Constants.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,9 @@ namespace Application.SignalR.ClientInterfaces
         public Task ShowCard(CardViewModel card);
         public Task SetGameEvent(GameEventViewModel gameEvent); // lehet null a kártya pl húzásnál.
         public Task MessageReceieved(MessageViewModel message);
+
+        public Task WinnerIs(RoleType winnert);
+        public Task PlayerDied(string userId);
 
         //Client
         public Task CardsReceieved(List<CardViewModel> cards);

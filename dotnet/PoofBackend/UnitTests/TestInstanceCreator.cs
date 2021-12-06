@@ -3,7 +3,6 @@ using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
 
 namespace UnitTests
 {
@@ -32,7 +31,7 @@ namespace UnitTests
             {
                 GetCharacter("Black Jack", game),
                 GetCharacter("Bart Cassidy", game),
-                GetCharacter("Calamity Janet", game)
+                GetCharacter("Paul Regret", game)
             });
 
             game.CurrentUserId = game.Characters.First().Id;
