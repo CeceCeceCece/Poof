@@ -107,7 +107,10 @@ namespace Application.Services
             {
                 if (i == 0)
                 {
-                    result.Add(characterCards.ElementAt(characterIndexes[i]).ToCharacter(connections.ElementAt(indexes[i]), RoleType.Sheriff));
+                    var sheriff = characterCards.ElementAt(characterIndexes[i]).ToCharacter(connections.ElementAt(indexes[i]), RoleType.Sheriff);
+                    sheriff.LifePoint++;
+                    sheriff.MaxLifePoint++;
+                    result.Add(sheriff);
                 }
                 else if (i == 1)
                 {
@@ -173,6 +176,7 @@ namespace Application.Services
             context.GameCards.RemoveRange(game.Deck);
             context.GameCards.RemoveRange(game.DiscardPile);
             context.Games.Remove(game);
+            context.Characters.RemoveRange(await context.Characters.Where(x => x.Game == null).ToListAsync(cancellationToken));
             await context.SaveChangesAsync(cancellationToken);
             return game;
         }

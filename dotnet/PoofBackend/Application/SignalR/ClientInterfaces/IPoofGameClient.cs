@@ -31,7 +31,7 @@ namespace Application.SignalR.ClientInterfaces
         public Task MessageRecieved(MessageViewModel message);
 
         public Task WinnerIs(RoleType winnert);
-        public Task PlayerDied(string userId);
+        public Task PlayerDied(CharacterDiedViewModel user);
         public Task OnStatus();
 
         //Client

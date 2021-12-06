@@ -92,6 +92,12 @@ namespace Domain.Entities
             //Értesíteni hogy válaszolni kell
             if(hub is not null)
                 await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, userId, card == null ? null : new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value)));
+
+            var nextCharacter = game.GetReactionCharacter();
+            foreach (var equipedCard in nextCharacter.EquipedCards)
+            {
+                await equipedCard.Map().OnActiveAsync(nextCharacter.Map(hub));
+            }
         }
 
         public static async Task CallerSingleReactAsync(this Game game, PoofGameHub hub)

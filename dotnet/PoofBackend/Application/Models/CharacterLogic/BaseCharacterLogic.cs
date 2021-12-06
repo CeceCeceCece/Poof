@@ -23,9 +23,9 @@ namespace Application.Models.CharacterLogic
             this.Hub = hub;
         }
         public virtual async Task DrawAsync() 
-        {   
-            await DrawAsync(Character.Game.GetAndRemoveCards(2));
-            Character.Game.Event = GameEvent.None;
+        {
+            Character.Game.Event = GameEvent.Draw;
+            await Hub.Clients.Client(Character.ConnectionId).DrawOption(new DrawOptionViewModel(false, new List<CardViewModel>()));
         }
 
         public async Task DrawAsync(List<GameCard> cards) 
@@ -111,7 +111,11 @@ namespace Application.Models.CharacterLogic
           
         }
 
-        public virtual Task DrawReactAsync(OptionDto option) { return Task.CompletedTask; }
+        public virtual async Task DrawReactAsync(OptionDto option) 
+        {
+            await DrawAsync(Character.Game.GetAndRemoveCards(2));
+            Character.Game.Event = GameEvent.None;
+        }
 
         public virtual async Task DecreaseLifepointAsync(int point)
         {
@@ -143,9 +147,10 @@ namespace Application.Models.CharacterLogic
             Character.Weapon = null;
 
             if (Hub is not null)
-                await Hub.Clients.Group(Character.Game.Name).PlayerDied(Character.Id);
+                await Hub.Clients.Group(Character.Game.Name).PlayerDied(new CharacterDiedViewModel(Character.Id, Character.Role));
 
             Character.Game.Characters.Remove(Character);
+            Character.Game = null;
 
             await Character.Game.CheckWinAsync(Hub);
         }
