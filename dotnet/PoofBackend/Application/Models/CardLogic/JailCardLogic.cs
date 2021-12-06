@@ -3,6 +3,7 @@ using Application.Exceptions;
 using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
+using Domain.Constants.Enums;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -39,10 +40,20 @@ namespace Application.Models.CardLogic
             await target.EquipeCardAsync(Card);
             await character.LeaveCardAsync(Card.Id);
         }
-        public override Task OnActiveAsync(BaseCharacterLogic character)
+        public override async Task OnActiveAsync(BaseCharacterLogic character)
         {
-            //TODO kör vége.
-            return base.OnActiveAsync(character);
+            if(character.Character.Game.Event == GameEvent.Draw) 
+            {
+                var card = character.Character.Game.GetAndRemoveCards(1).First();
+                await character.Character.Game.AddToDiscardPileAsync(character.Hub, card);
+                await character.Hub.Clients.Group(character.Character.Game.Name).ShowCard(new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value));
+                await character.DropCardAsync(Card.Id);
+                if(card.Card.Suite != CardSuits.Hearths) 
+                {
+                    await character .Character.Game.EndTurnAsync(character.Hub);                   
+                }
+            }
+
         }
     }
 }

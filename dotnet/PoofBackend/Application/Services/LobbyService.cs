@@ -130,7 +130,7 @@ namespace Application.Services
         {
             var lobby = await context.Lobbies.Include(x => x.Connections).SingleOrDefaultAsync(x => x.Connections.Any(c => c.UserId == userId), cancellationToken);
             if (lobby is null)
-                throw new PoofException(LobbyMessages.LOBBY_NEM_LETEZIK);
+                return;
 
             var connection = lobby.Connections.FirstOrDefault(x => x.UserId == userId);
 

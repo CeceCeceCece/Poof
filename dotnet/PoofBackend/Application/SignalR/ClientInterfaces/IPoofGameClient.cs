@@ -28,14 +28,17 @@ namespace Application.SignalR.ClientInterfaces
         public Task CardsAdded(List<CardIdViewModel> cards);
         public Task ShowCard(CardViewModel card);
         public Task SetGameEvent(GameEventViewModel gameEvent); // lehet null a kártya pl húzásnál.
-        public Task MessageReceieved(MessageViewModel message);
+        public Task MessageRecieved(MessageViewModel message);
 
         public Task WinnerIs(RoleType winnert);
         public Task PlayerDied(string userId);
+        public Task OnStatus();
 
         //Client
         public Task CardsReceieved(List<CardViewModel> cards);
         public Task ShowOption(OptionViewModel option);
+        public Task DrawOption(DrawOptionViewModel option);
+        public Task GameJoined(GameStartViewModel start);
 
     }
 }

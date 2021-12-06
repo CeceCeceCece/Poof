@@ -4,10 +4,6 @@ using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
@@ -20,7 +16,6 @@ namespace Application.Models.CardLogic
 
         public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            await character.ActivateCardAsync(Card.Id, null);
             var option = new OptionViewModel
             {
                 Description = CardMessages.WEAPONS_OPTION,

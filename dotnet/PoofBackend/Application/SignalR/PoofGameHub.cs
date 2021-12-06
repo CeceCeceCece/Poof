@@ -3,38 +3,32 @@ using Application.Models.DTOs;
 using Application.Services;
 using Application.SignalR.ClientInterfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
 
 namespace Application.SignalR
 {
+    [Authorize]
     public class PoofGameHub : Hub<IPoofGameClient>
     {
-        private readonly PoofTracker tracker;
         private ICurrentPlayerService currentPlayerService;
         private readonly IGameService gameService;
 
-        public PoofGameHub(PoofTracker tracker, IGameService gameService)
+        public PoofGameHub(IGameService gameService)
         {
-            this.tracker = tracker;
-            //Létrehpzni a playert servicet
-
             this.gameService = gameService;
+            gameService.Hub = this;
         }
         public override async Task OnConnectedAsync()
         {
-            //var httpContext = Context.GetHttpContext();
-            //var gameName = httpContext.Request.Query["game"].ToString();
-            //await Groups.AddToGroupAsync(Context.ConnectionId, gameName);
             await base.OnConnectedAsync();
-            await tracker.UserConnected(currentPlayerService.Player.Id, Context.ConnectionId);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await base.OnDisconnectedAsync(exception);
-            await tracker.UserDisconnected(currentPlayerService.Player.Id, Context.ConnectionId);
         }
 
         public async Task SendMessage(string gameId, string message)
@@ -48,7 +42,13 @@ namespace Application.SignalR
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await gameService.DrawReactAsync(gameId, currentPlayerService.Player.Id, option);
         }
-        
+
+        public async Task JoinGame(string gameId)
+        {
+            currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
+            await gameService.JoinGameAsync(gameId, currentPlayerService.Player.Id);
+        }
+
         public async Task ActiveCard(string gameId, string cardId, OptionDto option)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
@@ -59,6 +59,11 @@ namespace Application.SignalR
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await gameService.CardAnswearAsync(gameId, currentPlayerService.Player.Id, option);
+        }
+
+        public async Task Status(string gameName)
+        {
+            await Clients.Group(gameName).OnStatus();
         }
     }
 }

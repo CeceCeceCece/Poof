@@ -9,7 +9,8 @@ namespace Application.Interfaces
 {
     public interface IGameService
     {
-        public Task JoinGameAsync(string gameId, string userId, PoofGameHub hub, CancellationToken cancellationToken = default);
+        public PoofGameHub Hub { get; set; }
+        public Task JoinGameAsync(string gameId, string userId, CancellationToken cancellationToken = default);
         public Task CreateGameAsync(Lobby lobby, PoofHub lobbyHub, CancellationToken cancellationToken = default);
         public Task<Game> RemoveGameAsync(string gameId, CancellationToken cancellationToken = default);
         public Task SendMessageAsync(string gameId, string playerId, Message message, CancellationToken cancellationToken = default);

@@ -43,7 +43,10 @@ namespace Web
                .AddDefaultTokenProviders()
                .AddEntityFrameworkStores<PoofDbContext>();
 
-            services.AddSignalR();
+            services.AddSignalR(o => 
+            {
+                o.EnableDetailedErrors = true;
+            });
             services.AddHttpContextAccessor();
 
             services.AddSingleton<PoofTracker>();

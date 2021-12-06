@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Application.Models.DTOs;
 using Application.Models.ViewModels;
 using Application.SignalR;
+using Application.ViewModels;
 using Domain;
 using Domain.Constants.Enums;
 using Domain.Entities;
@@ -26,13 +27,34 @@ namespace Application.Services
 
         public PoofGameHub Hub { get; set; }
 
-        public async Task JoinGameAsync(string gameId, string userId, PoofGameHub hub, CancellationToken cancellationToken = default) 
+        public async Task JoinGameAsync(string gameId, string userId, CancellationToken cancellationToken = default) 
         {
             var game = await GetGameAsync(gameId, cancellationToken);
             var character = game.Characters.SingleOrDefault(x => x.Id == userId) ?? throw new PoofException(GameMessages.FELHASZNALO_NEM_A_JATEK_RESZE);
-            character.ConnectionId = hub.Context.ConnectionId;
+            character.ConnectionId = Hub.Context.ConnectionId;
             await context.SaveChangesAsync(cancellationToken);
-            //Hub értesíteni.
+     
+            if(Hub is not null) 
+            {
+                await Hub.Groups.AddToGroupAsync(Hub.Context.ConnectionId, game.Name);
+                await Hub.Clients.Client(Hub.Context.ConnectionId).GameJoined(new GameStartViewModel 
+                {
+                    SelfId = character.Id,
+                    Name = character.PersonalCard.Name,
+                    Role = character.Role,
+                    LifePoint = character.LifePoint,
+                    SheriffId = game.Characters.Where(x => x.Role == RoleType.Sheriff).Select(x => x.Id).SingleOrDefault(),
+                    Cards = character.Deck.Select(x => new CardViewModel(x.Id, x.Card.Name, x.Card.Type, x.Card.Suite, x.Card.Value)).ToList(),
+                    Characters = game.Characters.Select(x => new CharacterViewModel 
+                    {
+                        UserId = x.Id,
+                        UserName = x.Name,
+                        Name = x.PersonalCard.Name,
+                        LifePoint = x.LifePoint,
+                        CardIds = x.Deck.Select(c => c.Id).ToList()
+                    }).ToList()
+                });
+            }
         }
 
         public async Task CreateGameAsync(Lobby lobby, PoofHub lobbyHub, CancellationToken cancellationToken = default)
@@ -165,7 +187,7 @@ namespace Application.Services
             await context.SaveChangesAsync(cancellationToken);
 
             if (Hub is not null)
-                await Hub.Clients.Group(game.Name).MessageReceieved(new MessageViewModel(message.Kuldo, message.Tartalom, message.Datum));
+                await Hub.Clients.Group(game.Name).MessageRecieved(new MessageViewModel(message.Kuldo, message.Tartalom, message.Datum));
         }
 
         private async Task DrawAsync(string gameId, string playerId, CancellationToken cancellationToken) 

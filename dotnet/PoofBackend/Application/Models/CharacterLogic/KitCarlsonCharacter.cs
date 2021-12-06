@@ -5,10 +5,8 @@ using Application.SignalR;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models.CharacterLogic
@@ -17,27 +15,10 @@ namespace Application.Models.CharacterLogic
     {
         public KitCarlsonCharacter(Character character, PoofGameHub hub) : base(character, hub) { }
 
-        public override Task DrawAsync()
+        public override async Task DrawAsync()
         {
             Character.Game.Event = GameEvent.Draw;
-            return Task.CompletedTask;   
-            //Hub értesítés hogy mit kell tenni.
-
-            //return new Option
-            //{
-            //    Description = CardMessages.CHOOSE_ONE_PLAYER,
-            //    NumberOfCards = 2,
-            //    PossibleCards = game.GetCards(3)
-            //        .Select(x => new CardViewModel
-            //        {
-            //            Id = x.Id,
-            //            Name = x.Card.Name
-            //        })
-            //        .ToList(),
-            //    PossibleTargets = null,
-            //    RequireAnswear = true,
-            //    RequireCards = true,
-            //};
+            await Hub.Clients.Client(Character.ConnectionId).DrawOption(new DrawOptionViewModel(true, Character.Game.GetCards(3).Select(x => new CardViewModel(x.Id, x.Card.Name, x.Card.Type, x.Card.Suite, x.Card.Value)).ToList()));
         }
 
         public override async Task DrawReactAsync(OptionDto option)

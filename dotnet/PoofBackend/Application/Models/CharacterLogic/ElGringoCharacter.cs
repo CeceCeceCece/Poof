@@ -1,9 +1,6 @@
 ﻿using Application.SignalR;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models.CharacterLogic
@@ -19,10 +16,7 @@ namespace Application.Models.CharacterLogic
                 var card = await Character.Game.GetCurrentCharacter().Map(Hub).LeaveCardRandomAsync();
                 await DrawAsync(new List<GameCard> { card });
             }
-            else 
-            {
-                await base.DecreaseLifepointAsync(point);
-            }
+            await base.DecreaseLifepointAsync(point);
         }
     }
 }

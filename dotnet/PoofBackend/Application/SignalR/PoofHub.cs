@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.Constants;
+using Application.Exceptions;
+using Application.Interfaces;
 using Application.Services;
 using Application.SignalR.ClientInterfaces;
 using Domain.Entities;
@@ -12,14 +14,12 @@ namespace Application.SignalR
     [Authorize]
     public class PoofHub : Hub<IPoofClient>
     {
-        private readonly PoofTracker tracker;
         private ICurrentPlayerService currentPlayerService;
         private readonly ILobbyService lobbyService;
         private readonly IGameService gameService;
 
-        public PoofHub(PoofTracker tracker, ILobbyService lobbyService, IGameService gameService)
+        public PoofHub(ILobbyService lobbyService, IGameService gameService)
         {
-            this.tracker = tracker;
             this.lobbyService = lobbyService;
             this.gameService = gameService;
         }
@@ -27,7 +27,6 @@ namespace Application.SignalR
         {
             await base.OnConnectedAsync();
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
-            await tracker.UserConnected(currentPlayerService.Player.Id, Context.ConnectionId);
             await lobbyService.ReconnectLobbyAsync(this);
         }
 
@@ -36,7 +35,6 @@ namespace Application.SignalR
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await DisconnectLobby();
             await base.OnDisconnectedAsync(exception);
-            await tracker.UserDisconnected(currentPlayerService.Player.Id, Context.ConnectionId);
         }
 
         public async Task CreateLobby(string name) 
@@ -51,8 +49,16 @@ namespace Application.SignalR
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             var lobby = await lobbyService.GetLobbyAsync(lobbyName);
-            if(lobby.Connections.Count >= 2)
+
+            if (lobby.Vezeto != currentPlayerService.Player.Name)
+                throw new PoofException(LobbyMessages.ERRE_CSAK_A_SZOBA_TULAJDONOSA_JOGOSULT);
+
+            if(lobby.Connections.Count >= 1) 
+            {
                 await gameService.CreateGameAsync(lobby, this);
+                await lobbyService.DeleteLobbyAsync(lobbyName, currentPlayerService.Player.Name, null);
+            }
+                
         }
 
         public async Task JoinLobby(string name) 

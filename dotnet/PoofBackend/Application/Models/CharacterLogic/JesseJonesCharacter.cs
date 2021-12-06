@@ -1,14 +1,9 @@
-﻿using Application.Constants;
-using Application.Exceptions;
-using Application.Models.DTOs;
+﻿using Application.Models.DTOs;
 using Application.SignalR;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models.CharacterLogic
@@ -21,18 +16,7 @@ namespace Application.Models.CharacterLogic
         public override async Task DrawAsync()
         {
             Character.Game.Event = GameEvent.Draw;
-            await Hub.Clients.Client(Character.ConnectionId).SetGameEvent(new GameEventViewModel(GameEvent.Draw, Character.Id, null));
-            //HUB draw event és válaszolni kell
-
-            //return new Option
-            //{
-            //    Description = CardMessages.CHOOSE_ONE_PLAYER,
-            //    NumberOfCards = 0,
-            //    PossibleCards = null,
-            //    PossibleTargets = game.GetAllPlayer(),
-            //    RequireAnswear = true,
-            //    RequireCards = false
-            //};
+            await Hub.Clients.Client(Character.ConnectionId).DrawOption(new DrawOptionViewModel(true, new List<CardViewModel>()));
         }
 
         public override async Task DrawReactAsync(OptionDto option)
@@ -51,8 +35,6 @@ namespace Application.Models.CharacterLogic
 
                 await DrawAsync(cards);
             }
-
-            await Character.Game.EndReactionAsync(Hub);
         }
     }
 }

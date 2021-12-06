@@ -268,7 +268,7 @@ namespace Domain.Entities
                 await hub.Clients.Group(game.Name).SetDiscardPile(new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value));
         }
 
-        public static async Task EndTurn(this Game game, PoofGameHub hub)
+        public static async Task EndTurnAsync(this Game game, PoofGameHub hub)
         {
             var current = game.GetCurrentCharacter();
             if (current.Deck.Count > current.LifePoint)
