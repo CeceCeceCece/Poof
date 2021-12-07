@@ -19,10 +19,8 @@ namespace Application.Models.CardLogic
             var option = new OptionViewModel
             {
                 Description = CardMessages.BANG_OPTION,
-                RequireAnswear = true,
                 RequireCards = false,
-                PossibleTargets = character.GetNeighbours(true),
-                PossibleCards = null
+                PossibleTargets = character.GetNeighbours(true)
             };
             await character.ShowOptionAsync(option);
         }

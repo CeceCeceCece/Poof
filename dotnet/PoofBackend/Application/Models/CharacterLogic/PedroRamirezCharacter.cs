@@ -23,7 +23,7 @@ namespace Application.Models.CharacterLogic
             }
             Character.Game.Event = GameEvent.Draw;
             var card = Character.Game.DiscardPile.Last();
-            await Hub.Clients.Client(Character.ConnectionId).DrawOption(new DrawOptionViewModel(true, new List<CardViewModel> { new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value) }));
+            await Hub.Clients.Client(Character.ConnectionId).DrawOption(new DrawOptionViewModel(false, new List<CardViewModel> { new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value) }));
         }
 
         public override async Task DrawReactAsync(OptionDto option)

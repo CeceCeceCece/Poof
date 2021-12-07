@@ -282,7 +282,6 @@ namespace Domain.Entities
             await game.EndReactionAsync(hub);
 
             var next = game.GetNextCharacter().Map(hub);
-            game.Event = GameEvent.Draw;
             game.CurrentUserId = next.Character.Id;
             foreach (var card in next.Character.EquipedCards)
             {
@@ -290,7 +289,7 @@ namespace Domain.Entities
             }
             if(game.CurrentUserId == next.Character.Id) 
             {
-                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(GameEvent.None, game.CurrentUserId, null));
+                //await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(GameEvent.None, game.CurrentUserId, null));
                 await next.DrawAsync();
             }
                 

@@ -64,8 +64,8 @@ namespace Application.Services
 
             foreach (var character in characters)
             {
-                character.Deck.AddRange(cards.GetRange(0,4));
-                cards.RemoveRange(0,4);
+                character.Deck.AddRange(cards.GetRange(0,character.LifePoint));
+                cards.RemoveRange(0, character.LifePoint);
             }
 
             var game = new Game
@@ -252,6 +252,11 @@ namespace Application.Services
             {
                 await RemoveGameAsync(game.Id);
             }
+        }
+
+        public async Task NextTurnAsync(string gameId, string playerId, CancellationToken cancellationToken = default)
+        {
+            
         }
     }
 }

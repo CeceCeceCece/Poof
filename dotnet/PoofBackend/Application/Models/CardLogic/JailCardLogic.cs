@@ -24,11 +24,8 @@ namespace Application.Models.CardLogic
             var option = new OptionViewModel
             {
                 Description = CardMessages.CHOOSE_ONE_PLAYER,
-                RequireAnswear = true,
                 RequireCards = false,
-                PossibleTargets = character.Character.Game.GetOtherCharacters(),
-                PossibleCards = null,
-                NumberOfCards = 0
+                PossibleTargets = character.Character.Game.GetOtherCharacters()
             };
 
             await character.ShowOptionAsync(option);

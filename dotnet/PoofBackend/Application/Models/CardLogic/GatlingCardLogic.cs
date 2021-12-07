@@ -2,12 +2,9 @@
 using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
-using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
@@ -23,11 +20,8 @@ namespace Application.Models.CardLogic
             var option = new OptionViewModel
             {
                 Description = CardMessages.GATLING_OPTION,
-                RequireAnswear = false,
                 RequireCards = false,
-                PossibleTargets = null,
-                PossibleCards = null,
-                NumberOfCards = 0
+                PossibleTargets = new List<string> { character.Character.Id },
             };
 
             await character.ShowOptionAsync(option);

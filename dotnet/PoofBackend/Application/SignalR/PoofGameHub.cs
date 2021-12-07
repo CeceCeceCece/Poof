@@ -61,6 +61,19 @@ namespace Application.SignalR
             await gameService.CardAnswearAsync(gameId, currentPlayerService.Player.Id, option);
         }
 
+        public async Task CardOption(string cardId, string gameId)
+        {
+            currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
+            await gameService.CardOptionAsync(gameId, currentPlayerService.Player.Id, cardId);
+        }
+
+        public async Task NextTurn(string gameId)
+        {
+            currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
+            await gameService(gameId, currentPlayerService.Player.Id, cardId);
+        }
+
+
         public async Task Status(string gameName)
         {
             await Clients.Group(gameName).OnStatus();

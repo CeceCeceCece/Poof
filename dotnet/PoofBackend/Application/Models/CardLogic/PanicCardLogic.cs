@@ -22,10 +22,8 @@ namespace Application.Models.CardLogic
             var option = new OptionViewModel
             {
                 Description = CardMessages.PANIC_OPTION,
-                RequireAnswear = true,
-                RequireCards = false,
-                PossibleTargets = character.GetNeighbours(false),
-                PossibleCards = null
+                RequireCards = true,
+                PossibleTargets = character.GetNeighbours(false)
             };
             await character.ShowOptionAsync(option);
         }

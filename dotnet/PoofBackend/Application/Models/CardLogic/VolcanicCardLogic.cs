@@ -4,6 +4,7 @@ using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
@@ -19,10 +20,8 @@ namespace Application.Models.CardLogic
             var option = new OptionViewModel
             {
                 Description = CardMessages.WEAPONS_OPTION,
-                RequireAnswear = false,
                 RequireCards = false,
-                PossibleTargets = null,
-                PossibleCards = null
+                PossibleTargets = new List<string> { character.Character.Id }
             };
 
             await character.ShowOptionAsync(option);

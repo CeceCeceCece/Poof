@@ -18,7 +18,7 @@ namespace Application.Models.CharacterLogic
         public override async Task DrawAsync()
         {
             Character.Game.Event = GameEvent.Draw;
-            await Hub.Clients.Client(Character.ConnectionId).DrawOption(new DrawOptionViewModel(true, Character.Game.GetCards(3).Select(x => new CardViewModel(x.Id, x.Card.Name, x.Card.Type, x.Card.Suite, x.Card.Value)).ToList()));
+            await Hub.Clients.Client(Character.ConnectionId).DrawOption(new DrawOptionViewModel(false, Character.Game.GetCards(3).Select(x => new CardViewModel(x.Id, x.Card.Name, x.Card.Type, x.Card.Suite, x.Card.Value)).ToList()));
         }
 
         public override async Task DrawReactAsync(OptionDto option)

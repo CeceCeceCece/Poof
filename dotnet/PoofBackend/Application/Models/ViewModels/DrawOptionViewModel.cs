@@ -4,13 +4,13 @@ namespace Application.ViewModels
 {
     public class DrawOptionViewModel
     {
-        public DrawOptionViewModel(bool userId, List<CardViewModel> cards)
+        public DrawOptionViewModel(bool userIdRequired, List<CardViewModel> cards)
         {
-            UserId = userId;
+            UserIdRequired = userIdRequired;
             Cards = cards;
         }
 
-        public bool UserId { get; set; }
+        public bool UserIdRequired { get; set; }
         public List<CardViewModel> Cards{ get; set; }
     }
 }

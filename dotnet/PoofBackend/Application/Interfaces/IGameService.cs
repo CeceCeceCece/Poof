@@ -17,5 +17,6 @@ namespace Application.Interfaces
         public Task DrawReactAsync(string gameId, string playerId, OptionDto dto, CancellationToken cancellationToken = default);
         public Task CardActivateAsync(string gameId, string playerId, string cardId, OptionDto dto, CancellationToken cancellationToken = default);
         public Task CardAnswearAsync(string gameId, string playerId, OptionDto dto, CancellationToken cancellationToken = default);
+        public Task CardOptionAsync(string gameId, string playerId, string cardId, CancellationToken cancellationToken = default);
     }
 }

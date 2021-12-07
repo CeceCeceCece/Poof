@@ -23,10 +23,8 @@ namespace Application.Models.CardLogic
             var option = new OptionViewModel
             {
                 Description = CardMessages.BARREL_OPTION,
-                RequireAnswear = false,
                 RequireCards = false,
-                PossibleTargets = null,
-                PossibleCards = null
+                PossibleTargets = new List<string> {character.Character.Id},
             };
 
             await character.ShowOptionAsync(option);

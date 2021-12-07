@@ -3,12 +3,8 @@ using Application.Exceptions;
 using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
-using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
@@ -24,10 +20,8 @@ namespace Application.Models.CardLogic
             var option = new OptionViewModel
             {
                 Description = CardMessages.DUEL_OPTION,
-                RequireAnswear = true,
                 RequireCards = false,
                 PossibleTargets = character.Character.Game.GetOtherCharacters(),
-                PossibleCards = null
             };
             await character.ShowOptionAsync(option);
         }
@@ -45,7 +39,7 @@ namespace Application.Models.CardLogic
         public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
         {
             var target = character.Character.Game.GetReactionCharacter().Map(character.Hub);
-            if (dto.CardIds != null && await target.TryHasCardAsync(dto.CardIds.First(), "Bang!"))
+            if (dto.CardIds != null && dto.CardIds.Count != 0 && await target.TryHasCardAsync(dto.CardIds.First(), "Bang!"))
             {
                 await character.Character.Game.CallerSingleReactAsync(character.Hub);
             }
