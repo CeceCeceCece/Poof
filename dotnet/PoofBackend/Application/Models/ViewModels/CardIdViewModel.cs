@@ -1,11 +1,4 @@
-﻿using Domain.Constants.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.ViewModels
+﻿namespace Application.ViewModels
 {
     public class CardIdViewModel
     {
@@ -16,6 +9,6 @@ namespace Application.ViewModels
         }
 
         public string CardId { get; set; }
-        public string CharacterId{ get; set; }
+        public string CharacterId { get; set; }
     }
 }

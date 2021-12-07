@@ -6,6 +6,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.SignalR
@@ -14,11 +15,11 @@ namespace Application.SignalR
     public class PoofGameHub : Hub<IPoofGameClient>
     {
         private ICurrentPlayerService currentPlayerService;
-        private readonly IGameService gameService;
+        private readonly IGameService GameService;
 
         public PoofGameHub(IGameService gameService)
         {
-            this.gameService = gameService;
+            this.GameService = gameService;
             gameService.Hub = this;
         }
         public override async Task OnConnectedAsync()
@@ -34,45 +35,50 @@ namespace Application.SignalR
         public async Task SendMessage(string gameId, string message)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
-            await gameService.SendMessageAsync(gameId, currentPlayerService.Player.Id, new Message(Guid.NewGuid().ToString(), currentPlayerService.Player.Name, message, DateTime.Now));
+            await GameService.SendMessageAsync(gameId, currentPlayerService.Player.Id, new Message(Guid.NewGuid().ToString(), currentPlayerService.Player.Name, message, DateTime.Now));
         }
         
         public async Task DrawReact(string gameId, OptionDto option)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
-            await gameService.DrawReactAsync(gameId, currentPlayerService.Player.Id, option);
+            await GameService.DrawReactAsync(gameId, currentPlayerService.Player.Id, option);
         }
 
         public async Task JoinGame(string gameId)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
-            await gameService.JoinGameAsync(gameId, currentPlayerService.Player.Id);
+            await GameService.JoinGameAsync(gameId, currentPlayerService.Player.Id);
         }
 
         public async Task ActiveCard(string gameId, string cardId, OptionDto option)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
-            await gameService.CardActivateAsync(gameId, currentPlayerService.Player.Id, cardId, option);
+            await GameService.CardActivateAsync(gameId, currentPlayerService.Player.Id, cardId, option);
         }
         
         public async Task AnswearCard(string gameId, OptionDto option)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
-            await gameService.CardAnswearAsync(gameId, currentPlayerService.Player.Id, option);
+            await GameService.CardAnswearAsync(gameId, currentPlayerService.Player.Id, option);
         }
 
         public async Task CardOption(string cardId, string gameId)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
-            await gameService.CardOptionAsync(gameId, currentPlayerService.Player.Id, cardId);
+            await GameService.CardOptionAsync(gameId, currentPlayerService.Player.Id, cardId);
         }
 
         public async Task NextTurn(string gameId)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
-            await gameService(gameId, currentPlayerService.Player.Id, cardId);
+            await GameService.NextTurnAsync(gameId, currentPlayerService.Player.Id);
         }
 
+        public async Task Discard(string gameId, List<string> cardIds)
+        {
+            currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
+            await GameService.DiscardAsync(gameId, currentPlayerService.Player.Id, cardIds);
+        }
 
         public async Task Status(string gameName)
         {

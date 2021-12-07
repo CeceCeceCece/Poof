@@ -17,5 +17,6 @@ namespace Application.Constants
         public static string NEM_JATSZHATSZ_KI_KARTYAT = "Nem játszhatsz ki kártyát.";
         public static string NEM_REAGALHATSZ = "Nem reagalhatsz!";
         public static string KOR_VEGE_NEM_LEHETSEGES = "Kör vége nem lehetséges!";
+        public static string NEM_DOHATSZ_EL_KARTYAT = "Kártya eldobás nem lehetséges!";
     }
 }

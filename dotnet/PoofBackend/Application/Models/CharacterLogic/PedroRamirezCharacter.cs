@@ -30,7 +30,7 @@ namespace Application.Models.CharacterLogic
         {
             if (option.CardIds is null || option.CardIds.Count == 0) 
             {
-                await base.DrawAsync();
+                await base.DrawReactAsync(null);
             }
             else 
             {

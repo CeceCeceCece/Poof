@@ -1,10 +1,6 @@
 ﻿using Application.Models.ViewModels;
 using Application.ViewModels;
-using Domain.Constants.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.SignalR.ClientInterfaces
@@ -15,11 +11,9 @@ namespace Application.SignalR.ClientInterfaces
         public Task SetDeck(List<CardViewModel> cards);
         //Egy játékos felszerelt kártyáit állítja be
         public Task SetEquipedDeck(List<CardViewModel> cards);
-        //A kijátszott kártyák paklijának tetején lévő kártyát állítja be
-        public Task SetDiscardPile(CardViewModel card);
-        //Megadja egy játéko életerejét, mindkinek szól és a megfelelő id-ju játékos életerejét átálítja mindenki.
 
         //Group
+        public Task SetDiscardPile(CardViewModel card);
         public Task SetWeapon(string characterId, CardViewModel weapon); //lehet null
         public Task SetLifePoint(LifePointViewModel pointModel);
         public Task CardsDroped(List<CardIdViewModel> cards);
@@ -30,8 +24,9 @@ namespace Application.SignalR.ClientInterfaces
         public Task SetGameEvent(GameEventViewModel gameEvent); // lehet null a kártya pl húzásnál.
         public Task MessageRecieved(MessageViewModel message);
 
-        public Task WinnerIs(RoleType winnert);
+        public Task WinnerIs(WinnerIsViewModel winner);
         public Task PlayerDied(CharacterDiedViewModel user);
+        public Task TurnStarted(string userId);
         public Task OnStatus();
 
         //Client

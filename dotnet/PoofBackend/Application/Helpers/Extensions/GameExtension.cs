@@ -1,6 +1,7 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
 using Application.Models.DTOs;
+using Application.Services;
 using Application.SignalR;
 using Application.ViewModels;
 using Domain.Constants.Enums;
@@ -261,7 +262,7 @@ namespace Domain.Entities
             if(await winLogic.CheckWinAsync(game, out var winner)) 
             {
                 if (hub is not null)
-                    await hub.Clients.Group(game.Name).WinnerIs(winner);
+                    await hub.Clients.Group(game.Name).WinnerIs(new WinnerIsViewModel(winner));
 
                 game.Win = WinType.None;
             }
@@ -279,17 +280,23 @@ namespace Domain.Entities
             var current = game.GetCurrentCharacter();
             if (current.Deck.Count > current.LifePoint)
                 throw new PoofException(GameMessages.KOR_VEGE_NEM_LEHETSEGES);
-            await game.EndReactionAsync(hub);
+            await game.EndReactionAsync(null);
 
             var next = game.GetNextCharacter().Map(hub);
+            
             game.CurrentUserId = next.Character.Id;
+            game.Event = GameEvent.Draw;
+
+            if (hub is not null)
+                await hub.Clients.Group(game.Name).TurnStarted(game.CurrentUserId);
+
             foreach (var card in next.Character.EquipedCards)
             {
                 await card.Map().OnActiveAsync(next);
             }
+
             if(game.CurrentUserId == next.Character.Id) 
             {
-                //await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(GameEvent.None, game.CurrentUserId, null));
                 await next.DrawAsync();
             }
                 

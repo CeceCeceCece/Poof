@@ -193,9 +193,11 @@ namespace Application.Models.CharacterLogic
                 await Character.Weapon.Map().DeactivateAsync(this);
                 await game.AddToDiscardPileAsync(Hub, Character.Weapon);
                 Character.Weapon = null;
-
-                if (Hub is not null)
-                    await Hub.Clients.Group(Character.Game.Name).SetWeapon(Character.Id, null);
+                if (Hub is not null) 
+                {
+                    await Hub.Clients.Group(Character.Game.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
+                }
+                    
             }
             else 
             {
@@ -222,6 +224,9 @@ namespace Application.Models.CharacterLogic
         public virtual async Task EquipeCardAsync(string cardId) 
         {
             var card = Character.Deck.SingleOrDefault(x => x.Id == cardId) ?? throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
+            
+            if(Character.EquipedCards.Any(x => x.Card.Name == card.Card.Name))
+                throw new PoofException(CharacterMessages.ILYEN_LAPPAL_MAR_RENDELKEZIK);
             Character.EquipedCards.Add(card);
             await LeaveCardAsync(cardId);
 
@@ -232,6 +237,8 @@ namespace Application.Models.CharacterLogic
         public virtual async Task EquipeWeaponAsync(string cardId)
         {
             var card = Character.Deck.SingleOrDefault(x => x.Id == cardId) ?? throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
+            if (Character.Weapon is not null)
+                await DropCardAsync(Character.Weapon.Id);
             Character.Weapon = card;
             await LeaveCardAsync(cardId);
             if (Hub is not null)

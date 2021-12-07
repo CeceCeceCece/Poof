@@ -19,12 +19,11 @@ namespace Application.Services
 {
     public class GameService : IGameService
     {
-        private readonly PoofDbContext context;
         public GameService(PoofDbContext context)
         {
-            this.context = context;
+            this.Context = context;
         }
-
+        public PoofDbContext Context { get; init; }
         public PoofGameHub Hub { get; set; }
 
         public async Task JoinGameAsync(string gameId, string userId, CancellationToken cancellationToken = default) 
@@ -32,7 +31,7 @@ namespace Application.Services
             var game = await GetGameAsync(gameId, cancellationToken);
             var character = game.Characters.SingleOrDefault(x => x.Id == userId) ?? throw new PoofException(GameMessages.FELHASZNALO_NEM_A_JATEK_RESZE);
             character.ConnectionId = Hub.Context.ConnectionId;
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
      
             if(Hub is not null) 
             {
@@ -61,6 +60,7 @@ namespace Application.Services
         {
             var characters = await CreateCharactersAsync(lobby.Connections.ToList(), cancellationToken);
             var cards = await CreateCardsAsync(cancellationToken);
+            cards.Shuffle();
 
             foreach (var character in characters)
             {
@@ -83,8 +83,8 @@ namespace Application.Services
                 Deck = cards
             };
 
-            context.Games.Add(game);
-            await context.SaveChangesAsync(cancellationToken);
+            Context.Games.Add(game);
+            await Context.SaveChangesAsync(cancellationToken);
 
             if(lobbyHub is not null)
                 await lobbyHub.Clients.Group(lobby.Name).GameCreated(game.Id);
@@ -92,12 +92,12 @@ namespace Application.Services
 
         private async Task<List<GameCard>> CreateCardsAsync(CancellationToken cancellationToken = default)
         {
-            return await context.Cards.Select(x => new GameCard(Guid.NewGuid().ToString(), x)).ToListAsync(cancellationToken);
+            return await Context.Cards.Select(x => new GameCard(Guid.NewGuid().ToString(), x)).ToListAsync(cancellationToken);
         }
 
         private async Task<List<Character>> CreateCharactersAsync(List<Connection> connections, CancellationToken cancellationToken = default) 
         {
-            var characterCards = await context.CharacterCards.ToListAsync(cancellationToken);
+            var characterCards = await Context.CharacterCards.ToListAsync(cancellationToken);
             var indexes = GenerateNumbers(connections.Count, connections.Count);
             var characterIndexes = GenerateNumbers(characterCards.Count, connections.Count);
 
@@ -146,7 +146,7 @@ namespace Application.Services
 
         public Task<Game> GetGameAsync(string groupId, CancellationToken cancellationToken = default)
         {
-            return context.Games.Include(x => x.Deck).ThenInclude(deck => deck.Card)
+            return Context.Games.Include(x => x.Deck).ThenInclude(deck => deck.Card)
                 .Include(x => x.DiscardPile).ThenInclude(disc => disc.Card)
                 .Include(X => X.NextCard).ThenInclude(next => next.Card)
                 .Include(x => x.Messages)
@@ -167,38 +167,31 @@ namespace Application.Services
             foreach (var character in game.Characters)
             {
                 await Hub.Groups.RemoveFromGroupAsync(character.ConnectionId, game.Name, cancellationToken);
-                context.GameCards.RemoveRange(character.Deck);
-                context.GameCards.RemoveRange(character.EquipedCards);
-                context.GameCards.Remove(character.Weapon);
+                Context.GameCards.RemoveRange(character.Deck);
+                Context.GameCards.RemoveRange(character.EquipedCards);
+                Context.GameCards.Remove(character.Weapon);
             }
-            context.Messages.RemoveRange(game.Messages);
-            context.Characters.RemoveRange(game.Characters);
-            context.GameCards.RemoveRange(game.Deck);
-            context.GameCards.RemoveRange(game.DiscardPile);
-            context.Games.Remove(game);
-            context.Characters.RemoveRange(await context.Characters.Where(x => x.Game == null).ToListAsync(cancellationToken));
-            await context.SaveChangesAsync(cancellationToken);
+            Context.Messages.RemoveRange(game.Messages);
+            Context.Characters.RemoveRange(game.Characters);
+            Context.GameCards.RemoveRange(game.Deck);
+            Context.GameCards.RemoveRange(game.DiscardPile);
+            Context.Games.Remove(game);
+            Context.Characters.RemoveRange(await Context.Characters.Where(x => x.Game == null).ToListAsync(cancellationToken));
+            await Context.SaveChangesAsync(cancellationToken);
             return game;
         }
 
         public async Task SendMessageAsync(string gameId, string playerId , Message message, CancellationToken cancellationToken = default)
         {
-            var game = await context.Games.Where(x => x.Characters.Any(c => c.Id == playerId) && x.Id == gameId).Include(x => x.Messages).SingleOrDefaultAsync(cancellationToken);
+            var game = await Context.Games.Where(x => x.Characters.Any(c => c.Id == playerId) && x.Id == gameId).Include(x => x.Messages).SingleOrDefaultAsync(cancellationToken);
             if (game is null)
                 throw new PoofException(GameMessages.JATEK_NEM_LETEZIK + " vagy " + GameMessages.FELHASZNALO_NEM_A_JATEK_RESZE);
 
             game.Messages.Add(message);
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
 
             if (Hub is not null)
                 await Hub.Clients.Group(game.Name).MessageRecieved(new MessageViewModel(message.Kuldo, message.Tartalom, message.Datum));
-        }
-
-        private async Task DrawAsync(string gameId, string playerId, CancellationToken cancellationToken) 
-        {
-            var game = await GetGameAsync(gameId, cancellationToken);
-            await game.GetCharacterById(playerId).Map(Hub).DrawAsync();
-            await context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DrawReactAsync(string gameId, string playerId, OptionDto dto, CancellationToken cancellationToken = default)
@@ -209,7 +202,7 @@ namespace Application.Services
                 throw new PoofException(GameMessages.MOST_NEM_LEHET_LAPOT_HUZNI);
 
             await game.GetCharacterById(playerId).Map(Hub).DrawReactAsync(dto);
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task CardOptionAsync(string gameId, string playerId, string cardId, CancellationToken cancellationToken = default) 
@@ -220,6 +213,7 @@ namespace Application.Services
                 throw new PoofException(GameMessages.NEM_JATSZHATSZ_KI_KARTYAT);
 
             await game.GetCharacterById(playerId).Map(Hub).CardOptionAsync(cardId);
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task CardActivateAsync(string gameId, string playerId, string cardId, OptionDto dto, CancellationToken cancellationToken = default)
@@ -231,7 +225,7 @@ namespace Application.Services
 
             await game.GetCharacterById(playerId).Map(Hub).ActivateCardAsync(cardId, dto);
             await CheckGameEnd(game);
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task CardAnswearAsync(string gameId, string playerId, OptionDto dto, CancellationToken cancellationToken = default)
@@ -243,7 +237,7 @@ namespace Application.Services
 
             await game.GetCharacterById(playerId).Map(Hub).AnswearCardAsync(dto);
             await CheckGameEnd(game);
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task CheckGameEnd(Game game) 
@@ -256,7 +250,20 @@ namespace Application.Services
 
         public async Task NextTurnAsync(string gameId, string playerId, CancellationToken cancellationToken = default)
         {
-            
+            var game = await GetGameAsync(gameId, cancellationToken);
+            if (game.CurrentUserId != playerId)
+                throw new PoofException(GameMessages.KOR_VEGE_NEM_LEHETSEGES);
+            await game.EndTurnAsync(Hub);
+            await Context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task DiscardAsync(string gameId, string playerId, List<string> cardIds, CancellationToken cancellationToken = default)
+        {
+            var game = await GetGameAsync(gameId, cancellationToken);
+            if(game.CurrentUserId != playerId)
+                throw new PoofException(GameMessages.NEM_DOHATSZ_EL_KARTYAT);
+            await game.GetCurrentCharacter().Map(Hub).DropCardsFromDeckAsync(cardIds);
+            await Context.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -16,8 +16,6 @@ namespace Application.Models.CardLogic
 
         public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            await character.ActivateCardAsync(Card.Id, null);
-
             var option = new OptionViewModel
             {
                 Description = CardMessages.SALOON_OPTION,
