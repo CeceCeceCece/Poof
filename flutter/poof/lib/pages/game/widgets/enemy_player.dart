@@ -131,7 +131,7 @@ class EnemyPlayer extends StatelessWidget {
 
   Widget _buildCharacter() {
     return Stack(
-      alignment: Alignment.bottomLeft,
+      //alignment: Alignment.bottomLeft,
       children: [
         Positioned(
           child: NonPlayableCard(
@@ -151,24 +151,31 @@ class EnemyPlayer extends StatelessWidget {
             children: [
               FaIcon(
                 FontAwesomeIcons.solidHeart,
-                color: Colors.red,
+                color: AppColors.buttonShadowColor,
                 size: 20,
               ),
               Positioned(
-                bottom: 2,
-                left: 5,
+                bottom: 5,
+                left: 6.5,
                 child: Text(
                   health.toString(),
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 15),
+                      fontSize: 12),
                 ),
               ),
             ],
           ),
         ),
-        // Text('❤: $health', style: TextStyle(fontWeight: FontWeight.bold)),
+        isSheriff
+            ? Positioned(
+                top: 0,
+                right: 0,
+                child: FaIcon(FontAwesomeIcons.certificate,
+                    color: AppColors.buttonShadowColor, size: 20),
+              )
+            : Container()
       ],
     );
   }

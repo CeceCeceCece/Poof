@@ -50,8 +50,7 @@ class GameView extends GetView<GameController> {
                 PlayableCard.back(
                     isDrawPile: true,
                     extraElevation: 2,
-                    canBeTargeted:
-                        controller.drawPileGlow()), //TODO can be targeted
+                    canBeTargeted: controller.drawPileGlow())
               ],
             )),
       );
@@ -73,15 +72,16 @@ class GameView extends GetView<GameController> {
               ? PlayableCard(
                   shadowed: true,
                   targetGlow: controller.discardPileGlow(),
-                  extraElevation: 6,
-                  dragOnWillAccept: (data) {
-                    var returnValue =
-                        data?.contains(controller.myPlayer().id) ?? false;
-
-                    Dev.log(returnValue.toString());
-                    return true;
+                  extraElevation: 3,
+                  dragOnWillAccept: (id) {
+                    Dev.log(
+                        'ID: ${controller.myPlayer().id}, TARGETABLE: ${controller.targetableCardIds()}');
+                    return controller
+                        .targetableCardIds()
+                        .contains(controller.myPlayer().id);
                   },
-                  dragOnAccept: controller.targetSelected,
+                  dragOnAccept: (_) =>
+                      controller.targetSelected(controller.myPlayer().id),
                   card: ActionCard(
                     range: 0,
                     background: 'bang',
@@ -538,6 +538,15 @@ class GameView extends GetView<GameController> {
       return Align(
         alignment: Alignment.bottomCenter,
         child: Player(
+            dragOnWillAccept: (id) {
+              Dev.log(
+                  'ID: ${controller.myPlayer().id}, TARGETABLE: ${controller.targetableCardIds()}');
+              return controller
+                  .targetableCardIds()
+                  .contains(controller.myPlayer().id);
+            },
+            dragOnAccept: (_) =>
+                controller.targetSelected(controller.myPlayer().id),
             discard: controller.discard,
             nextTurn: controller.nextTurn,
             health: controller.myPlayer().health,
@@ -566,6 +575,7 @@ class GameView extends GetView<GameController> {
   }
 
   List<Widget> _mapCards() {
+    Dev.log('DATA: ' + controller.targetableCardIds().toString());
     var cards = controller.myPlayer().cards;
     return [
       for (int i = 0; i < cards.length; i++)
@@ -573,12 +583,12 @@ class GameView extends GetView<GameController> {
           scale: 0.85,
           card: cards[i],
           canBeDragged: true,
-          targets: controller.highlightedIndex() == i
-              ? controller.targetableCardIds()
-              : [],
+          targets: controller.targetableCardIds(),
           onDragStartedCallback: () => controller.highlightTargets(i),
           onDragEndedCallback: () => controller.highlightTargets(-1),
-          onDragSuccessCallback: () => controller.targetSelected(cards[i].id),
+          onDragSuccessCallback: () {
+            Dev.log('onSuccessCalled');
+          }, //=> controller.targetSelected(cards[i].id),
           handCallback: () => controller.highlight(i),
           handCallbackInverse: () => controller.highlight(-1),
           targetGlow: controller.targetableCardIds().contains(cards[i].id),

@@ -14,8 +14,8 @@ class NonPlayableCard extends StatefulWidget {
   final bool nextActionGlow;
   final bool targetGlow;
   final bool showBackPermanently;
-  final bool Function(List<String>? data)? dragOnWillAccept;
-  final void Function(List<String> data)? dragOnAccept;
+  final bool Function(String?)? dragOnWillAccept;
+  final void Function(String?)? dragOnAccept;
   const NonPlayableCard({
     Key? key,
     required this.card,
@@ -126,9 +126,9 @@ class _BangCardWidgetState extends State<NonPlayableCard>
             transform: Matrix4.identity()
               ..setEntry(3, 2, 0.001)
               ..rotateY(val),
-            child: DragTarget<List<String>>(
-              onWillAccept: widget.dragOnWillAccept,
-              onAccept: widget.dragOnAccept,
+            child: DragTarget(
+              onWillAccept: (_) => widget.dragOnWillAccept?.call(null) ?? false,
+              onAccept: (data) => widget.dragOnAccept?.call(null),
               builder: (
                 BuildContext context,
                 List<dynamic> accepted,

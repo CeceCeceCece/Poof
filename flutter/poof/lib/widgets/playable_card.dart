@@ -8,6 +8,7 @@ import 'package:bang/models/cards/playable_card_base.dart';
 import 'package:bang/models/cards/playable_cards/action_card.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,8 +26,8 @@ class PlayableCard extends StatefulWidget {
   final bool showBackPermanently;
   final bool shadowed;
   late final List<String> possibleTargets;
-  final bool Function(List<String>? data)? dragOnWillAccept;
-  final void Function(String selected)? dragOnAccept;
+  final bool Function(String?)? dragOnWillAccept;
+  final void Function(String)? dragOnAccept;
 
   PlayableCard({
     Key? key,
@@ -171,9 +172,13 @@ class _PlayableCardState extends State<PlayableCard>
           var card = showBack
               ? Material(
                   borderRadius: BorderRadius.circular(10 * widget.scale),
-                  elevation: isElevated && !widget.isInsideHand ? 40 : 0,
+                  elevation: isElevated && !widget.isInsideHand
+                      ? 40
+                      : widget.extraElevation,
                   child: AnimatedContainer(
                       decoration: BoxDecoration(
+                          color:
+                              widget.shadowed ? Colors.blueGrey.shade200 : null,
                           borderRadius:
                               BorderRadius.circular(10 * widget.scale),
                           boxShadow: _setGlow()),
@@ -184,7 +189,7 @@ class _PlayableCardState extends State<PlayableCard>
                           ? ColorFiltered(
                               child: Opacity(opacity: 0.6, child: render()),
                               colorFilter: ColorFilter.mode(
-                                  Colors.grey, BlendMode.modulate))
+                                  Colors.white, BlendMode.modulate))
                           : render()),
                 )
               : Material(
@@ -212,7 +217,7 @@ class _PlayableCardState extends State<PlayableCard>
               ..setEntry(3, 2, 0.001)
               ..rotateY(val),
             child: widget.canBeDragged
-                ? Draggable<List<String>>(
+                ? Draggable(
                     onDragStarted: widget.onDragStartedCallback,
                     onDragCompleted: () {
                       widget.onDragSuccessCallback?.call();
@@ -225,7 +230,7 @@ class _PlayableCardState extends State<PlayableCard>
                             ? Fluttertoast.showToast(
                                 msg: AppStrings.not_valid_target.tr)
                             : {Dev.log('DRAGGED CARD ID: ${widget.card.id}')},
-                    data: widget.possibleTargets,
+                    data: {},
                     feedback: Container(
                       width: 80,
                       height: 80,
@@ -263,7 +268,7 @@ class _PlayableCardState extends State<PlayableCard>
                     ),
                     child: card,
                   )
-                : DragTarget<List<String>>(
+                : DragTarget(
                     builder: (
                       BuildContext context,
                       List<dynamic> accepted,
@@ -271,7 +276,8 @@ class _PlayableCardState extends State<PlayableCard>
                     ) {
                       return card;
                     },
-                    onWillAccept: widget.dragOnWillAccept,
+                    onWillAccept: (_) =>
+                        widget.dragOnWillAccept?.call(null) ?? false,
                     onAccept: (data) =>
                         widget.dragOnAccept?.call(widget.card.id),
                   ),

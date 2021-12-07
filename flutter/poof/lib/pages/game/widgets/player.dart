@@ -30,6 +30,8 @@ class Player extends StatelessWidget {
     required this.nextTurn,
     required this.health,
     required this.discard,
+    this.dragOnWillAccept,
+    this.dragOnAccept,
     this.currentRoundGlow = false,
     this.nextActionGlow = false,
     this.targetGlow = false,
@@ -49,6 +51,8 @@ class Player extends StatelessWidget {
   final List<Widget> cardsInHand;
   final int highlightedIndexInHand;
   final int health;
+  final bool Function(String?)? dragOnWillAccept;
+  final void Function(String?)? dragOnAccept;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +94,8 @@ class Player extends StatelessWidget {
             nextActionGlow: nextActionGlow,
             currentRoundGlow: currentRoundGlow,
             canBeFocused: false,
+            dragOnWillAccept: dragOnWillAccept,
+            dragOnAccept: dragOnAccept,
           ),
         )
       : Container();

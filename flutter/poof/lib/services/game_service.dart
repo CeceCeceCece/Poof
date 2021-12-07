@@ -18,7 +18,9 @@ import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/my_player.dart';
 import 'package:bang/models/option_command.dart';
 import 'package:bang/models/option_dto.dart';
+import 'package:bang/models/player_died_dto.dart';
 import 'package:bang/models/role_type.dart';
+import 'package:bang/models/winner_is_dto.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/lobby_service.dart';
@@ -94,7 +96,7 @@ class GameService extends ServiceBase {
     }
     _connection.onreconnected((connectionId) {
       log('RECONNECTED');
-      //statusTimer = Timer.periodic(statusInterval, (_) => _status()); //TODO
+      //statusTimer = Timer.periodic(statusInterval, (_) => _status());
     });
     _connection.onreconnecting((exception) {
       log(exception.toString());
@@ -152,7 +154,7 @@ class GameService extends ServiceBase {
     _connection.on(
       'CardUnequiped',
       (card) => _cardUnequipped(
-        CardDto.fromJson(
+        CardIdDto.fromJson(
           card?[0],
         ),
       ),
@@ -244,6 +246,23 @@ class GameService extends ServiceBase {
         ),
       ),
     );
+    _connection.on(
+      'PlayerDied',
+      (playerDiedDto) => _onPlayerDied(
+        PlayerDiedDto.fromJson(
+          playerDiedDto?[0],
+        ),
+      ),
+    );
+
+    _connection.on(
+      'WinnerIs',
+      (winnerIs) => _onWinnerIs(
+        WinnerIsDto.fromJson(
+          winnerIs?[0],
+        ),
+      ),
+    );
   }
 
   void _nextTurn(String currentUserId) {
@@ -270,9 +289,46 @@ class GameService extends ServiceBase {
 
   void _setEquippedDeck(List<CardDto> cards) {}
 
-  void _setWeapon(String characterId, CardDto weapon) {}
+  void _setWeapon(String characterId, CardDto card) {
+    var name =
+        card.name.removeAllWhitespace.toLowerCase().replaceAll(RegExp('!'), '');
+    if (characterId == myPlayer().id) {
+      myPlayer().equipment.add(EquipmentCard(
+          background: name,
+          id: card.id,
+          name: name,
+          value: card.value,
+          type: card.type,
+          suit: card.suite));
 
-  void _setLifePoint(LifePointDto lifePoint) {}
+      myPlayer.refresh();
+    } else {
+      var player =
+          enemyPlayers().firstWhere((enemy) => characterId == enemy.playerId);
+
+      player.equipment.add(EquipmentCard(
+          background: name,
+          id: card.id,
+          name: name,
+          value: card.value,
+          type: card.type,
+          suit: card.suite));
+
+      enemyPlayers.refresh();
+    }
+  }
+
+  void _setLifePoint(LifePointDto lifePoint) {
+    if (lifePoint.characterId == myPlayer().id) {
+      myPlayer().health = lifePoint.lifePoint;
+      myPlayer.refresh();
+    } else {
+      var player = enemyPlayers()
+          .firstWhere((player) => player.playerId == lifePoint.characterId);
+      player.health = lifePoint.lifePoint;
+      enemyPlayers.refresh();
+    }
+  }
 
   void _status() {
     _connection.invoke('Status', args: [gameName]);
@@ -283,6 +339,7 @@ class GameService extends ServiceBase {
   }
 
   void _cardsDropped(List<CardIdDto> cards) {
+    //TODO EQUIPPED ÉS TEMPORARY
     log('cards dropped' + cards.toString());
     cards.forEach((card) {
       if (card.characterId == myPlayer().id) {
@@ -298,7 +355,19 @@ class GameService extends ServiceBase {
     });
   }
 
-  void _cardUnequipped(CardDto card) {}
+  void _cardUnequipped(CardIdDto card) {
+    if (card.characterId == myPlayer().id) {
+      myPlayer().equipment.removeWhere((eq) => eq.id == card.cardId);
+      myPlayer().temporaryEffects.removeWhere((temp) => temp.id == card.cardId);
+      myPlayer.refresh();
+    } else {
+      var player = enemyPlayers()
+          .firstWhere((player) => player.playerId == card.characterId);
+      player.equipment.removeWhere((eq) => eq.id == card.cardId);
+      player.temporaryEffects.removeWhere((temp) => temp.id == card.cardId);
+      enemyPlayers.refresh();
+    }
+  }
 
   void _onGameJoined(GameStartDto gameStartDto) {
     Get.offAndToNamed(Routes.GAME);
@@ -336,44 +405,49 @@ class GameService extends ServiceBase {
 
   void _cardsEquipped(String characterId, CardDto card) {
     log('cards equipped');
+    var name =
+        card.name.removeAllWhitespace.toLowerCase().replaceAll(RegExp('!'), '');
+
     if (characterId == myPlayer().id) {
       if (card.name == 'Jail' || card.name == 'Dynamite') {
         myPlayer().temporaryEffects.add(EquipmentCard(
-            background: card.name,
+            background: name,
             id: card.id,
-            name: card.name,
+            name: name,
             value: card.value,
             type: card.type,
             suit: card.suite));
       } else {
         myPlayer().equipment.add(EquipmentCard(
-            background: card.name,
+            background: name,
             id: card.id,
-            name: card.name,
+            name: name,
             value: card.value,
             type: card.type,
             suit: card.suite));
       }
+      myPlayer.refresh();
     } else {
       var player =
           enemyPlayers().firstWhere((enemy) => characterId == enemy.playerId);
       if (card.name == 'Jail' || card.name == 'Dynamite') {
         player.temporaryEffects.add(EquipmentCard(
-            background: card.name,
+            background: name,
             id: card.id,
-            name: card.name,
+            name: name,
             value: card.value,
             type: card.type,
             suit: card.suite));
       } else {
         player.equipment.add(EquipmentCard(
-            background: card.name,
+            background: name,
             id: card.id,
-            name: card.name,
+            name: name,
             value: card.value,
             type: card.type,
             suit: card.suite));
       }
+      enemyPlayers.refresh();
     }
   }
 
@@ -389,7 +463,10 @@ class GameService extends ServiceBase {
     enemyPlayers.refresh();
   }
 
-  void _showCard(CardDto card) {}
+  void _showCard(CardDto card) {
+    log('${card.name}');
+  }
+
   void _setGameEvent(GameEventDto gameEvent) {}
 
   void _showOption(OptionDto optionDto) {
@@ -469,13 +546,14 @@ class GameService extends ServiceBase {
     await _connection.invoke('NextTurn', args: [gameId]);
   }
 
-  void activeCard({required OptionDto option, required String cardId}) async {
+  void playCard({required OptionCommand option, String? playedCardId}) async {
+    if (playedCardId == null) return;
     await _connection.invoke('ActiveCard', args: [
       gameId,
-      cardId,
+      playedCardId,
       option.toJson(),
     ]).then(
-      (value) => print('ACTIVE CARD SENT!'),
+      (value) => print('Card played'),
     );
   }
 
@@ -555,4 +633,25 @@ class GameService extends ServiceBase {
       }
     }).toList();
   }
+
+  void _onPlayerDied(PlayerDiedDto playerDied) {
+    if (playerDied.userId == myPlayer().id) {
+      myPlayer().health = 0;
+      myPlayer().equipment.clear();
+      myPlayer().temporaryEffects.clear();
+      myPlayer().cards.clear();
+      myPlayer.refresh();
+    } else {
+      var player = enemyPlayers()
+          .firstWhere((player) => player.playerId == playerDied.userId);
+      player.health = 0;
+      player.equipment.clear();
+      player.temporaryEffects.clear();
+      player.cardIds.clear();
+      myPlayer.refresh();
+      enemyPlayers.refresh();
+    }
+  }
+
+  void _onWinnerIs(WinnerIsDto winnerIs) {}
 }

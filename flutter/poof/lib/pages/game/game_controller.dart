@@ -11,6 +11,7 @@ import 'package:bang/models/cards/playable_cards/weapon_card.dart';
 import 'package:bang/models/enemy_player_dto.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/my_player.dart';
+import 'package:bang/models/option_command.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/auth_service.dart';
 import 'package:bang/services/game_service.dart';
@@ -33,6 +34,8 @@ class GameController extends GetxController {
   StateSetter? onMessageArrivedCallback;
   var messages = <MessageDto>[].obs;
   late String playerName;
+
+  Rx<String?> currentlyDraggedCardId = Rx(null);
 
   RxBool drawPileGlow = true.obs;
   RxBool discardPileGlow = false.obs;
@@ -59,24 +62,16 @@ class GameController extends GetxController {
     targetableCardIds = gameService.targetableCardIds;
     discardedPileTop = gameService.discardPileTop;
     discardPileGlow = gameService.discardPileGlow;
-
-    /*handWidgets = [
-      for (int i = 0; i < hand().length; i++)
-        PlayableCard(
-          scale: 0.85,
-          card: hand[i],
-          canBeDragged: true,
-          onDragSuccessCallback: () => removeCard(i),
-          handCallback: () => highlight(i),
-          handCallbackInverse: () => highlight(-1),
-        ),
-    ].obs;*/
     super.onInit();
   }
 
   void targetSelected(String targetedCardId) {
-    Dev.log(targetedCardId);
-    Dev.log('success');
+    Dev.log(
+        'TARGET:  $targetedCardId, CARD PLAYED: ${currentlyDraggedCardId()}');
+
+    gameService.playCard(
+        option: OptionCommand(cardIds: [], userId: myPlayer().id),
+        playedCardId: currentlyDraggedCardId());
   }
 
   void sendMessage() {
@@ -89,8 +84,6 @@ class GameController extends GetxController {
     isHandExpanded.value = !isHandExpanded();
     isEquipmentViewExpanded.value = false;
   }
-
-  var handWidgets = <PlayableCard>[].obs;
 
   void toggleEquipmentView() =>
       isEquipmentViewExpanded.value = !isEquipmentViewExpanded();
@@ -107,10 +100,12 @@ class GameController extends GetxController {
     var cardIndex = index ?? highlightedIndex();
     if (cardIndex != -1) {
       var cardId = myPlayer().cards[cardIndex].id;
+      currentlyDraggedCardId.value = cardId;
       _getPossibleTargets(cardId);
     } else {
       gameService.targetableCardIds.value = [];
       gameService.discardPileGlow.value = false;
+      currentlyDraggedCardId.value = null;
     }
   }
 
