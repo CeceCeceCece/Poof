@@ -4,7 +4,7 @@ import 'package:bang/core/app_colors.dart';
 import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/models/cards/non_playable_cards/character_card.dart';
 import 'package:bang/models/cards/non_playable_cards/role_card.dart';
-import 'package:bang/models/cards/playable_cards/equipment_card.dart';
+import 'package:bang/models/cards/playable_cards/action_card.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player.dart';
 import 'package:bang/widgets/bang_background.dart';
@@ -45,32 +45,12 @@ class GameView extends GetView<GameController> {
         child: Obx(() => Stack(
               alignment: Alignment.center,
               children: [
-                for (int i = 0; i < controller.drawPileAmount() / 5; i++)
-                  _buildDummyCardBack(),
+                for (int i = 0; i < 16; i++) _buildDummyCardBack(),
                 PlayableCard.back(
                     isDrawPile: true,
                     extraElevation: 2,
-                    canBeTargeted: false), //TODO can be targeted
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 1.5),
-                      shape: BoxShape.circle),
-                  child: Opacity(
-                    opacity: 0.6,
-                    child: Material(
-                      shape: CircleBorder(),
-                    ),
-                  ),
-                ),
-                Text(
-                  controller.drawPileAmount().toString(),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
+                    canBeTargeted:
+                        controller.drawPileGlow()), //TODO can be targeted
               ],
             )),
       );
@@ -81,29 +61,39 @@ class GameView extends GetView<GameController> {
         child: Transform.rotate(
           angle: (pi / 180) * (controller.random.nextInt(7) - 3),
           child: PlayableCard.back(
-              isDrawPile: true, extraElevation: 2, canBeTargeted: false),
+              isDrawPile: true, extraElevation: 3, canBeTargeted: false),
         ),
       );
 
   Widget _buildDiscardPile(double height) => Positioned(
         bottom: height / 2 - 35,
-        child: Obx(() => Stack(
-              children: [
-                for (int i = 0; i < controller.discardedPileAmount() / 5; i++)
-                  _buildDummyCardBack(),
-                PlayableCard(
-                  card: EquipmentCard(
-                      background: 'barrel',
-                      name: 'barrel',
-                      value: CardValue.Ten,
-                      type: CardType.Equipment,
-                      suit: CardSuit.Diamonds),
+        child: Obx(
+          () => controller.discardedPileTop() == null
+              ? PlayableCard(
+                  shadowed: true,
+                  targetGlow: controller.discardPileGlow(),
+                  extraElevation: 6,
+                  card: ActionCard(
+                    range: 0,
+                    background: 'bang',
+                    name: 'bang',
+                    value: CardValue.Five,
+                    type: CardType.Action,
+                    suit: CardSuit.Diamonds,
+                  ),
+                  canBeFocused: false,
+                  scale: 0.5,
+                )
+              : PlayableCard(
+                  targetGlow: controller.discardPileGlow(),
+                  extraElevation: 6,
+                  card: controller.gameService
+                      .mapCards([controller.discardedPileTop()!]).first,
                   canBeFocused: true,
                   scale: 0.5,
                   highlightMultiplier: 1.3,
                 ),
-              ],
-            )),
+        ),
       );
 
   Widget _buildChatButton(BuildContext context) => Positioned(
@@ -145,14 +135,22 @@ class GameView extends GetView<GameController> {
         ];
       case 2:
         return [
-          Positioned(
+          Obx(() => Positioned(
               child: EnemyPlayer(
+                top: true, left: true,
                 cardIds: controller.enemyPlayers()[0].cardIds,
                 cardAmount: controller.enemyPlayers()[0].cardIds.length,
                 characterName: controller.enemyPlayers()[0].characterName,
                 equipment: controller
                     .enemyPlayers()[0]
-                    .equipment, //controller.equipmentCards,
+                    .equipment
+                    .map((e) => PlayableCard(
+                          card: e,
+                          canBeFocused: true,
+                          scale: 0.25,
+                          highlightMultiplier: 1.5,
+                        ))
+                    .toList(), //controller.equipmentCards,
                 health: controller.enemyPlayers()[0].health,
                 playerName: controller.enemyPlayers()[0].playerName,
                 isSheriff: controller.enemyPlayers()[0].isSheriff,
@@ -160,7 +158,14 @@ class GameView extends GetView<GameController> {
 
                 temporaryEffects: controller
                     .enemyPlayers()[0]
-                    .temporaryEffects, //controller.temporaryEffectCards,
+                    .temporaryEffects
+                    .map((e) => PlayableCard(
+                          card: e,
+                          canBeFocused: true,
+                          scale: 0.25,
+                          highlightMultiplier: 1.5,
+                        ))
+                    .toList(), //controller.temporaryEffectCards,
                 isTakingNextAction: controller.nextActionPlayerId() ==
                     controller.enemyPlayers()[0].playerId,
                 canBeTargeted: controller
@@ -174,7 +179,7 @@ class GameView extends GetView<GameController> {
                     .any((id) => controller.targetableCardIds().contains(id)),
               ),
               top: 40,
-              left: width / 2 - 100),
+              left: width / 2 - 100)),
           _buildPlayer(),
         ];
       case 3:
@@ -188,12 +193,29 @@ class GameView extends GetView<GameController> {
                 characterName: controller.enemyPlayers()[0].characterName,
                 equipment: controller
                     .enemyPlayers()[0]
-                    .equipment, //controller.equipmentCards,
+                    .equipment
+                    .map((e) => PlayableCard(
+                          card: e,
+                          canBeFocused: true,
+                          scale: 0.25,
+                          highlightMultiplier: 1.5,
+                        ))
+                    .toList(), //controller.equipmentCards,
+
                 health: controller.enemyPlayers()[0].health,
                 playerName: controller.enemyPlayers()[0].playerName,
                 isSheriff: controller.enemyPlayers()[0].isSheriff,
                 id: controller.enemyPlayers()[0].playerId,
-                temporaryEffects: controller.enemyPlayers()[0].temporaryEffects,
+                temporaryEffects: controller
+                    .enemyPlayers()[0]
+                    .temporaryEffects
+                    .map((e) => PlayableCard(
+                          card: e,
+                          canBeFocused: true,
+                          scale: 0.25,
+                          highlightMultiplier: 1.5,
+                        ))
+                    .toList(),
               ),
               top: height * 0.38,
               left: 10),
@@ -205,12 +227,28 @@ class GameView extends GetView<GameController> {
                 characterName: controller.enemyPlayers()[1].characterName,
                 equipment: controller
                     .enemyPlayers()[1]
-                    .equipment, //controller.equipmentCards,
+                    .equipment
+                    .map((e) => PlayableCard(
+                          card: e,
+                          canBeFocused: true,
+                          scale: 0.25,
+                          highlightMultiplier: 1.5,
+                        ))
+                    .toList(), //controller.equipmentCards,
                 health: controller.enemyPlayers()[1].health,
                 playerName: controller.enemyPlayers()[1].playerName,
                 isSheriff: controller.enemyPlayers()[1].isSheriff,
                 id: controller.enemyPlayers()[1].playerId,
-                temporaryEffects: controller.enemyPlayers()[1].temporaryEffects,
+                temporaryEffects: controller
+                    .enemyPlayers()[1]
+                    .temporaryEffects
+                    .map((e) => PlayableCard(
+                          card: e,
+                          canBeFocused: true,
+                          scale: 0.25,
+                          highlightMultiplier: 1.5,
+                        ))
+                    .toList(),
               ),
               top: height * 0.38,
               right: 10),
@@ -481,31 +519,41 @@ class GameView extends GetView<GameController> {
       ];
 
   Widget _buildPlayer() {
-    return Obx(() => Align(
-          alignment: Alignment.bottomCenter,
-          child: Player(
-              health: controller.myPlayer().health,
-              characterCard: CharacterCard(
-                  background: controller.myPlayer().characterName,
-                  health: controller.myPlayer().health,
-                  name: controller.myPlayer().characterName),
-              roleCard: RoleCard(role: controller.myPlayer().role),
-              cardsInHand: _mapCards(),
-              equipment: [], // controller.equipmentList,
-              handDoubleTap: controller.toggleExpandedHand,
-              highlightedIndexInHand: controller.highlightedIndex(),
-              isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
-              isHandViewExpanded: controller.isHandExpanded(),
-              temporaryEffects: [], //controller.temporaryEffectList,
-              toggleEquipmentView: controller.toggleEquipmentView,
-              currentRoundGlow:
-                  controller.currentlyHasRound() == controller.myPlayer().id,
-              nextActionGlow:
-                  controller.nextActionPlayerId() == controller.myPlayer().id,
-              targetGlow: controller
-                  .targetableCardIds()
-                  .contains(controller.myPlayer().id)),
-        ));
+    return Obx(() {
+      print(controller
+          .targetableCardIds()
+          .contains(controller.myPlayer().id)
+          .toString());
+      print(controller.myPlayer().id);
+      print(controller.targetableCardIds().toString());
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Player(
+            discard: controller.discard,
+            nextTurn: controller.nextTurn,
+            health: controller.myPlayer().health,
+            characterCard: CharacterCard(
+                background: controller.myPlayer().characterName,
+                health: controller.myPlayer().health,
+                name: controller.myPlayer().characterName),
+            roleCard: RoleCard(role: controller.myPlayer().role),
+            cardsInHand: _mapCards(),
+            handDoubleTap: controller.toggleExpandedHand,
+            highlightedIndexInHand: controller.highlightedIndex(),
+            isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
+            isHandViewExpanded: controller.isHandExpanded(),
+            equipment: controller.myPlayer().equipment,
+            temporaryEffects: controller.myPlayer().temporaryEffects,
+            toggleEquipmentView: controller.toggleEquipmentView,
+            currentRoundGlow:
+                controller.currentlyHasRound() == controller.myPlayer().id,
+            nextActionGlow:
+                controller.nextActionPlayerId() == controller.myPlayer().id,
+            targetGlow: controller
+                .targetableCardIds()
+                .contains(controller.myPlayer().id)),
+      );
+    });
   }
 
   List<Widget> _mapCards() {
@@ -516,6 +564,9 @@ class GameView extends GetView<GameController> {
           scale: 0.85,
           card: cards[i],
           canBeDragged: true,
+          targets: controller.highlightedIndex() == i
+              ? controller.targetableCardIds()
+              : [],
           onDragStartedCallback: () => controller.highlightTargets(i),
           onDragEndedCallback: () => controller.highlightTargets(-1),
           onDragSuccessCallback: () => controller.removeCard(i),

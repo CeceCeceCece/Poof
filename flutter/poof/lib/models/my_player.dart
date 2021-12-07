@@ -1,7 +1,7 @@
 import 'package:bang/models/role_type.dart';
-import 'package:bang/widgets/playable_card.dart';
 
 import 'cards/playable_card_base.dart';
+import 'cards/playable_cards/equipment_card.dart';
 
 class MyPlayer {
   MyPlayer({
@@ -10,14 +10,14 @@ class MyPlayer {
     required this.health,
     required this.characterName,
     required this.id,
-    this.equipment = const [],
-    this.temporaryEffects = const [],
+    required this.equipment,
+    required this.temporaryEffects,
   });
   List<PlayableCardBase> cards;
   String characterName;
   RoleType role;
   int health;
   String id;
-  List<PlayableCard> equipment;
-  List<PlayableCard> temporaryEffects;
+  List<EquipmentCard> equipment;
+  List<EquipmentCard> temporaryEffects;
 }

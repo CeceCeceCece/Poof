@@ -14,9 +14,13 @@ class NonPlayableCard extends StatefulWidget {
   final bool nextActionGlow;
   final bool targetGlow;
   final bool showBackPermanently;
+  final bool Function(List<String>? data)? dragOnWillAccept;
+  final void Function(List<String> data)? dragOnAccept;
   const NonPlayableCard({
     Key? key,
     required this.card,
+    this.dragOnWillAccept,
+    this.dragOnAccept,
     this.canBeFocused = true,
     this.onTapCallback,
     this.scale = 1.0,
@@ -79,12 +83,12 @@ class _BangCardWidgetState extends State<NonPlayableCard>
     if (widget.nextActionGlow)
       return [
         BoxShadow(
-          color: Colors.amber.shade700,
+          color: Colors.amber.shade500,
           spreadRadius: 1,
           blurRadius: 5,
         ),
         BoxShadow(
-          color: Colors.amber.shade700,
+          color: Colors.amber.shade500,
           spreadRadius: -1,
           blurRadius: 5,
         )
@@ -122,38 +126,48 @@ class _BangCardWidgetState extends State<NonPlayableCard>
             transform: Matrix4.identity()
               ..setEntry(3, 2, 0.001)
               ..rotateY(val),
-            child: showBack
-                ? Material(
-                    borderRadius: BorderRadius.circular(10 * widget.scale),
-                    elevation: isElevated ? 40 : 0,
-                    child: AnimatedContainer(
-                      height: height,
-                      width: width,
-                      decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(10 * widget.scale),
-                          boxShadow: _setGlow()),
-                      duration: _cardFocusingDuration,
-                      child: render(),
-                    ),
-                  )
-                : Material(
-                    borderRadius: BorderRadius.circular(10),
-                    elevation: isElevated ? 40 : 0,
-                    child: Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.identity()..rotateY(pi),
-                      child: AnimatedContainer(
+            child: DragTarget<List<String>>(
+              onWillAccept: widget.dragOnWillAccept,
+              onAccept: widget.dragOnAccept,
+              builder: (
+                BuildContext context,
+                List<dynamic> accepted,
+                List<dynamic> rejected,
+              ) {
+                return showBack
+                    ? Material(
+                        borderRadius: BorderRadius.circular(10 * widget.scale),
+                        elevation: isElevated ? 40 : 0,
+                        child: AnimatedContainer(
+                          height: height,
+                          width: width,
                           decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(10 * widget.scale),
                               boxShadow: _setGlow()),
-                          height: height,
-                          width: width,
                           duration: _cardFocusingDuration,
-                          child: render(showBack: true)),
-                    ),
-                  ),
+                          child: render(),
+                        ),
+                      )
+                    : Material(
+                        borderRadius: BorderRadius.circular(10),
+                        elevation: isElevated ? 40 : 0,
+                        child: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.identity()..rotateY(pi),
+                          child: AnimatedContainer(
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.circular(10 * widget.scale),
+                                  boxShadow: _setGlow()),
+                              height: height,
+                              width: width,
+                              duration: _cardFocusingDuration,
+                              child: render(showBack: true)),
+                        ),
+                      );
+              },
+            ),
           );
         },
       ),

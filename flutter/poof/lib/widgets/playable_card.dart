@@ -1,3 +1,4 @@
+import 'dart:developer' as Dev;
 import 'dart:math';
 
 import 'package:bang/core/app_constants.dart';
@@ -20,24 +21,35 @@ class PlayableCard extends StatefulWidget {
   final double highlightMultiplier;
   late final bool isInsideHand;
   final bool targetGlow;
+  final bool drawPileGlow;
   final bool showBackPermanently;
+  final bool shadowed;
+  late final List<String> possibleTargets;
+  final bool Function(List<String>? data)? dragOnWillAccept;
+  final void Function(List<String> data)? dragOnAccept;
 
   PlayableCard({
     Key? key,
     required this.card,
+    this.dragOnWillAccept,
+    this.dragOnAccept,
     this.canBeDragged = false,
     this.canBeFocused = true,
+    this.shadowed = false,
     this.onDragSuccessCallback,
     this.handCallback,
     this.extraElevation = 0,
     this.scale = 1.0,
+    this.drawPileGlow = false,
     this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
     this.handCallbackInverse,
     this.onDragStartedCallback,
     this.onDragEndedCallback,
+    List<String>? targets,
     this.targetGlow = false,
   }) : super(key: key) {
+    this.possibleTargets = targets ?? [];
     this.isInsideHand = handCallback != null;
   }
 
@@ -57,7 +69,8 @@ class PlayableCard extends StatefulWidget {
       PlayableCard(
         scale: 0.5,
         showBackPermanently: true,
-        targetGlow: canBeTargeted,
+        targetGlow: !isDrawPile && canBeTargeted,
+        drawPileGlow: isDrawPile && canBeTargeted,
         canBeFocused: false,
         extraElevation: extraElevation,
         card: ActionCard(
@@ -87,13 +100,26 @@ class _PlayableCardState extends State<PlayableCard>
     if (widget.targetGlow)
       return [
         BoxShadow(
-          color: Colors.red.shade700,
+          color: Colors.red.shade500,
           spreadRadius: 1,
           blurRadius: 5,
         ),
         BoxShadow(
-          color: Colors.red.shade700,
+          color: Colors.red.shade500,
           spreadRadius: -1,
+          blurRadius: 5,
+        )
+      ];
+    if (widget.drawPileGlow)
+      return [
+        BoxShadow(
+          color: Colors.amber.shade100,
+          spreadRadius: 4,
+          blurRadius: 10,
+        ),
+        BoxShadow(
+          color: Colors.amber.shade100,
+          spreadRadius: -4,
           blurRadius: 5,
         )
       ];
@@ -128,6 +154,11 @@ class _PlayableCardState extends State<PlayableCard>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.possibleTargets.isNotEmpty) {
+      widget.possibleTargets.forEach((element) {
+        Dev.log('targetable: $element');
+      });
+    }
     return GestureDetector(
       onLongPressStart: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
       onLongPressEnd: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
@@ -142,14 +173,19 @@ class _PlayableCardState extends State<PlayableCard>
                   borderRadius: BorderRadius.circular(10 * widget.scale),
                   elevation: isElevated && !widget.isInsideHand ? 40 : 0,
                   child: AnimatedContainer(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10 * widget.scale),
-                        boxShadow: _setGlow()),
-                    height: height,
-                    width: width,
-                    duration: _cardFocusingDuration,
-                    child: render(),
-                  ),
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(10 * widget.scale),
+                          boxShadow: _setGlow()),
+                      height: height,
+                      width: width,
+                      duration: _cardFocusingDuration,
+                      child: widget.shadowed
+                          ? ColorFiltered(
+                              child: Opacity(opacity: 0.6, child: render()),
+                              colorFilter: ColorFilter.mode(
+                                  Colors.grey, BlendMode.modulate))
+                          : render()),
                 )
               : Material(
                   borderRadius: BorderRadius.circular(10 * widget.scale),
@@ -176,7 +212,7 @@ class _PlayableCardState extends State<PlayableCard>
               ..setEntry(3, 2, 0.001)
               ..rotateY(val),
             child: widget.canBeDragged
-                ? Draggable<String>(
+                ? Draggable<List<String>>(
                     onDragStarted: widget.onDragStartedCallback,
                     onDragCompleted: () {
                       widget.onDragSuccessCallback?.call();
@@ -189,7 +225,7 @@ class _PlayableCardState extends State<PlayableCard>
                             ? Fluttertoast.showToast(
                                 msg: AppStrings.not_valid_target.tr)
                             : {},
-                    data: widget.card.toString(),
+                    data: widget.possibleTargets,
                     feedback: Image.asset(AppAssetPaths.crossHairPath,
                         width: 50, height: 50),
                     childWhenDragging: ColorFiltered(
@@ -201,8 +237,19 @@ class _PlayableCardState extends State<PlayableCard>
                       colorFilter: ColorFilter.mode(
                           Colors.red.shade100, BlendMode.modulate),
                     ),
-                    child: card)
-                : card,
+                    child: card,
+                  )
+                : DragTarget<List<String>>(
+                    builder: (
+                      BuildContext context,
+                      List<dynamic> accepted,
+                      List<dynamic> rejected,
+                    ) {
+                      return card;
+                    },
+                    onWillAccept: widget.dragOnWillAccept,
+                    onAccept: widget.dragOnAccept,
+                  ),
           );
         },
       ),

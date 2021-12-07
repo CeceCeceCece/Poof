@@ -107,7 +107,7 @@ class LobbyService extends ServiceBase {
     _connection.on(
       'SetMessages',
       (messages) => _setMessages(
-        messages?.map((e) => MessageDto.fromJson(e)).toList() ?? [],
+        (messages?.first as List).map((e) => MessageDto.fromJson(e)).toList(),
       ),
     );
 

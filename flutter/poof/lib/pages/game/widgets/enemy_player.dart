@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:bang/core/app_colors.dart';
 import 'package:bang/models/cards/non_playable_cards/character_card.dart';
 import 'package:bang/widgets/non_playable_card_widget.dart';
 import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EnemyPlayer extends StatelessWidget {
@@ -47,6 +50,9 @@ class EnemyPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('canBeTargeted: $canBeTargeted');
+    log('currentlyHasRound: $currentlyHasRound');
+    log('hasTargetableCard: $hasTargetableCard');
     double? rightChar = top ? (right ? 102.5 : null) : (right ? 45 : null);
     double? leftChar = top ? (left ? 102.5 : null) : (left ? 45 : null);
     double? rightCards = top ? (left ? 102.5 : null) : null;
@@ -107,11 +113,13 @@ class EnemyPlayer extends StatelessWidget {
                   right: rightTemporaryEffectCards,
                   left: leftTemporaryEffectCards,
                   child: temporaryEffects[i]),
-            Positioned(
-              right: rightCards,
-              left: leftCards,
-              child: _backWithAmount(),
-            ),
+            cardAmount != 0
+                ? Positioned(
+                    right: rightCards,
+                    left: leftCards,
+                    child: _backWithAmount(),
+                  )
+                : Container(),
             Positioned(
               right: rightChar,
               left: leftChar,
@@ -136,7 +144,31 @@ class EnemyPlayer extends StatelessWidget {
                 background: characterName, health: 4, name: characterName),
           ),
         ),
-        Text('❤: $health', style: TextStyle(fontWeight: FontWeight.bold)),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          child: Stack(
+            children: [
+              FaIcon(
+                FontAwesomeIcons.solidHeart,
+                color: Colors.red,
+                size: 20,
+              ),
+              Positioned(
+                bottom: 2,
+                left: 5,
+                child: Text(
+                  health.toString(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Text('❤: $health', style: TextStyle(fontWeight: FontWeight.bold)),
       ],
     );
   }

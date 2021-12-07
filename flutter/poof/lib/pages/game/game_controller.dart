@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/core/lang/app_strings.dart';
+import 'package:bang/models/card_dto.dart';
 import 'package:bang/models/cards/playable_card_base.dart';
 import 'package:bang/models/cards/playable_cards/action_card.dart';
 import 'package:bang/models/cards/playable_cards/equipment_card.dart';
@@ -24,7 +25,6 @@ class GameController extends GetxController {
   var isEquipmentViewExpanded = false.obs;
   RxInt highlightedIndex = (-1).obs;
   var drawPileAmount = 80.obs;
-  var discardedPileAmount = 20.obs;
   Random random = Random();
   var gameService = Get.find<GameService>();
   var modalSheetScrollController = ScrollController();
@@ -33,10 +33,15 @@ class GameController extends GetxController {
   var messages = <MessageDto>[].obs;
   late String playerName;
 
+  RxBool drawPileGlow = true.obs;
+  RxBool discardPileGlow = false.obs;
+
+  Rx<CardDto?> discardedPileTop = Rx(null);
+
   late Rx<MyPlayer> myPlayer;
   late RxList<EnemyPlayerDto> enemyPlayers;
 
-  var targetableCardIds = <String>[].obs;
+  RxList<String> targetableCardIds = <String>[].obs;
 
   late RxString currentlyHasRound;
   Rx<String?> nextActionPlayerId = Rx(null);
@@ -50,8 +55,11 @@ class GameController extends GetxController {
     myPlayer = gameService.myPlayer;
     currentlyHasRound = gameService.currentlyHasRound;
     nextActionPlayerId = gameService.nextActionPlayerId;
+    targetableCardIds = gameService.targetableCardIds;
+    discardedPileTop = gameService.discardPileTop;
+    discardPileGlow = gameService.discardPileGlow;
 
-    handWidgets = [
+    /*handWidgets = [
       for (int i = 0; i < hand().length; i++)
         PlayableCard(
           scale: 0.85,
@@ -61,7 +69,7 @@ class GameController extends GetxController {
           handCallback: () => highlight(i),
           handCallbackInverse: () => highlight(-1),
         ),
-    ].obs;
+    ].obs;*/
     super.onInit();
   }
 
@@ -93,27 +101,15 @@ class GameController extends GetxController {
     var cardIndex = index ?? highlightedIndex();
     if (cardIndex != -1) {
       var cardId = myPlayer().cards[cardIndex].id;
-      var possibleTargets = _getPossibleTargets(cardId);
-      var possiblePlayers = enemyPlayers()
-          .where((player) => possibleTargets.contains(player.playerId))
-          .map((e) => e.playerId);
-
-      var possibleCards = enemyPlayers()
-          .map((player) => player.cardIds
-              .where((cardId) => possibleTargets.contains(cardId)))
-          .expand((i) => i);
-
-      targetableCardIds.value = [
-        ...possiblePlayers,
-        ...possibleCards,
-      ];
+      _getPossibleTargets(cardId);
     } else {
-      targetableCardIds.value = [];
+      gameService.targetableCardIds.value = [];
+      gameService.discardPileGlow.value = false;
     }
   }
 
-  List<String> _getPossibleTargets(String cardId) {
-    return [];
+  void _getPossibleTargets(String cardId) {
+    gameService.cardOption(cardId);
   }
 
   void scrollToBottom() {
@@ -392,4 +388,14 @@ class GameController extends GetxController {
       type: CardType.Equipment,
     ),
   ].obs;
+
+  void nextTurn() => gameService.nextTurn();
+
+  void discard() {
+    var cardAmountToDiscard = myPlayer().cards.length - myPlayer().health;
+    if (cardAmountToDiscard <= 0) return;
+
+    gameService.discard(
+        myPlayer().cards.take(cardAmountToDiscard).map((e) => e.id).toList());
+  }
 }

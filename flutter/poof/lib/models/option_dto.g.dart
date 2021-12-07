@@ -11,8 +11,6 @@ OptionDto _$OptionDtoFromJson(Map<String, dynamic> json) => OptionDto(
       possibleTargets: (json['possibleTargets'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      numberOfCards: json['numberOfCards'] as int,
-      requireAnswear: json['requireAnswear'] as bool?,
       requireCards: json['requireCards'] as bool?,
     );
 
@@ -20,6 +18,4 @@ Map<String, dynamic> _$OptionDtoToJson(OptionDto instance) => <String, dynamic>{
       'description': instance.description,
       'possibleTargets': instance.possibleTargets,
       'requireCards': instance.requireCards,
-      'numberOfCards': instance.numberOfCards,
-      'requireAnswear': instance.requireAnswear,
     };

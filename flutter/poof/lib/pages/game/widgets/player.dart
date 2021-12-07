@@ -27,7 +27,9 @@ class Player extends StatelessWidget {
     required this.temporaryEffects,
     required this.cardsInHand,
     required this.highlightedIndexInHand,
+    required this.nextTurn,
     required this.health,
+    required this.discard,
     this.currentRoundGlow = false,
     this.nextActionGlow = false,
     this.targetGlow = false,
@@ -40,6 +42,8 @@ class Player extends StatelessWidget {
   final bool isEquipmentViewExpanded;
   final VoidCallback toggleEquipmentView;
   final VoidCallback handDoubleTap;
+  final VoidCallback discard;
+  final VoidCallback nextTurn;
   final List<PlayableCardBase> equipment;
   final List<PlayableCardBase> temporaryEffects;
   final List<Widget> cardsInHand;
@@ -82,6 +86,9 @@ class Player extends StatelessWidget {
           child: NonPlayableCard(
             scale: 0.4,
             card: characterCard,
+            targetGlow: targetGlow,
+            nextActionGlow: nextActionGlow,
+            currentRoundGlow: currentRoundGlow,
             canBeFocused: false,
           ),
         )
@@ -165,7 +172,7 @@ class Player extends StatelessWidget {
                       ),
                       iconSize: 18,
                       color: Colors.white,
-                      onPressed: () {}),
+                      onPressed: discard),
                 ),
               )),
         ),
@@ -250,7 +257,7 @@ class Player extends StatelessWidget {
                       ),
                       iconSize: 18,
                       color: Colors.white,
-                      onPressed: () {}),
+                      onPressed: nextTurn),
                 ),
               )),
         ),

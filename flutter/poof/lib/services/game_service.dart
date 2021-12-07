@@ -4,16 +4,19 @@ import 'dart:developer';
 import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/models/card_dto.dart';
+import 'package:bang/models/card_id_dto.dart';
 import 'package:bang/models/cards/playable_card_base.dart';
 import 'package:bang/models/cards/playable_cards/action_card.dart';
 import 'package:bang/models/cards/playable_cards/equipment_card.dart';
 import 'package:bang/models/cards/playable_cards/weapon_card.dart';
+import 'package:bang/models/draw_option_dto.dart';
 import 'package:bang/models/enemy_player_dto.dart';
 import 'package:bang/models/game_event_dto.dart';
 import 'package:bang/models/game_start_dto.dart';
 import 'package:bang/models/life_point_dto.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/my_player.dart';
+import 'package:bang/models/option_command.dart';
 import 'package:bang/models/option_dto.dart';
 import 'package:bang/models/role_type.dart';
 import 'package:bang/pages/game/game_controller.dart';
@@ -32,17 +35,22 @@ class GameService extends ServiceBase {
   String? gameName;
   var playerAmount = 1.obs;
   RxString currentlyHasRound = ''.obs;
+  RxList<String> targetableCardIds = <String>[].obs;
+  Rx<CardDto?> discardPileTop = Rx(null);
+  var discardPileGlow = false.obs;
 
   var myPlayer = MyPlayer(
     id: '',
     cards: [],
+    equipment: [],
+    temporaryEffects: [],
     role: RoleType.Renegade,
     health: 0,
     characterName: 'kitcarlson',
   ).obs;
   var enemyPlayers = <EnemyPlayerDto>[].obs;
 
-  var statusInterval = Duration(seconds: 10);
+  var statusInterval = Duration(seconds: 6);
 
   Timer? statusTimer;
   var messages = <MessageDto>[].obs;
@@ -99,14 +107,14 @@ class GameService extends ServiceBase {
     _connection.on(
       'SetDeck',
       (cards) => _setDeck(
-        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
+        cards?[0].map((e) => CardDto.fromJson(e)).toList() ?? [],
       ),
     );
 
     _connection.on(
       'SetEquipedDeck',
       (cards) => _setEquippedDeck(
-        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
+        cards?[0].map((e) => CardDto.fromJson(e)).toList() ?? [],
       ),
     );
 
@@ -137,7 +145,7 @@ class GameService extends ServiceBase {
     _connection.on(
       'CardsDroped',
       (cards) => _cardsDropped(
-        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
+        (cards?[0] as List).map((e) => CardIdDto.fromJson(e)).toList(),
       ),
     );
 
@@ -165,11 +173,30 @@ class GameService extends ServiceBase {
         CardDto.fromJson(card?[0]),
       ),
     );
+
+    _connection.on(
+      'TurnStarted',
+      (userId) => _nextTurn(
+        userId?[0],
+      ),
+    );
+
+    _connection.on(
+      'CardsReceieved',
+      (cards) {
+        log('${cards.toString()}');
+        _cardsReceived(
+          (cards?.first as List).map((e) => CardDto.fromJson(e)).toList(),
+        );
+      },
+    );
     _connection.on(
       'CardsAdded',
-      (cards) => _cardsAdded(
-        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
-      ),
+      (cards) {
+        log('${cards.toString()}');
+        _cardsAdded(
+            (cards?.first as List).map((e) => CardIdDto.fromJson(e)).toList());
+      },
     );
     _connection.on(
       'SetGameEvent',
@@ -192,16 +219,18 @@ class GameService extends ServiceBase {
     );
 
     _connection.on(
-      'CardsReceieved',
-      (cards) => _cardsReceived(
-        cards?.map((e) => CardDto.fromJson(e)).toList() ?? [],
+      'ShowOption',
+      (option) => _showOption(
+        OptionDto.fromJson(
+          option?[0],
+        ),
       ),
     );
 
     _connection.on(
-      'ShowOption',
-      (option) => _showOption(
-        OptionDto.fromJson(
+      'DrawOption',
+      (option) => _drawOption(
+        DrawOptionDto.fromJson(
           option?[0],
         ),
       ),
@@ -217,7 +246,25 @@ class GameService extends ServiceBase {
     );
   }
 
-  void _setDiscardPile(CardDto card) {}
+  void _nextTurn(String currentUserId) {
+    currentlyHasRound.value = currentUserId;
+    log('Turn Changed');
+  }
+
+  void _drawOption(DrawOptionDto drawOption) {
+    log('draw option arrived');
+    log('${drawOption.cards.toString()}');
+    drawReact(option: OptionCommand(cardIds: [], userId: myPlayer().id)) /*)*/;
+  }
+
+  void _setDiscardPile(CardDto card) {
+    log(card.toString());
+    discardPileTop.value = card;
+  }
+
+  void discard(List<String> discardedIds) {
+    _connection.invoke('Discard', args: [gameId, discardedIds]);
+  }
 
   void _setDeck(List<CardDto> cards) {}
 
@@ -235,30 +282,48 @@ class GameService extends ServiceBase {
     log('SIGNALR Status recieved -- GAME');
   }
 
-  void _cardsDropped(List<CardDto> cards) {}
+  void _cardsDropped(List<CardIdDto> cards) {
+    log('cards dropped' + cards.toString());
+    cards.forEach((card) {
+      if (card.characterId == myPlayer().id) {
+        myPlayer().cards.removeWhere((myCard) => myCard.id == card.cardId);
+        myPlayer.refresh();
+      } else {
+        enemyPlayers()
+            .firstWhere((player) => player.playerId == card.characterId)
+            .cardIds
+            .removeWhere((cardId) => cardId == card.cardId);
+        enemyPlayers.refresh();
+      }
+    });
+  }
 
   void _cardUnequipped(CardDto card) {}
 
   void _onGameJoined(GameStartDto gameStartDto) {
     Get.offAndToNamed(Routes.GAME);
     myPlayer.value = MyPlayer(
+        equipment: [],
+        temporaryEffects: [],
         id: gameStartDto.selfId,
-        cards: _mapCards(gameStartDto),
+        cards: mapCards(gameStartDto.cards),
         role: gameStartDto.role,
         health: gameStartDto.lifePoint,
-        characterName: gameStartDto.name);
+        characterName: gameStartDto.name.removeAllWhitespace.toLowerCase());
     playerAmount.value = gameStartDto.characters.length;
     currentlyHasRound.value = gameStartDto.sheriffId;
 
     enemyPlayers.value = gameStartDto.characters
         .where((character) => character.userId != gameStartDto.selfId)
         .map((e) => EnemyPlayerDto(
+              equipment: [],
+              temporaryEffects: [],
               cardIds: e.cardIds,
               health: e.lifePoint,
               playerId: e.userId,
               isSheriff: e.userId == gameStartDto.sheriffId,
               playerName: e.userName,
-              characterName: e.name,
+              characterName: e.name.removeAllWhitespace.toLowerCase(),
             ))
         .toList();
   }
@@ -269,14 +334,93 @@ class GameService extends ServiceBase {
     Get.find<GameController>().scrollToBottom();
   }
 
-  void _cardsEquipped(String characterId, CardDto card) {}
-  void _cardsAdded(List<CardDto> cards) {}
+  void _cardsEquipped(String characterId, CardDto card) {
+    log('cards equipped');
+    if (characterId == myPlayer().id) {
+      if (card.name == 'Jail' || card.name == 'Dynamite') {
+        myPlayer().temporaryEffects.add(EquipmentCard(
+            background: card.name,
+            id: card.id,
+            name: card.name,
+            value: card.value,
+            type: card.type,
+            suit: card.suite));
+      } else {
+        myPlayer().equipment.add(EquipmentCard(
+            background: card.name,
+            id: card.id,
+            name: card.name,
+            value: card.value,
+            type: card.type,
+            suit: card.suite));
+      }
+    } else {
+      var player =
+          enemyPlayers().firstWhere((enemy) => characterId == enemy.playerId);
+      if (card.name == 'Jail' || card.name == 'Dynamite') {
+        player.temporaryEffects.add(EquipmentCard(
+            background: card.name,
+            id: card.id,
+            name: card.name,
+            value: card.value,
+            type: card.type,
+            suit: card.suite));
+      } else {
+        player.equipment.add(EquipmentCard(
+            background: card.name,
+            id: card.id,
+            name: card.name,
+            value: card.value,
+            type: card.type,
+            suit: card.suite));
+      }
+    }
+  }
+
+  void _cardsAdded(List<CardIdDto> cards) {
+    log('ARRIVED: ${cards.toString()}');
+    cards.forEach((card) {
+      if (card.characterId != myPlayer().id)
+        enemyPlayers()
+            .firstWhere((player) => player.playerId == card.characterId)
+            .cardIds
+            .add(card.cardId);
+    });
+    enemyPlayers.refresh();
+  }
+
   void _showCard(CardDto card) {}
   void _setGameEvent(GameEventDto gameEvent) {}
 
-  void _showOption(OptionDto optionDto) {}
+  void _showOption(OptionDto optionDto) {
+    log('${optionDto.possibleTargets.toString()}');
+    var possibleTargets = optionDto.possibleTargets;
 
-  void _cardsReceived(List<CardDto> list) {}
+    var possiblePlayers = enemyPlayers()
+        .where((player) => possibleTargets.contains(player.playerId))
+        .map((e) => e.playerId);
+    if (possibleTargets.contains(myPlayer().id))
+      possiblePlayers = [...possiblePlayers, myPlayer().id];
+    log('${possiblePlayers.toList().toString()}');
+
+    var possibleCards = enemyPlayers()
+        .map((player) =>
+            player.cardIds.where((cardId) => possibleTargets.contains(cardId)))
+        .expand((i) => i);
+
+    targetableCardIds.value = [
+      ...possiblePlayers,
+      ...possibleCards,
+    ];
+    if (targetableCardIds().contains(myPlayer().id))
+      discardPileGlow.value = true;
+  }
+
+  void _cardsReceived(List<CardDto> cards) {
+    log('ARRIVED: ${cards.toString()}');
+    myPlayer().cards.addAll(mapCards(cards));
+    myPlayer.refresh();
+  }
 
   void sendMessage({required String message}) async {
     if (message.isNotEmpty) {
@@ -287,6 +431,10 @@ class GameService extends ServiceBase {
         (value) => print('MESSAGE SENT!'),
       );
     }
+  }
+
+  void cardOption(String cardId) async {
+    await _connection.invoke('CardOption', args: [cardId, gameId]);
   }
 
   void joinGame({required String gameId, required String gameName}) async {
@@ -308,13 +456,17 @@ class GameService extends ServiceBase {
     );
   }
 
-  void drawReact({required OptionDto option}) async {
+  void drawReact({required OptionCommand option}) async {
     await _connection.invoke('DrawReact', args: [
       gameId,
       option.toJson(),
     ]).then(
       (value) => print('DRAW REACT SENT!'),
     );
+  }
+
+  void nextTurn() async {
+    await _connection.invoke('NextTurn', args: [gameId]);
   }
 
   void activeCard({required OptionDto option, required String cardId}) async {
@@ -341,29 +493,34 @@ class GameService extends ServiceBase {
     super.onClose();
   }
 
-  List<PlayableCardBase> _mapCards(GameStartDto gameStartDto) {
-    return gameStartDto.cards.map((e) {
+  List<PlayableCardBase> mapCards(List<CardDto> cards) {
+    return cards.map((e) {
+      var name =
+          e.name.removeAllWhitespace.toLowerCase().replaceAll(RegExp('!'), '');
       switch (e.type) {
         case CardType.Action:
           return ActionCard(
+              id: e.id,
               range: 0,
-              background: e.name,
-              name: e.name,
+              background: name,
+              name: name,
               value: e.value,
               type: e.type,
               suit: e.suite);
         case CardType.Equipment:
           return EquipmentCard(
-              background: e.name,
-              name: e.name,
+              id: e.id,
+              background: name,
+              name: name,
               value: e.value,
               type: e.type,
               suit: e.suite);
         case CardType.Weapon:
           return WeaponCard(
+              id: e.id,
               range: 0,
-              background: e.name,
-              name: e.name,
+              background: name,
+              name: name,
               value: e.value,
               type: e.type,
               suit: e.suite);
@@ -372,24 +529,26 @@ class GameService extends ServiceBase {
         case CardType.Character:
           return WeaponCard(
               range: 0,
-              background: e.name,
-              name: e.name,
+              background: name,
+              name: name,
               value: e.value,
               type: e.type,
               suit: e.suite);
         case CardType.Role:
           return WeaponCard(
               range: 0,
-              background: e.name,
-              name: e.name,
+              id: e.id,
+              background: name,
+              name: name,
               value: e.value,
               type: e.type,
               suit: e.suite);
         case CardType.Back:
           return WeaponCard(
               range: 0,
-              background: e.name,
-              name: e.name,
+              id: e.id,
+              background: name,
+              name: name,
               value: e.value,
               type: e.type,
               suit: e.suite);
