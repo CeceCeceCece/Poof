@@ -1,31 +1,46 @@
-import 'package:bang/cards/model/non_playable_cards/character_card.dart';
 import 'package:bang/core/app_colors.dart';
+import 'package:bang/models/cards/non_playable_cards/character_card.dart';
 import 'package:bang/widgets/non_playable_card_widget.dart';
 import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EnemyPlayer extends StatelessWidget {
-  EnemyPlayer(
-      {Key? key,
-      this.left = false,
-      this.top = false,
-      this.right = false,
-      required this.playerName,
-      required this.cardAmount,
-      required this.health,
-      required this.characterName,
-      required this.temporaryEffects,
-      required this.equipment})
-      : super(key: key);
+  EnemyPlayer({
+    Key? key,
+    this.left = false,
+    this.top = false,
+    this.right = false,
+    required this.playerName,
+    required this.cardAmount,
+    required this.health,
+    this.cardIds = const [],
+    this.isSheriff = false,
+    this.id = '',
+    required this.characterName,
+    required this.temporaryEffects,
+    required this.equipment,
+    this.isTakingNextAction = false,
+    this.canBeTargeted = false,
+    this.hasTargetableCard = false,
+    this.currentlyHasRound = false,
+  }) : super(key: key);
 
   final bool left;
   final bool top;
   final bool right;
+  final String id;
+  final bool isSheriff;
+  final List<String> cardIds;
   final String playerName;
   final int cardAmount;
   final int health;
   final String characterName;
+
+  final bool isTakingNextAction;
+  final bool canBeTargeted;
+  final bool currentlyHasRound;
+  final bool hasTargetableCard;
 
   final List<PlayableCard> temporaryEffects;
   final List<PlayableCard> equipment;
@@ -53,7 +68,6 @@ class EnemyPlayer extends StatelessWidget {
             SizedBox(
               height: 200,
               width: 200,
-              //child: Container(color: left ? Colors.green : Colors.red),
             ),
             Positioned(
               top: equipment.isEmpty ? 75 : 110,
@@ -114,6 +128,9 @@ class EnemyPlayer extends StatelessWidget {
         Positioned(
           child: NonPlayableCard(
             scale: 0.5,
+            nextActionGlow: isTakingNextAction,
+            targetGlow: canBeTargeted,
+            currentRoundGlow: currentlyHasRound,
             highlightMultiplier: 1.5,
             card: CharacterCard(
                 background: characterName, health: 4, name: characterName),
@@ -128,7 +145,7 @@ class EnemyPlayer extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        PlayableCard.back(),
+        PlayableCard.back(canBeTargeted: hasTargetableCard),
         Container(
           height: 30,
           width: 30,

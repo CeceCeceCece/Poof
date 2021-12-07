@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:animated_icon_button/animated_icon_button.dart';
-import 'package:bang/cards/model/non_playable_cards/character_card.dart';
-import 'package:bang/cards/model/non_playable_cards/role_card.dart';
-import 'package:bang/cards/model/playable_card_base.dart';
 import 'package:bang/core/app_colors.dart';
 import 'package:bang/core/helpers/card_helpers.dart';
+import 'package:bang/models/cards/non_playable_cards/character_card.dart';
+import 'package:bang/models/cards/non_playable_cards/role_card.dart';
+import 'package:bang/models/cards/playable_card_base.dart';
 import 'package:bang/pages/game/widgets/hand.dart';
 import 'package:bang/widgets/non_playable_card_widget.dart';
 import 'package:bang/widgets/playable_card.dart';
@@ -28,8 +28,14 @@ class Player extends StatelessWidget {
     required this.cardsInHand,
     required this.highlightedIndexInHand,
     required this.health,
+    this.currentRoundGlow = false,
+    this.nextActionGlow = false,
+    this.targetGlow = false,
   });
   final random = Random();
+  final bool currentRoundGlow;
+  final bool nextActionGlow;
+  final bool targetGlow;
   final bool isHandViewExpanded;
   final bool isEquipmentViewExpanded;
   final VoidCallback toggleEquipmentView;
@@ -116,6 +122,9 @@ class Player extends StatelessWidget {
                         bottom: 20,
                         child: NonPlayableCard(
                           scale: 0.95,
+                          targetGlow: targetGlow,
+                          nextActionGlow: nextActionGlow,
+                          currentRoundGlow: currentRoundGlow,
                           card: characterCard,
                         ),
                       ),

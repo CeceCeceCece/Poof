@@ -4,8 +4,6 @@ import 'package:bang/core/helpers/app_validators.dart';
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/pages/home/home_controller.dart';
 import 'package:bang/routes/routes.dart';
-import 'package:bang/services/audio_service.dart';
-import 'package:bang/services/game_service.dart';
 import 'package:bang/widgets/bang_background.dart';
 import 'package:bang/widgets/bang_button.dart';
 import 'package:bang/widgets/bang_input_field.dart';
@@ -36,7 +34,7 @@ class HomeView extends GetView<HomeController> {
               text: AppStrings.reading_qr.tr,
             ),
             Spacer(),
-            BangButton(
+            /* BangButton(
               // todo remove when finished testing
               text: 'shortcut',
               onPressed: () {
@@ -45,7 +43,7 @@ class HomeView extends GetView<HomeController> {
                 AudioService.playBackgroundMusic();
                 Get.offAndToNamed(Routes.GAME);
               },
-            ),
+            ),*/
             _buildCreateRoomButton(),
             Spacer(),
             Spacer(),

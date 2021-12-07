@@ -103,7 +103,7 @@ class LobbyView extends GetView<LobbyController> {
             width: 160,
             height: 40,
             text: AppStrings.start_game.tr,
-            onPressed: controller.join,
+            onPressed: controller.createGame,
           ),
           BangButton(
             width: 160,

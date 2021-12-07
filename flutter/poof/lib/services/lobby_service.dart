@@ -22,12 +22,14 @@ class LobbyService extends ServiceBase {
   var delay = Duration(milliseconds: 150);
   var statusInterval = Duration(seconds: 10);
   Timer? statusTimer;
+  String? gameId;
 
   var admin = ''.obs;
   var users = <UserDto>[].obs;
   var messages = <MessageDto>[].obs;
   var lobbyName = ''.obs;
   var _connectionInitialized = false;
+  var notInGame = true;
 
   late HubConnection _connection;
   Future<void> initWebsocket() async {
@@ -56,12 +58,11 @@ class LobbyService extends ServiceBase {
           ),
         )
         .build();
+    _connectionInitialized = true;
     try {
       await _connection.start();
-      _connectionInitialized = true;
     } catch (error) {
       log('$error');
-      _connectionInitialized = true;
     }
     _connection.onreconnected((connectionId) {
       log('RECONNECTED');
@@ -192,7 +193,7 @@ class LobbyService extends ServiceBase {
   }
 
   void _onStatus() {
-    log('Status recieved');
+    log('SIGNALR Status recieved -- LOBBY');
   }
 
   void _userEntered(UserDto user) {
@@ -215,7 +216,8 @@ class LobbyService extends ServiceBase {
   void _userLeft(String userId) {
     log('Arrived:$userId');
     var userThatLeft = users.firstWhere((user) => user.id == userId);
-    Get.find<LobbyController>().removeUserCallback(userThatLeft.name);
+    if (notInGame)
+      Get.find<LobbyController>().removeUserCallback(userThatLeft.name);
     users.removeWhere((element) => element.id == userId);
   }
 
@@ -227,7 +229,8 @@ class LobbyService extends ServiceBase {
 
   void _gameCreated(String gameId) {
     log('Arrived:$gameId');
-    Get.find<LobbyController>().join();
+    Get.find<LobbyController>().joinGame(gameId);
+    statusTimer?.cancel();
   }
 
   void createLobby({required String lobbyName}) async {
@@ -260,9 +263,21 @@ class LobbyService extends ServiceBase {
     }
   }
 
+  void createGame() async {
+    log('create game called');
+
+    await _connection.invoke('CreateGame', args: [
+      lobbyName(),
+    ]);
+    log('create game returned');
+  }
+
   Future<void> disconnect() async {
     statusTimer?.cancel();
-    if (_connectionInitialized) await _connection.stop();
+    if (_connectionInitialized) {
+      _connectionInitialized = false;
+      await _connection.stop();
+    }
   }
 
   @override

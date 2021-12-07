@@ -9,10 +9,12 @@ class EquipmentCard extends PlayableCardBase {
       required String name,
       required CardValue value,
       required CardType type,
+      String id = '',
       required CardSuit suit})
       : super(
           background: background,
           suit: suit,
+          id: id,
           value: value,
           name: name,
           type: type,

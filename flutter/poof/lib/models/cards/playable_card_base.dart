@@ -8,6 +8,7 @@ abstract class PlayableCardBase extends CardBase {
   CardSuit suit;
   Color borderColor = Colors.white;
   CardType type;
+  String id;
 
   PlayableCardBase(
       {required String background,
@@ -15,6 +16,7 @@ abstract class PlayableCardBase extends CardBase {
       required this.suit,
       required this.value,
       required this.type,
+      required this.id,
       bool showBack = false})
       : super(background: background, name: name, showBack: showBack);
 

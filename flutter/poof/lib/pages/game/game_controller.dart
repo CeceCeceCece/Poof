@@ -1,12 +1,14 @@
 import 'dart:math';
 
-import 'package:bang/cards/model/playable_card_base.dart';
-import 'package:bang/cards/model/playable_cards/action_card.dart';
-import 'package:bang/cards/model/playable_cards/equipment_card.dart';
-import 'package:bang/cards/model/playable_cards/weapon_card.dart';
 import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/core/lang/app_strings.dart';
+import 'package:bang/models/cards/playable_card_base.dart';
+import 'package:bang/models/cards/playable_cards/action_card.dart';
+import 'package:bang/models/cards/playable_cards/equipment_card.dart';
+import 'package:bang/models/cards/playable_cards/weapon_card.dart';
+import 'package:bang/models/enemy_player_dto.dart';
 import 'package:bang/models/message_dto.dart';
+import 'package:bang/models/my_player.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/auth_service.dart';
 import 'package:bang/services/game_service.dart';
@@ -17,7 +19,7 @@ import 'package:get/get.dart';
 
 class GameController extends GetxController {
   var _exitConfirmed = false;
-  var playerNumber = 7.obs;
+  late RxInt playerNumber;
   var isHandExpanded = false.obs;
   var isEquipmentViewExpanded = false.obs;
   RxInt highlightedIndex = (-1).obs;
@@ -30,6 +32,38 @@ class GameController extends GetxController {
   StateSetter? onMessageArrivedCallback;
   var messages = <MessageDto>[].obs;
   late String playerName;
+
+  late Rx<MyPlayer> myPlayer;
+  late RxList<EnemyPlayerDto> enemyPlayers;
+
+  var targetableCardIds = <String>[].obs;
+
+  late RxString currentlyHasRound;
+  Rx<String?> nextActionPlayerId = Rx(null);
+
+  @override
+  void onInit() {
+    playerNumber = gameService.playerAmount;
+    playerName = Get.find<AuthService>().player;
+    messages = gameService.messages;
+    enemyPlayers = gameService.enemyPlayers;
+    myPlayer = gameService.myPlayer;
+    currentlyHasRound = gameService.currentlyHasRound;
+    nextActionPlayerId = gameService.nextActionPlayerId;
+
+    handWidgets = [
+      for (int i = 0; i < hand().length; i++)
+        PlayableCard(
+          scale: 0.85,
+          card: hand[i],
+          canBeDragged: true,
+          onDragSuccessCallback: () => removeCard(i),
+          handCallback: () => highlight(i),
+          handCallbackInverse: () => highlight(-1),
+        ),
+    ].obs;
+    super.onInit();
+  }
 
   void sendMessage() {
     var message = chatTextController.text;
@@ -52,24 +86,34 @@ class GameController extends GetxController {
       highlightedIndex.value = i;
     else
       highlightedIndex.value = -1;
+    highlightTargets();
   }
 
-  @override
-  void onInit() {
-    playerName = Get.find<AuthService>().player;
-    messages = gameService.messages;
-    handWidgets = [
-      for (int i = 0; i < hand().length; i++)
-        PlayableCard(
-          scale: 0.85,
-          card: hand[i],
-          canBeDragged: true,
-          onDragSuccessCallback: () => removeCard(i),
-          handCallback: () => highlight(i),
-          handCallbackInverse: () => highlight(-1),
-        ),
-    ].obs;
-    super.onInit();
+  void highlightTargets([int? index]) {
+    var cardIndex = index ?? highlightedIndex();
+    if (cardIndex != -1) {
+      var cardId = myPlayer().cards[cardIndex].id;
+      var possibleTargets = _getPossibleTargets(cardId);
+      var possiblePlayers = enemyPlayers()
+          .where((player) => possibleTargets.contains(player.playerId))
+          .map((e) => e.playerId);
+
+      var possibleCards = enemyPlayers()
+          .map((player) => player.cardIds
+              .where((cardId) => possibleTargets.contains(cardId)))
+          .expand((i) => i);
+
+      targetableCardIds.value = [
+        ...possiblePlayers,
+        ...possibleCards,
+      ];
+    } else {
+      targetableCardIds.value = [];
+    }
+  }
+
+  List<String> _getPossibleTargets(String cardId) {
+    return [];
   }
 
   void scrollToBottom() {
@@ -90,6 +134,43 @@ class GameController extends GetxController {
     handWidgets().removeAt(idx);
     handWidgets.refresh();
   }
+
+  Future<bool> showBackPopupForResult() async {
+    await Get.defaultDialog<bool>(
+      title: AppStrings.assert_required.tr,
+      onWillPop: () => Future.value(false),
+      onConfirm: _exit,
+      onCancel: () => Future.value(false),
+      cancel: BangButton(
+        text: AppStrings.cancel.tr,
+        onPressed: Get.back,
+        height: 35,
+        width: 60,
+      ),
+      confirm: BangButton(
+        text: AppStrings.still_exit.tr,
+        onPressed: _exit,
+        height: 40,
+        width: 150,
+        isNormal: false,
+      ),
+      content: Text(
+        AppStrings.error_message_upon_game_exit.tr,
+        textAlign: TextAlign.center,
+      ),
+    );
+    var returnValue = _exitConfirmed;
+    _exitDone();
+    return Future.value(returnValue);
+  }
+
+  void _exit() {
+    _exitConfirmed = true;
+    Get.back();
+    AudioService.playMenuSong();
+  }
+
+  void _exitDone() => _exitConfirmed = false;
 
   final RxList hand = [
     ActionCard(
@@ -189,43 +270,6 @@ class GameController extends GetxController {
       range: 0,
     ),
   ].obs;
-
-  Future<bool> showBackPopupForResult() async {
-    await Get.defaultDialog<bool>(
-      title: AppStrings.assert_required.tr,
-      onWillPop: () => Future.value(false),
-      onConfirm: _exit,
-      onCancel: () => Future.value(false),
-      cancel: BangButton(
-        text: AppStrings.cancel.tr,
-        onPressed: Get.back,
-        height: 35,
-        width: 60,
-      ),
-      confirm: BangButton(
-        text: AppStrings.still_exit.tr,
-        onPressed: _exit,
-        height: 40,
-        width: 150,
-        isNormal: false,
-      ),
-      content: Text(
-        AppStrings.error_message_upon_game_exit.tr,
-        textAlign: TextAlign.center,
-      ),
-    );
-    var returnValue = _exitConfirmed;
-    _exitDone();
-    return Future.value(returnValue);
-  }
-
-  void _exit() {
-    _exitConfirmed = true;
-    Get.back();
-    AudioService.playMenuSong();
-  }
-
-  void _exitDone() => _exitConfirmed = false;
 
   final equipmentCards = [
     PlayableCard(

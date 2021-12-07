@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppColors {
+abstract class AppColors {
   static const background = Color(0xffFFEBC9);
   static const equipmentCardColor = Color(0xff6b8cc8);
   static const actionCardColor = Color(0xffd1aa63);

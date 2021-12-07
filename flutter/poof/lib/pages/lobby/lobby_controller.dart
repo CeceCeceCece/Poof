@@ -1,7 +1,7 @@
+import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/user_dto.dart';
-import 'package:bang/routes/routes.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/auth_service.dart';
 import 'package:bang/services/game_service.dart';
@@ -89,7 +89,7 @@ class LobbyController extends GetxController {
           errorCorrectionLevel: QrErrorCorrectLevel.Q,
           size: 100.0,
           embeddedImage: AssetImage(
-            'assets/icons/bang_logo.png',
+            AppAssetPaths.bangLogo,
           ),
           embeddedImageStyle: QrEmbeddedImageStyle(size: Size(30, 30)),
         ),
@@ -97,11 +97,15 @@ class LobbyController extends GetxController {
     );
   }
 
-  void join() {
-    var gameService = Get.put(GameService());
-    gameService.roomId.value = lobbyName();
-    Get.offAndToNamed(Routes.GAME);
+  Future<GameService> _initalizeGameService() async {
+    var service = Get.put(GameService());
+    await service.disconnect();
+    await service.initWebsocket();
+    return service;
   }
+
+  void joinGame(String gameId) => _initalizeGameService().then(
+      (service) => service.joinGame(gameId: gameId, gameName: lobbyName()));
 
   void resetQRBoolean() {
     showingQr.value = false;
@@ -133,4 +137,6 @@ class LobbyController extends GetxController {
     Get.back();
     AudioService.playMenuSong();
   }
+
+  void createGame() => lobbyService.createGame();
 }

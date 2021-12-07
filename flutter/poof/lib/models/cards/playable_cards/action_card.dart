@@ -11,11 +11,13 @@ class ActionCard extends PlayableCardBase {
       required String background,
       required String name,
       required CardValue value,
+      String id = '',
       required CardType type,
       required CardSuit suit})
       : super(
           background: background,
           suit: suit,
+          id: id,
           value: value,
           name: name,
           type: type,

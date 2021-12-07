@@ -1,3 +1,4 @@
+import 'package:bang/models/role_type.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -62,6 +63,21 @@ abstract class CardHelpers {
       (suit == CardSuit.Hearts || suit == CardSuit.Diamonds)
           ? Colors.red
           : Colors.black;
+
+  static String roleToString(RoleType role) {
+    switch (role) {
+      case RoleType.DeputySheriff:
+        return "vice";
+      case RoleType.Outlaw:
+        return 'outlaw';
+      case RoleType.Renegade:
+        return "renegade";
+      case RoleType.Sheriff:
+        return "sheriff";
+      case RoleType.None:
+        return "roleback";
+    }
+  }
 
   static String cardValueToString(CardValue value) {
     switch (value) {

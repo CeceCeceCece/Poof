@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:bang/cards/model/non_playable_cards/character_card.dart';
-import 'package:bang/cards/model/non_playable_cards/role_card.dart';
-import 'package:bang/cards/model/playable_cards/equipment_card.dart';
 import 'package:bang/core/app_colors.dart';
 import 'package:bang/core/helpers/card_helpers.dart';
+import 'package:bang/models/cards/non_playable_cards/character_card.dart';
+import 'package:bang/models/cards/non_playable_cards/role_card.dart';
+import 'package:bang/models/cards/playable_cards/equipment_card.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player.dart';
 import 'package:bang/widgets/bang_background.dart';
@@ -47,7 +47,10 @@ class GameView extends GetView<GameController> {
               children: [
                 for (int i = 0; i < controller.drawPileAmount() / 5; i++)
                   _buildDummyCardBack(),
-                PlayableCard.back(isDrawPile: true, extraElevation: 2),
+                PlayableCard.back(
+                    isDrawPile: true,
+                    extraElevation: 2,
+                    canBeTargeted: false), //TODO can be targeted
                 Container(
                   height: 30,
                   width: 30,
@@ -77,7 +80,8 @@ class GameView extends GetView<GameController> {
             controller.random.nextInt(5) - 2, controller.random.nextInt(5) - 2),
         child: Transform.rotate(
           angle: (pi / 180) * (controller.random.nextInt(7) - 3),
-          child: PlayableCard.back(isDrawPile: true, extraElevation: 2),
+          child: PlayableCard.back(
+              isDrawPile: true, extraElevation: 2, canBeTargeted: false),
         ),
       );
 
@@ -135,6 +139,83 @@ class GameView extends GetView<GameController> {
 
   List<Widget> _buildLayout(double height, double width) {
     switch (controller.playerNumber()) {
+      case 1:
+        return [
+          _buildPlayer(),
+        ];
+      case 2:
+        return [
+          Positioned(
+              child: EnemyPlayer(
+                cardIds: controller.enemyPlayers()[0].cardIds,
+                cardAmount: controller.enemyPlayers()[0].cardIds.length,
+                characterName: controller.enemyPlayers()[0].characterName,
+                equipment: controller
+                    .enemyPlayers()[0]
+                    .equipment, //controller.equipmentCards,
+                health: controller.enemyPlayers()[0].health,
+                playerName: controller.enemyPlayers()[0].playerName,
+                isSheriff: controller.enemyPlayers()[0].isSheriff,
+                id: controller.enemyPlayers()[0].playerId,
+
+                temporaryEffects: controller
+                    .enemyPlayers()[0]
+                    .temporaryEffects, //controller.temporaryEffectCards,
+                isTakingNextAction: controller.nextActionPlayerId() ==
+                    controller.enemyPlayers()[0].playerId,
+                canBeTargeted: controller
+                    .targetableCardIds()
+                    .contains(controller.enemyPlayers()[0].playerId),
+                currentlyHasRound: controller.currentlyHasRound() ==
+                    controller.enemyPlayers()[0].playerId,
+                hasTargetableCard: controller
+                    .enemyPlayers()[0]
+                    .cardIds
+                    .any((id) => controller.targetableCardIds().contains(id)),
+              ),
+              top: 40,
+              left: width / 2 - 100),
+          _buildPlayer(),
+        ];
+      case 3:
+        return [
+          Positioned(
+              child: EnemyPlayer(
+                left: true,
+                cardIds: controller.enemyPlayers()[0].cardIds,
+
+                cardAmount: controller.enemyPlayers()[0].cardIds.length,
+                characterName: controller.enemyPlayers()[0].characterName,
+                equipment: controller
+                    .enemyPlayers()[0]
+                    .equipment, //controller.equipmentCards,
+                health: controller.enemyPlayers()[0].health,
+                playerName: controller.enemyPlayers()[0].playerName,
+                isSheriff: controller.enemyPlayers()[0].isSheriff,
+                id: controller.enemyPlayers()[0].playerId,
+                temporaryEffects: controller.enemyPlayers()[0].temporaryEffects,
+              ),
+              top: height * 0.38,
+              left: 10),
+          Positioned(
+              child: EnemyPlayer(
+                right: true,
+                cardIds: controller.enemyPlayers()[1].cardIds,
+                cardAmount: controller.enemyPlayers()[1].cardIds.length,
+                characterName: controller.enemyPlayers()[1].characterName,
+                equipment: controller
+                    .enemyPlayers()[1]
+                    .equipment, //controller.equipmentCards,
+                health: controller.enemyPlayers()[1].health,
+                playerName: controller.enemyPlayers()[1].playerName,
+                isSheriff: controller.enemyPlayers()[1].isSheriff,
+                id: controller.enemyPlayers()[1].playerId,
+                temporaryEffects: controller.enemyPlayers()[1].temporaryEffects,
+              ),
+              top: height * 0.38,
+              right: 10),
+          _buildPlayer(),
+        ];
       case 4:
         return _buildFourPlayerLayout(width: width, height: height);
       case 5:
@@ -403,20 +484,46 @@ class GameView extends GetView<GameController> {
     return Obx(() => Align(
           alignment: Alignment.bottomCenter,
           child: Player(
-            health: 3,
-            characterCard: CharacterCard(
-                background: 'willythekid', health: 4, name: 'willythekid'),
-            roleCard: RoleCard(name: 'sheriff', background: 'sheriff'),
-            cardsInHand: controller.handWidgets,
-            equipment: controller.equipmentList,
-            handDoubleTap: controller.toggleExpandedHand,
-            highlightedIndexInHand: controller.highlightedIndex(),
-            isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
-            isHandViewExpanded: controller.isHandExpanded(),
-            temporaryEffects: controller.temporaryEffectList,
-            toggleEquipmentView: controller.toggleEquipmentView,
-          ),
+              health: controller.myPlayer().health,
+              characterCard: CharacterCard(
+                  background: controller.myPlayer().characterName,
+                  health: controller.myPlayer().health,
+                  name: controller.myPlayer().characterName),
+              roleCard: RoleCard(role: controller.myPlayer().role),
+              cardsInHand: _mapCards(),
+              equipment: [], // controller.equipmentList,
+              handDoubleTap: controller.toggleExpandedHand,
+              highlightedIndexInHand: controller.highlightedIndex(),
+              isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
+              isHandViewExpanded: controller.isHandExpanded(),
+              temporaryEffects: [], //controller.temporaryEffectList,
+              toggleEquipmentView: controller.toggleEquipmentView,
+              currentRoundGlow:
+                  controller.currentlyHasRound() == controller.myPlayer().id,
+              nextActionGlow:
+                  controller.nextActionPlayerId() == controller.myPlayer().id,
+              targetGlow: controller
+                  .targetableCardIds()
+                  .contains(controller.myPlayer().id)),
         ));
+  }
+
+  List<Widget> _mapCards() {
+    var cards = controller.myPlayer().cards;
+    return [
+      for (int i = 0; i < cards.length; i++)
+        PlayableCard(
+          scale: 0.85,
+          card: cards[i],
+          canBeDragged: true,
+          onDragStartedCallback: () => controller.highlightTargets(i),
+          onDragEndedCallback: () => controller.highlightTargets(-1),
+          onDragSuccessCallback: () => controller.removeCard(i),
+          handCallback: () => controller.highlight(i),
+          handCallbackInverse: () => controller.highlight(-1),
+          targetGlow: controller.targetableCardIds().contains(cards[i].id),
+        )
+    ];
   }
 
   void _buildChat(BuildContext context) {

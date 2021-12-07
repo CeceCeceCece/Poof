@@ -12,11 +12,13 @@ class WeaponCard extends PlayableCardBase {
       required String name,
       required CardValue value,
       required CardType type,
+      String id = '',
       required CardSuit suit})
       : super(
           background: background,
           suit: suit,
           value: value,
+          id: id,
           name: name,
           type: type,
         ) {

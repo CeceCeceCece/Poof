@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:bang/cards/model/playable_card_base.dart';
-import 'package:bang/cards/model/playable_cards/action_card.dart';
 import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/core/lang/app_strings.dart';
+import 'package:bang/models/cards/playable_card_base.dart';
+import 'package:bang/models/cards/playable_cards/action_card.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -19,7 +19,7 @@ class PlayableCard extends StatefulWidget {
   final bool canBeDragged;
   final double highlightMultiplier;
   late final bool isInsideHand;
-
+  final bool targetGlow;
   final bool showBackPermanently;
 
   PlayableCard({
@@ -34,21 +34,30 @@ class PlayableCard extends StatefulWidget {
     this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
     this.handCallbackInverse,
+    this.onDragStartedCallback,
+    this.onDragEndedCallback,
+    this.targetGlow = false,
   }) : super(key: key) {
     this.isInsideHand = handCallback != null;
   }
 
   final VoidCallback? onDragSuccessCallback;
+  final VoidCallback? onDragEndedCallback;
+  final VoidCallback? onDragStartedCallback;
   final VoidCallback? handCallback;
   final VoidCallback? handCallbackInverse;
 
   @override
   _PlayableCardState createState() => _PlayableCardState();
 
-  static back({bool isDrawPile = false, double extraElevation = 3}) =>
+  static back(
+          {bool isDrawPile = false,
+          double extraElevation = 3,
+          required bool canBeTargeted}) =>
       PlayableCard(
         scale: 0.5,
         showBackPermanently: true,
+        targetGlow: canBeTargeted,
         canBeFocused: false,
         extraElevation: extraElevation,
         card: ActionCard(
@@ -72,6 +81,25 @@ class _PlayableCardState extends State<PlayableCard>
   final _cardFocusingDuration = Duration(milliseconds: 100);
   bool isElevated = false;
   double angle = 0;
+
+  List<BoxShadow> _setGlow() {
+    if (isElevated) return [];
+    if (widget.targetGlow)
+      return [
+        BoxShadow(
+          color: Colors.red.shade700,
+          spreadRadius: 1,
+          blurRadius: 5,
+        ),
+        BoxShadow(
+          color: Colors.red.shade700,
+          spreadRadius: -1,
+          blurRadius: 5,
+        )
+      ];
+
+    return [];
+  }
 
   void _toggleCardFocus() {
     setState(() {
@@ -114,6 +142,9 @@ class _PlayableCardState extends State<PlayableCard>
                   borderRadius: BorderRadius.circular(10 * widget.scale),
                   elevation: isElevated && !widget.isInsideHand ? 40 : 0,
                   child: AnimatedContainer(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10 * widget.scale),
+                        boxShadow: _setGlow()),
                     height: height,
                     width: width,
                     duration: _cardFocusingDuration,
@@ -130,6 +161,10 @@ class _PlayableCardState extends State<PlayableCard>
                     transform: Matrix4.identity()..rotateY(pi),
                     child: AnimatedContainer(
                         height: height,
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(10 * widget.scale),
+                            boxShadow: _setGlow()),
                         width: width,
                         duration: _cardFocusingDuration,
                         child: render(showBack: true)),
@@ -142,7 +177,13 @@ class _PlayableCardState extends State<PlayableCard>
               ..rotateY(val),
             child: widget.canBeDragged
                 ? Draggable<String>(
-                    onDragCompleted: widget.onDragSuccessCallback,
+                    onDragStarted: widget.onDragStartedCallback,
+                    onDragCompleted: () {
+                      widget.onDragSuccessCallback?.call();
+                      widget.onDragEndedCallback?.call();
+                    },
+                    onDraggableCanceled: (_, __) =>
+                        widget.onDragEndedCallback?.call(),
                     onDragEnd: (DraggableDetails details) =>
                         !details.wasAccepted
                             ? Fluttertoast.showToast(
