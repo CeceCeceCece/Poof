@@ -26,7 +26,7 @@ class PlayableCard extends StatefulWidget {
   final bool shadowed;
   late final List<String> possibleTargets;
   final bool Function(List<String>? data)? dragOnWillAccept;
-  final void Function(List<String> data)? dragOnAccept;
+  final void Function(String selected)? dragOnAccept;
 
   PlayableCard({
     Key? key,
@@ -224,10 +224,34 @@ class _PlayableCardState extends State<PlayableCard>
                         !details.wasAccepted
                             ? Fluttertoast.showToast(
                                 msg: AppStrings.not_valid_target.tr)
-                            : {},
+                            : {Dev.log('DRAGGED CARD ID: ${widget.card.id}')},
                     data: widget.possibleTargets,
-                    feedback: Image.asset(AppAssetPaths.crossHairPath,
-                        width: 50, height: 50),
+                    feedback: Container(
+                      width: 80,
+                      height: 80,
+                      child: Column(
+                        children: [
+                          Spacer(),
+                          Row(
+                            children: [
+                              Spacer(),
+                              Spacer(),
+                              Container(
+                                width: 40,
+                                height: 40,
+                                child: Image.asset(
+                                  AppAssetPaths.crossHairPath,
+                                  fit: BoxFit.fitWidth,
+                                  width: 30,
+                                  height: 30,
+                                ),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                     childWhenDragging: ColorFiltered(
                       child: AnimatedOpacity(
                         opacity: 0.8,
@@ -248,7 +272,8 @@ class _PlayableCardState extends State<PlayableCard>
                       return card;
                     },
                     onWillAccept: widget.dragOnWillAccept,
-                    onAccept: widget.dragOnAccept,
+                    onAccept: (data) =>
+                        widget.dragOnAccept?.call(widget.card.id),
                   ),
           );
         },

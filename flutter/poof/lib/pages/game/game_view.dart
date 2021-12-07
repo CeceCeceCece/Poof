@@ -1,3 +1,4 @@
+import 'dart:developer' as Dev;
 import 'dart:math';
 
 import 'package:bang/core/app_colors.dart';
@@ -73,6 +74,14 @@ class GameView extends GetView<GameController> {
                   shadowed: true,
                   targetGlow: controller.discardPileGlow(),
                   extraElevation: 6,
+                  dragOnWillAccept: (data) {
+                    var returnValue =
+                        data?.contains(controller.myPlayer().id) ?? false;
+
+                    Dev.log(returnValue.toString());
+                    return true;
+                  },
+                  dragOnAccept: controller.targetSelected,
                   card: ActionCard(
                     range: 0,
                     background: 'bang',
@@ -569,7 +578,7 @@ class GameView extends GetView<GameController> {
               : [],
           onDragStartedCallback: () => controller.highlightTargets(i),
           onDragEndedCallback: () => controller.highlightTargets(-1),
-          onDragSuccessCallback: () => controller.removeCard(i),
+          onDragSuccessCallback: () => controller.targetSelected(cards[i].id),
           handCallback: () => controller.highlight(i),
           handCallbackInverse: () => controller.highlight(-1),
           targetGlow: controller.targetableCardIds().contains(cards[i].id),

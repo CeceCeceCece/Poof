@@ -1,3 +1,4 @@
+import 'dart:developer' as Dev;
 import 'dart:math';
 
 import 'package:bang/core/helpers/card_helpers.dart';
@@ -73,6 +74,11 @@ class GameController extends GetxController {
     super.onInit();
   }
 
+  void targetSelected(String targetedCardId) {
+    Dev.log(targetedCardId);
+    Dev.log('success');
+  }
+
   void sendMessage() {
     var message = chatTextController.text;
     gameService.sendMessage(message: message);
@@ -126,10 +132,10 @@ class GameController extends GetxController {
     );
   }
 
-  void removeCard(int idx) async {
+  /*void removeCard(int idx) async {
     handWidgets().removeAt(idx);
     handWidgets.refresh();
-  }
+  }*/
 
   Future<bool> showBackPopupForResult() async {
     await Get.defaultDialog<bool>(
