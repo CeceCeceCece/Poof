@@ -37,17 +37,9 @@ namespace Application.Models.CardLogic
         {
             var target = character.Character.Game.GetReactionCharacter().Map(character.Hub);
 
-            if (dto.CardIds is null || dto.CardIds.Count == 0)
+            if (dto.CardIds is null || dto.CardIds.Count == 0 || !await target.TryHasCardAsync(dto.CardIds.First(), "Missed!"))
             {
                 await target.DecreaseLifepointAsync(1);
-            }
-            else
-            {
-                var hasCard = await target.TryHasCardAsync(dto.CardIds.First(), "Missed!");
-                if (!hasCard)
-                {
-                    await target.DecreaseLifepointAsync(1);
-                }
             }
             await character.Character.Game.AllReactNextAsync(character.Hub);
         }

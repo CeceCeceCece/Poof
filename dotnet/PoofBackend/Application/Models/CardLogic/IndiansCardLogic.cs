@@ -31,7 +31,6 @@ namespace Application.Models.CardLogic
         {
             await character.Character.Game.SetAllReactAsync(character.Character.Id, character.Hub, Card);
             await character.LeaveCardAsync(Card.Id);
-            //Hub értesítés hogy reagáljon bang-al.
 
         }
         public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)

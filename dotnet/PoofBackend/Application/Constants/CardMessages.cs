@@ -59,6 +59,9 @@ namespace Application.Constants
         //Scope
         public static string SCOPE_OPTION = "Szerelje fel ezt a kártyát a látótáv növeléséhez.";
 
+        //Jail
+        public static string SHERIFF= "A Sheriffet nem lehet börtönbe zárni.";
+
 
     }
 }

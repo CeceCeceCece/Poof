@@ -11,10 +11,11 @@ namespace Application.Models.CharacterLogic
 
         public override async Task DecreaseLifepointAsync(int point)
         {
-            if(point == 1 && Character.Game.CurrentUserId != Character.Id) 
+            if (point == 1 && Character.Game.CurrentUserId != Character.Id) 
             {
                 var card = await Character.Game.GetCurrentCharacter().Map(Hub).LeaveCardRandomAsync();
-                await DrawAsync(new List<GameCard> { card });
+                if(card is not null)
+                    await DrawAsync(new List<GameCard> { card });
             }
             await base.DecreaseLifepointAsync(point);
         }

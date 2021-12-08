@@ -19,7 +19,8 @@ namespace Application.Models.CharacterLogic
         {
             if (Character.Game.DiscardPile.Count <= 0)
             {
-                await base.DrawAsync();
+                await base.DrawReactAsync(null);
+                return;
             }
             Character.Game.Event = GameEvent.Draw;
             var card = Character.Game.DiscardPile.Last();

@@ -46,7 +46,7 @@ namespace Application.Models.CardLogic
             else 
             {
                 await character.Character.Game.GetNextCharacter().Map(character.Hub).EquipeCardAsync(Card);
-                await character.UnequipeCard(Card.Id);
+                await character.LeaveCardAsync(Card.Id, true);
             }
         }
     }

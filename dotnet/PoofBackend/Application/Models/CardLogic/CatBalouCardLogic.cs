@@ -20,7 +20,7 @@ namespace Application.Models.CardLogic
             {
                 Description = CardMessages.CHOOSE_ONE_CARD,
                 RequireCards = true,
-                PossibleTargets = character.Character.Game.GetOtherCharacters()
+                PossibleTargets = character.Character.Game.GetAllPlayer()
             };
 
             await character.ShowOptionAsync(option);

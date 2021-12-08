@@ -58,7 +58,7 @@ namespace Application.Models.CharacterLogic
                     Character.EquipedCards.Remove(equiped);
 
                     if (Hub is not null)
-                        await Hub.Clients.Group(Character.Game.Name).CardUnequiped(new CardIdViewModel(cardId, Character.Id));
+                        await Hub.Clients.Group(Character.Game.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
 
                     return equiped;
                 }
@@ -69,8 +69,8 @@ namespace Application.Models.CharacterLogic
                     Character.Weapon = null;
 
                     if (Hub is not null)
-                        await Hub.Clients.Group(Character.Game.Name).SetWeapon(Character.Id, null);
-                    
+                        await Hub.Clients.Group(Character.Game.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
+
                     return weapon;
                 }
             }
@@ -84,6 +84,8 @@ namespace Application.Models.CharacterLogic
         }
         public async Task<GameCard> LeaveCardRandomAsync()
         {
+            if (Character.Deck.Count < 0)
+                return null;
             var rand = new Random().Next(Character.Deck.Count);
             return await LeaveCardAsync(Character.Deck.ElementAt(rand).Id);
         }
@@ -197,7 +199,6 @@ namespace Application.Models.CharacterLogic
                 {
                     await Hub.Clients.Group(Character.Game.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
                 }
-                    
             }
             else 
             {
@@ -207,7 +208,7 @@ namespace Application.Models.CharacterLogic
                 await game.AddToDiscardPileAsync(Hub, equipedCard);
 
                 if (Hub is not null)
-                    await Hub.Clients.Group(Character.Game.Name).CardUnequiped(new CardIdViewModel(cardId, Character.Id));
+                    await Hub.Clients.Group(Character.Game.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
             }
         }
 
@@ -218,7 +219,7 @@ namespace Application.Models.CharacterLogic
             Character.EquipedCards.Remove(equipedCard);
 
             if (Hub is not null)
-                await Hub.Clients.Group(Character.Name).CardUnequiped(new CardIdViewModel(cardId, Character.Id));
+                await Hub.Clients.Group(Character.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
         }
 
         public virtual async Task EquipeCardAsync(string cardId) 

@@ -19,11 +19,14 @@ namespace Application.Models.CardLogic
 
         public override async Task OptionAsync(BaseCharacterLogic character)
         {
+            var targetList = character.GetNeighbours(false);
+            targetList.Add(character.Character.Id);
+
             var option = new OptionViewModel
             {
                 Description = CardMessages.PANIC_OPTION,
                 RequireCards = true,
-                PossibleTargets = character.GetNeighbours(false)
+                PossibleTargets = targetList
             };
             await character.ShowOptionAsync(option);
         }

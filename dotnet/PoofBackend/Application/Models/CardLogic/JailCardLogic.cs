@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Exceptions;
 using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.Services;
@@ -31,6 +32,8 @@ namespace Application.Models.CardLogic
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
             var target = character.Character.Game.GetCharacterById(dto.UserId).Map(character.Hub);
+            if (target.Character.Role == RoleType.Sheriff)
+                throw new PoofException(CardMessages.SHERIFF);
             await target.EquipeCardAsync(Card);
             await character.LeaveCardAsync(Card.Id);
         }

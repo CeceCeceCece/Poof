@@ -46,14 +46,9 @@ namespace Application.Models.CardLogic
         {
             var target = character.Character.Game.GetReactionCharacter().Map(character.Hub);
 
-            if (dto is null || dto.CardIds is null || dto.CardIds.Count == 0)
+            if (dto is null || dto.CardIds is null || dto.CardIds.Count == 0 || !await target.TryHasCardAsync(dto.CardIds.First(), "Missed!"))
             {
                 await target.DecreaseLifepointAsync(1);
-            }
-            else 
-            {
-                if (!await target.TryHasCardAsync(dto.CardIds.First(), "Missed!"))
-                    throw new PoofException(CardMessages.BANG_ANSWEAR_ERROR);
             }
             await character.Character.Game.EndReactionAsync(character.Hub);
         }

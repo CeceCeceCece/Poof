@@ -89,10 +89,11 @@ namespace Domain.Entities
             game.Event = GameEvent.SingleReact;
             game.NextCard = card;
             game.NextUserId = userId;
+            await game.AddToDiscardPileAsync(hub, game.NextCard);
 
             //Értesíteni hogy válaszolni kell
-            if(hub is not null)
-                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, userId, card == null ? null : new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value)));
+            if (hub is not null)
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(userId, card == null ? null : new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value)));
 
             var nextCharacter = game.GetReactionCharacter();
             foreach (var equipedCard in nextCharacter.EquipedCards)
@@ -106,7 +107,7 @@ namespace Domain.Entities
             game.Event = game.Event == GameEvent.CallerReact ? GameEvent.SingleReact : GameEvent.CallerReact;
             //Értesíteni hogy válaszolni kell
             if (hub is not null)
-                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, game.Event == GameEvent.CallerReact ? game.CurrentUserId : game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event == GameEvent.CallerReact ? game.CurrentUserId : game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
         }
 
         public static async Task SetAllReactAsync(this Game game, string currentUserId, PoofGameHub hub, GameCard card, bool currentStart = false)
@@ -131,10 +132,11 @@ namespace Domain.Entities
             }
             game.Event = GameEvent.AllReact;
             game.NextCard = card;
+            await game.AddToDiscardPileAsync(hub, game.NextCard);
 
             //Értesíteni hogy válaszolni kell
             if (hub is not null)
-                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel( game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
         }
 
         public static async Task AllReactNextAsync(this Game game, PoofGameHub hub)
@@ -160,7 +162,7 @@ namespace Domain.Entities
 
                 //Értesíteni hogy válaszolni kell
                 if (hub is not null)
-                    await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
+                    await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
             }
         }
 
@@ -170,13 +172,12 @@ namespace Domain.Entities
             game.NextUserId = null;
             if (game.NextCard is not null)
             {
-                game.DiscardPile.Add(game.NextCard);
                 game.NextCard = null;
             }
 
             //Értesíteni hogy válaszolni kell
             if (hub is not null)
-                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.Event, game.CurrentUserId, null));
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel( game.CurrentUserId, null));
         }
 
         public static Character GetReactionCharacter(this Game game) => game.Event switch
@@ -282,6 +283,8 @@ namespace Domain.Entities
                 throw new PoofException(GameMessages.KOR_VEGE_NEM_LEHETSEGES);
             await game.EndReactionAsync(null);
 
+            current.BangState = current.BangState == BangState.None ? BangState.One : current.BangState;
+
             var next = game.GetNextCharacter().Map(hub);
             
             game.CurrentUserId = next.Character.Id;
@@ -290,7 +293,9 @@ namespace Domain.Entities
             if (hub is not null)
                 await hub.Clients.Group(game.Name).TurnStarted(game.CurrentUserId);
 
-            foreach (var card in next.Character.EquipedCards)
+            var copiedList = new List<GameCard>(next.Character.EquipedCards);
+
+            foreach (var card in copiedList)
             {
                 await card.Map().OnActiveAsync(next);
             }

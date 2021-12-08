@@ -1,4 +1,5 @@
-﻿using Application.SignalR;
+﻿using Application.Models.DTOs;
+using Application.SignalR;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
@@ -11,7 +12,7 @@ namespace Application.Models.CharacterLogic
     {
         public BlackJackCharacter(Character character, PoofGameHub hub) : base(character,hub) {}
 
-        public virtual async Task Draw(Game game)
+        public override async Task DrawReactAsync(OptionDto options)
         {
             var cards = Character.Game.GetAndRemoveCards(2);
             var second = cards.ElementAt(1);
@@ -20,7 +21,7 @@ namespace Application.Models.CharacterLogic
                 cards.AddRange(Character.Game.GetAndRemoveCards(1));
             }
             await DrawAsync(cards);
-            await Character.Game.EndReactionAsync(Hub);
+            Character.Game.Event = GameEvent.None;
 
             if(Hub is not null)
                 await Hub.Clients.Group(Character.Game.Name).ShowCard(new CardViewModel(second.Id, second.Card.Name, second.Card.Type, second.Card.Suite, second.Card.Value));
