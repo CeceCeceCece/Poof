@@ -4,10 +4,8 @@ using Domain;
 using Domain.Constants.Enums;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using UnitTests.ServiceTests.Helpers;
 using Xunit;
@@ -43,7 +41,7 @@ namespace UnitTests.ServiceTests
 
             Assert.NotNull(game);
             Assert.Equal("Test", game.Name);
-            Assert.True(game.Characters.All(x => x.Deck.Count == 4));
+            Assert.True(game.Characters.All(x => x.Deck.Count == x.LifePoint || (x.Role == RoleType.Sheriff && x.Deck.Count == x.LifePoint + 1)));
             Assert.NotNull(game.Deck.First().Card);
             Assert.NotNull(game.Characters.First().Deck.First().Card);
             Assert.NotNull(game.Characters.First().PersonalCard);

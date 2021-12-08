@@ -276,10 +276,10 @@ namespace Domain.Entities
                 await hub.Clients.Group(game.Name).SetDiscardPile(new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value));
         }
 
-        public static async Task EndTurnAsync(this Game game, PoofGameHub hub)
+        public static async Task EndTurnAsync(this Game game, PoofGameHub hub, bool jail = false)
         {
             var current = game.GetCurrentCharacter();
-            if (current.Deck.Count > current.LifePoint)
+            if (!jail && current.Deck.Count > current.LifePoint)
                 throw new PoofException(GameMessages.KOR_VEGE_NEM_LEHETSEGES);
             await game.EndReactionAsync(null);
 

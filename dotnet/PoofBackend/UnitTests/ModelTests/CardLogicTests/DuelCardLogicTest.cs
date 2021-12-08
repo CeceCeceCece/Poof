@@ -40,6 +40,7 @@ namespace UnitTests
             Assert.Equal(game.NextCard.Id, cardLogic.Card.Id);
             Assert.Equal(game.NextUserId, target.Character.Id);
             Assert.Equal(GameEvent.SingleReact, game.Event);
+            Assert.Single(game.DiscardPile);
         }
         [Fact]
         public async Task AnswearAsyncTest()
@@ -102,7 +103,7 @@ namespace UnitTests
             Assert.Null(game.NextCard);
             Assert.Null(game.NextUserId);
             Assert.Equal(GameEvent.None, game.Event);
-            Assert.Single(game.DiscardPile);
+            Assert.Empty(game.DiscardPile);
         }
 
         [Fact]
@@ -160,8 +161,7 @@ namespace UnitTests
             Assert.Null(game.NextCard);
             Assert.Null(game.NextUserId);
             Assert.Equal(GameEvent.None, game.Event);
-            Assert.Single(game.DiscardPile);
-            Assert.Equal(game.DiscardPile.First().Id , cardLogic.Card.Id);
+            Assert.Empty(game.DiscardPile);
         }
 
 

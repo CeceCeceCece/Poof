@@ -62,7 +62,7 @@ namespace UnitTests
             Assert.Equal(cardLogic.Card.Id, target.Character.EquipedCards.First().Id);
             Assert.Null(game.NextUserId);
             Assert.Null(game.NextCard);
-            Assert.Equal(2,game.DiscardPile.Count);
+            Assert.Single(game.DiscardPile);
         }
     }
 }

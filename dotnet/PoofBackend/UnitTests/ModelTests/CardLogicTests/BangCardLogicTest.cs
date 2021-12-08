@@ -34,6 +34,7 @@ namespace UnitTests
             Assert.Equal(game.Characters.Last().Id, game.NextUserId);
             Assert.Equal(currentPlayerBefore, character.Character.Deck.Count + 1);
             Assert.Equal(logic.Card, game.NextCard);
+            Assert.Single(game.DiscardPile);
         }
 
         [Fact]
@@ -65,7 +66,6 @@ namespace UnitTests
             Assert.Null(game.NextUserId);
             Assert.Null(game.NextCard);
             Assert.Equal(before, game.Characters.Last().Deck.Count + 1);
-            Assert.Equal(game.DiscardPile.First().Id, card.Id);
         }
 
         [Fact]

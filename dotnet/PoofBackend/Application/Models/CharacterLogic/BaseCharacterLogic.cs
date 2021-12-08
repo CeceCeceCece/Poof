@@ -124,7 +124,18 @@ namespace Application.Models.CharacterLogic
             Character.LifePoint -= point;
             if(Character.LifePoint <= 0) 
             {
-                await DeadAsync();
+                var beers = Character.Deck.Where(x => x.Card.Name == "Beer").ToList();
+                if(beers.Count >= point) 
+                {
+                    foreach (var beer in beers)
+                    {
+                        await ActivateCardAsync(beer.Id, null);
+                    }
+                }
+                else 
+                {
+                    await DeadAsync();
+                }
             }
 
             if (Hub is not null)
@@ -152,7 +163,6 @@ namespace Application.Models.CharacterLogic
                 await Hub.Clients.Group(Character.Game.Name).PlayerDied(new CharacterDiedViewModel(Character.Id, Character.Role));
 
             Character.Game.Characters.Remove(Character);
-            Character.Game = null;
 
             await Character.Game.CheckWinAsync(Hub);
         }

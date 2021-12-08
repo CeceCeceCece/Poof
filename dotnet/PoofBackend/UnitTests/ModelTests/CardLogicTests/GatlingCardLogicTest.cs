@@ -33,6 +33,7 @@ namespace UnitTests
             Assert.Equal(game.NextCard.Id, cardLogic.Card.Id);
             Assert.Equal(game.NextUserId, game.Characters.ElementAt(1).Id);
             Assert.Equal(GameEvent.AllReact, game.Event);
+            Assert.Single(game.DiscardPile);
         }
         [Fact]
         public async Task AnswearAsyncTest()
@@ -116,7 +117,7 @@ namespace UnitTests
             Assert.Null(game.NextCard);
             Assert.Null(game.NextUserId);
             Assert.Equal(GameEvent.None, game.Event);
-            Assert.Equal(2, game.DiscardPile.Count);
+            Assert.Single(game.DiscardPile);
             Assert.Equal(4, target.Character.LifePoint);
         }
     }

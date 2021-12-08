@@ -23,7 +23,7 @@ namespace Application.Models.CardLogic
             {
                 Description = CardMessages.CHOOSE_ONE_PLAYER,
                 RequireCards = false,
-                PossibleTargets = character.Character.Game.GetOtherCharacters()
+                PossibleTargets = character.Character.Game.Characters.Where(x => x.Id != character.Character.Id && x.Role != RoleType.Sheriff).Select(x => x.Id).ToList()
             };
 
             await character.ShowOptionAsync(option);
@@ -47,7 +47,7 @@ namespace Application.Models.CardLogic
                 await character.DropCardAsync(Card.Id);
                 if(card.Card.Suite != CardSuits.Hearths) 
                 {
-                    await character.Character.Game.EndTurnAsync(character.Hub);                   
+                    await character.Character.Game.EndTurnAsync(character.Hub, true);                   
                 }
             }
 

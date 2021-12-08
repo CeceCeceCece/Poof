@@ -167,24 +167,30 @@ namespace Application.Services
                 .SingleOrDefaultAsync(x => x.Id == groupId, cancellationToken);
         }
 
-        public async Task<Game> RemoveGameAsync(string gameId, CancellationToken cancellationToken = default)
+        public async Task RemoveGameAsync(string gameId, CancellationToken cancellationToken = default)
         {
             var game = await GetGameAsync(gameId, cancellationToken);
             foreach (var character in game.Characters)
             {
-                await Hub.Groups.RemoveFromGroupAsync(character.ConnectionId, game.Name, cancellationToken);
+                if (Hub is not null)
+                    await Hub.Groups.RemoveFromGroupAsync(character.ConnectionId, game.Name, cancellationToken);
                 context.GameCards.RemoveRange(character.Deck);
                 context.GameCards.RemoveRange(character.EquipedCards);
-                context.GameCards.Remove(character.Weapon);
+                if (character.Weapon is not null)
+                    context.GameCards.Remove(character.Weapon);
             }
-            context.Messages.RemoveRange(game.Messages);
-            context.Characters.RemoveRange(game.Characters);
             context.GameCards.RemoveRange(game.Deck);
             context.GameCards.RemoveRange(game.DiscardPile);
+            context.Messages.RemoveRange(game.Messages);
+            context.Characters.RemoveRange(game.Characters);
+
+            if (game.NextCard is not null)
+                context.GameCards.Remove(game.NextCard);
+
+            game.NextCard = null;
             context.Games.Remove(game);
             context.Characters.RemoveRange(await context.Characters.Where(x => x.Game == null).ToListAsync(cancellationToken));
             await context.SaveChangesAsync(cancellationToken);
-            return game;
         }
 
         public async Task SendMessageAsync(string gameId, string playerId , Message message, CancellationToken cancellationToken = default)
@@ -230,8 +236,8 @@ namespace Application.Services
                 throw new PoofException(GameMessages.NEM_JATSZHATSZ_KI_KARTYAT);
 
             await game.GetCharacterById(playerId).Map(Hub).ActivateCardAsync(cardId, dto);
-            await CheckGameEnd(game);
             await context.SaveChangesAsync(cancellationToken);
+            await CheckGameEnd(game);
         }
 
         public async Task CardAnswearAsync(string gameId, string playerId, OptionDto dto, CancellationToken cancellationToken = default)
@@ -242,8 +248,8 @@ namespace Application.Services
                 throw new PoofException(GameMessages.NEM_REAGALHATSZ);
 
             await game.GetCharacterById(playerId).Map(Hub).AnswearCardAsync(dto);
-            await CheckGameEnd(game);
             await context.SaveChangesAsync(cancellationToken);
+            await CheckGameEnd(game);
         }
 
         public async Task CheckGameEnd(Game game) 
@@ -261,6 +267,7 @@ namespace Application.Services
                 throw new PoofException(GameMessages.KOR_VEGE_NEM_LEHETSEGES);
             await game.EndTurnAsync(Hub);
             await context.SaveChangesAsync(cancellationToken);
+            await CheckGameEnd(game);
         }
 
         public async Task DiscardAsync(string gameId, string playerId, List<string> cardIds, CancellationToken cancellationToken = default)
