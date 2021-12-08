@@ -339,17 +339,21 @@ class GameService extends ServiceBase {
   }
 
   void _cardsDropped(List<CardIdDto> cards) {
-    //TODO EQUIPPED ÉS TEMPORARY
     log('cards dropped' + cards.toString());
     cards.forEach((card) {
       if (card.characterId == myPlayer().id) {
         myPlayer().cards.removeWhere((myCard) => myCard.id == card.cardId);
+        myPlayer().equipment.removeWhere((myCard) => myCard.id == card.cardId);
+        myPlayer()
+            .temporaryEffects
+            .removeWhere((myCard) => myCard.id == card.cardId);
         myPlayer.refresh();
       } else {
-        enemyPlayers()
-            .firstWhere((player) => player.playerId == card.characterId)
-            .cardIds
-            .removeWhere((cardId) => cardId == card.cardId);
+        var enemy = enemyPlayers()
+            .firstWhere((player) => player.playerId == card.characterId);
+        enemy.cardIds.removeWhere((cardId) => cardId == card.cardId);
+        enemy.temporaryEffects.removeWhere((temp) => temp.id == card.cardId);
+        enemy.equipment.removeWhere((eq) => eq.id == card.cardId);
         enemyPlayers.refresh();
       }
     });
