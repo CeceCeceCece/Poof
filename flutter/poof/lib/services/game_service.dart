@@ -26,6 +26,7 @@ import 'package:bang/routes/routes.dart';
 import 'package:bang/services/lobby_service.dart';
 import 'package:bang/services/service_base.dart';
 import 'package:bang/services/shared_preference_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:signalr_core/signalr_core.dart';
@@ -468,10 +469,21 @@ class GameService extends ServiceBase {
   }
 
   void _showCard(CardDto card) {
-    log('${card.name}');
+    log('${card.name} ${card.suite} ${card.value}');
   }
 
-  void _setGameEvent(GameEventDto gameEvent) {}
+  void _setGameEvent(GameEventDto gameEvent) {
+    if (gameEvent.card == null) {
+      nextActionPlayerId.value = null;
+      return;
+    }
+    nextActionPlayerId.value = gameEvent.characterId;
+    if (gameEvent.characterId == myPlayer().id)
+      Fluttertoast.showToast(
+          msg: 'Az alábbi lapra kell reagálnod: ${gameEvent.card!.name}');
+
+    log('GAME EVENT, CARD: ${gameEvent.card?.name}, , ID: ${gameEvent.characterId}');
+  }
 
   void _showOption(OptionDto optionDto) {
     log('${optionDto.possibleTargets.toString()}');
@@ -528,7 +540,7 @@ class GameService extends ServiceBase {
     await _connection.invoke('JoinGame', args: [gameId]);
   }
 
-  void answerCard({required OptionDto option}) async {
+  void answerCard({required OptionCommand option}) async {
     await _connection.invoke('AnswearCard', args: [
       gameId,
       option.toJson(),
@@ -639,6 +651,7 @@ class GameService extends ServiceBase {
   }
 
   void _onPlayerDied(PlayerDiedDto playerDied) {
+    log('player died');
     if (playerDied.userId == myPlayer().id) {
       myPlayer().health = 0;
       myPlayer().equipment.clear();
@@ -649,7 +662,9 @@ class GameService extends ServiceBase {
       var player = enemyPlayers()
           .firstWhere((player) => player.playerId == playerDied.userId);
       player.health = 0;
+      player.role = playerDied.role;
       player.equipment.clear();
+      player.isDead = true;
       player.temporaryEffects.clear();
       player.cardIds.clear();
       myPlayer.refresh();
@@ -657,5 +672,15 @@ class GameService extends ServiceBase {
     }
   }
 
-  void _onWinnerIs(WinnerIsDto winnerIs) {}
+  void _onWinnerIs(WinnerIsDto winnerIs) async {
+    log('winner is ${winnerIs.winner.toString()}');
+    Fluttertoast.showToast(msg: 'Győztek a ${winnerIs.winner.toString()}');
+    Future.delayed(
+        Duration(
+          seconds: 3,
+        ), () async {
+      await disconnect();
+      Get.offAndToNamed(Routes.HOME);
+    });
+  }
 }

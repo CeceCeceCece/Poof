@@ -6,6 +6,7 @@ import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/models/cards/non_playable_cards/character_card.dart';
 import 'package:bang/models/cards/non_playable_cards/role_card.dart';
 import 'package:bang/models/cards/playable_cards/action_card.dart';
+import 'package:bang/models/enemy_player_dto.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/pages/game/widgets/player.dart';
 import 'package:bang/widgets/bang_background.dart';
@@ -70,6 +71,7 @@ class GameView extends GetView<GameController> {
         child: Obx(
           () => controller.discardedPileTop() == null
               ? PlayableCard(
+                  isDragTarget: true,
                   shadowed: true,
                   targetGlow: controller.discardPileGlow(),
                   extraElevation: 3,
@@ -80,8 +82,8 @@ class GameView extends GetView<GameController> {
                         .targetableCardIds()
                         .contains(controller.myPlayer().id);
                   },
-                  dragOnAccept: (_) =>
-                      controller.targetSelected(controller.myPlayer().id),
+                  dragOnAccept: (_) => controller.targetSelected(
+                      targetedUserId: controller.myPlayer().id),
                   card: ActionCard(
                     range: 0,
                     background: 'bang',
@@ -94,6 +96,16 @@ class GameView extends GetView<GameController> {
                   scale: 0.5,
                 )
               : PlayableCard(
+                  isDragTarget: true,
+                  dragOnWillAccept: (id) {
+                    Dev.log(
+                        'ID: ${controller.myPlayer().id}, TARGETABLE: ${controller.targetableCardIds()}');
+                    return controller
+                        .targetableCardIds()
+                        .contains(controller.myPlayer().id);
+                  },
+                  dragOnAccept: (_) => controller.targetSelected(
+                      targetedUserId: controller.myPlayer().id),
                   targetGlow: controller.discardPileGlow(),
                   extraElevation: 6,
                   card: controller.gameService
@@ -147,13 +159,46 @@ class GameView extends GetView<GameController> {
           Obx(() => Positioned(
               child: EnemyPlayer(
                 top: true, left: true,
+                dragOnCharacterWillAccept: (id) {
+                  Dev.log(
+                      'ID: $id, TARGETABLE: ${controller.targetableCardIds()}');
+                  return controller.targetableCardIds().contains(id);
+                },
+                dragOnCharacterAccept: (id) =>
+                    controller.targetSelected(targetedUserId: id),
                 cardIds: controller.enemyPlayers()[0].cardIds,
                 cardAmount: controller.enemyPlayers()[0].cardIds.length,
                 characterName: controller.enemyPlayers()[0].characterName,
+                isDead: controller.enemyPlayers()[0].isDead,
+                role: controller.enemyPlayers()[0].role,
                 equipment: controller
                     .enemyPlayers()[0]
                     .equipment
                     .map((e) => PlayableCard(
+                          isDragTarget: true,
+                          dragOnWillAccept: (_) {
+                            Dev.log(
+                                'ID: ${e.id}, TARGETABLE: ${controller.targetableCardIds()}');
+                            var enemy = controller.enemyPlayers().firstWhere(
+                                (player) => player.equipment
+                                    .map((e) => e.id)
+                                    .contains(e.id),
+                                orElse: () => EnemyPlayerDto(
+                                      cardIds: [],
+                                      characterName: '',
+                                      equipment: [],
+                                      health: 0,
+                                      isSheriff: false,
+                                      playerId: '',
+                                      playerName: '',
+                                      temporaryEffects: [],
+                                    ));
+                            return controller
+                                .targetableCardIds()
+                                .contains(enemy.playerId);
+                          },
+                          dragOnAccept: (id) =>
+                              controller.targetSelected(targetedCardId: id),
                           card: e,
                           canBeFocused: true,
                           scale: 0.25,
@@ -163,18 +208,42 @@ class GameView extends GetView<GameController> {
                 health: controller.enemyPlayers()[0].health,
                 playerName: controller.enemyPlayers()[0].playerName,
                 isSheriff: controller.enemyPlayers()[0].isSheriff,
-                id: controller.enemyPlayers()[0].playerId,
+                playerId: controller.enemyPlayers()[0].playerId,
 
                 temporaryEffects: controller
                     .enemyPlayers()[0]
                     .temporaryEffects
                     .map((e) => PlayableCard(
+                          isDragTarget: true,
+                          dragOnWillAccept: (id) {
+                            Dev.log(
+                                'ID: ${e.id}, TARGETABLE: ${controller.targetableCardIds()}');
+                            var enemy = controller.enemyPlayers().firstWhere(
+                                (player) => player.temporaryEffects
+                                    .map((e) => e.id)
+                                    .contains(e.id),
+                                orElse: () => EnemyPlayerDto(
+                                      cardIds: [],
+                                      characterName: '',
+                                      equipment: [],
+                                      health: 0,
+                                      isSheriff: false,
+                                      playerId: '',
+                                      playerName: '',
+                                      temporaryEffects: [],
+                                    ));
+                            return controller
+                                .targetableCardIds()
+                                .contains(enemy.playerId);
+                          },
+                          dragOnAccept: (id) =>
+                              controller.targetSelected(targetedCardId: id),
                           card: e,
                           canBeFocused: true,
                           scale: 0.25,
                           highlightMultiplier: 1.5,
                         ))
-                    .toList(), //controller.temporaryEffectCards,
+                    .toList(),
                 isTakingNextAction: controller.nextActionPlayerId() ==
                     controller.enemyPlayers()[0].playerId,
                 canBeTargeted: controller
@@ -214,7 +283,7 @@ class GameView extends GetView<GameController> {
                 health: controller.enemyPlayers()[0].health,
                 playerName: controller.enemyPlayers()[0].playerName,
                 isSheriff: controller.enemyPlayers()[0].isSheriff,
-                id: controller.enemyPlayers()[0].playerId,
+                playerId: controller.enemyPlayers()[0].playerId,
                 temporaryEffects: controller
                     .enemyPlayers()[0]
                     .temporaryEffects
@@ -234,6 +303,7 @@ class GameView extends GetView<GameController> {
                 cardIds: controller.enemyPlayers()[1].cardIds,
                 cardAmount: controller.enemyPlayers()[1].cardIds.length,
                 characterName: controller.enemyPlayers()[1].characterName,
+
                 equipment: controller
                     .enemyPlayers()[1]
                     .equipment
@@ -247,7 +317,7 @@ class GameView extends GetView<GameController> {
                 health: controller.enemyPlayers()[1].health,
                 playerName: controller.enemyPlayers()[1].playerName,
                 isSheriff: controller.enemyPlayers()[1].isSheriff,
-                id: controller.enemyPlayers()[1].playerId,
+                playerId: controller.enemyPlayers()[1].playerId,
                 temporaryEffects: controller
                     .enemyPlayers()[1]
                     .temporaryEffects
@@ -529,52 +599,58 @@ class GameView extends GetView<GameController> {
 
   Widget _buildPlayer() {
     return Obx(() {
-      print(controller
-          .targetableCardIds()
-          .contains(controller.myPlayer().id)
-          .toString());
-      print(controller.myPlayer().id);
-      print(controller.targetableCardIds().toString());
+      var isTakingNextAction =
+          controller.nextActionPlayerId() == controller.myPlayer().id;
       return Align(
         alignment: Alignment.bottomCenter,
         child: Player(
-            dragOnWillAccept: (id) {
-              Dev.log(
-                  'ID: ${controller.myPlayer().id}, TARGETABLE: ${controller.targetableCardIds()}');
-              return controller
-                  .targetableCardIds()
-                  .contains(controller.myPlayer().id);
-            },
-            dragOnAccept: (_) =>
-                controller.targetSelected(controller.myPlayer().id),
-            discard: controller.discard,
-            nextTurn: controller.nextTurn,
-            health: controller.myPlayer().health,
-            characterCard: CharacterCard(
-                background: controller.myPlayer().characterName,
-                health: controller.myPlayer().health,
-                name: controller.myPlayer().characterName),
-            roleCard: RoleCard(role: controller.myPlayer().role),
-            cardsInHand: _mapCards(),
-            handDoubleTap: controller.toggleExpandedHand,
-            highlightedIndexInHand: controller.highlightedIndex(),
-            isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
-            isHandViewExpanded: controller.isHandExpanded(),
-            equipment: controller.myPlayer().equipment,
-            temporaryEffects: controller.myPlayer().temporaryEffects,
-            toggleEquipmentView: controller.toggleEquipmentView,
-            currentRoundGlow:
-                controller.currentlyHasRound() == controller.myPlayer().id,
-            nextActionGlow:
-                controller.nextActionPlayerId() == controller.myPlayer().id,
-            targetGlow: controller
+          dragOnWillAccept: (id) {
+            Dev.log(
+                'ID: ${controller.myPlayer().id}, TARGETABLE: ${controller.targetableCardIds()}');
+            return controller
                 .targetableCardIds()
-                .contains(controller.myPlayer().id)),
+                .contains(controller.myPlayer().id);
+          },
+          dragOnAccept: (_) => controller.targetSelected(
+              targetedUserId: controller.myPlayer().id),
+          discard: controller.discard,
+          nextTurn: controller.nextTurn,
+          health: controller.myPlayer().health,
+          characterCard: CharacterCard(
+              background: controller.myPlayer().characterName,
+              health: controller.myPlayer().health,
+              name: controller.myPlayer().characterName),
+          roleCard: RoleCard(role: controller.myPlayer().role),
+          cardsInHand: _mapCards(isTakingNextAction),
+          handDoubleTap: controller.toggleExpandedHand,
+          highlightedIndexInHand: controller.highlightedIndex(),
+          isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
+          isHandViewExpanded: controller.isHandExpanded() || isTakingNextAction,
+          reactionCallback:
+              isTakingNextAction ? controller.answerWithCard : null,
+          equipment: controller.myPlayer().equipment,
+          temporaryEffects: controller.myPlayer().temporaryEffects,
+          toggleEquipmentView: controller.toggleEquipmentView,
+          currentRoundGlow:
+              controller.currentlyHasRound() == controller.myPlayer().id,
+          nextActionGlow: isTakingNextAction,
+          targetGlow:
+              controller.targetableCardIds().contains(controller.myPlayer().id),
+          dragOnEquipmentWillAccept: (id) {
+            return controller
+                .targetableCardIds()
+                .contains(controller.myPlayer().id);
+          },
+          dragOnEquipmentAccept: (id) => controller.targetSelected(
+            targetedCardId: id,
+            targetedUserId: controller.myPlayer().id,
+          ),
+        ),
       );
     });
   }
 
-  List<Widget> _mapCards() {
+  List<Widget> _mapCards([bool isTakingNextAction = false]) {
     Dev.log('DATA: ' + controller.targetableCardIds().toString());
     var cards = controller.myPlayer().cards;
     return [
@@ -583,6 +659,8 @@ class GameView extends GetView<GameController> {
           scale: 0.85,
           card: cards[i],
           canBeDragged: true,
+          reactionCallback:
+              isTakingNextAction ? controller.answerWithCard : null,
           targets: controller.targetableCardIds(),
           onDragStartedCallback: () => controller.highlightTargets(i),
           onDragEndedCallback: () => controller.highlightTargets(-1),

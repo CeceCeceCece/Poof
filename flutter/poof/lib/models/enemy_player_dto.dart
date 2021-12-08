@@ -1,4 +1,5 @@
 import 'package:bang/models/cards/playable_cards/equipment_card.dart';
+import 'package:bang/models/role_type.dart';
 
 class EnemyPlayerDto {
   EnemyPlayerDto({
@@ -10,12 +11,16 @@ class EnemyPlayerDto {
     required this.characterName,
     required this.equipment,
     required this.temporaryEffects,
+    this.isDead = false,
+    this.role,
   });
   List<String> cardIds;
   String playerId;
   String playerName;
   bool isSheriff;
   int health;
+  bool isDead;
+  RoleType? role;
   String characterName;
   List<EquipmentCard> equipment;
   List<EquipmentCard> temporaryEffects;

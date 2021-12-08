@@ -12,3 +12,20 @@ enum RoleType {
   @JsonValue(4)
   DeputySheriff
 }
+
+extension RoleString on RoleType {
+  String get asString {
+    switch (this) {
+      case RoleType.DeputySheriff:
+        return 'vice';
+      case RoleType.Outlaw:
+        return 'outlaw';
+      case RoleType.Sheriff:
+        return 'sheriff';
+      case RoleType.Renegade:
+        return 'renegade';
+      case RoleType.None:
+        return 'roleback';
+    }
+  }
+}

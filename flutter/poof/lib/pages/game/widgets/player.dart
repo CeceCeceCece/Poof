@@ -30,6 +30,9 @@ class Player extends StatelessWidget {
     required this.nextTurn,
     required this.health,
     required this.discard,
+    this.reactionCallback,
+    this.dragOnEquipmentAccept,
+    this.dragOnEquipmentWillAccept,
     this.dragOnWillAccept,
     this.dragOnAccept,
     this.currentRoundGlow = false,
@@ -53,6 +56,10 @@ class Player extends StatelessWidget {
   final int health;
   final bool Function(String?)? dragOnWillAccept;
   final void Function(String?)? dragOnAccept;
+  final void Function(String?)? reactionCallback;
+
+  final bool Function(String?)? dragOnEquipmentWillAccept;
+  final void Function(String)? dragOnEquipmentAccept;
 
   @override
   Widget build(BuildContext context) {
@@ -183,6 +190,34 @@ class Player extends StatelessWidget {
               )),
         ),
       );
+  Widget _buildReactionButton() => Positioned(
+        bottom: 15,
+        right: 60,
+        child: Material(
+          elevation: 20,
+          clipBehavior: Clip.hardEdge,
+          shape: CircleBorder(),
+          color: Colors.transparent,
+          child: Ink(
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: AppColors.darkBrown),
+                  gradient: AppColors.buttonGradient,
+                  borderRadius: BorderRadius.circular(200)),
+              child: Center(
+                child: SizedBox(
+                  height: 38,
+                  width: 38,
+                  child: IconButton(
+                      icon: FaIcon(
+                        FontAwesomeIcons.heartbeat,
+                      ),
+                      iconSize: 18,
+                      color: Colors.white,
+                      onPressed: () => reactionCallback?.call(null)),
+                ),
+              )),
+        ),
+      );
 
   Widget _buildHand() => Expanded(
         child: Stack(
@@ -201,6 +236,9 @@ class Player extends StatelessWidget {
                 ? _buildEquipmentViewTogglerButton()
                 : Container(),
             _buildDiscardButton(),
+            isHandViewExpanded && reactionCallback != null
+                ? _buildReactionButton()
+                : Container(),
           ],
         ),
         flex: isHandViewExpanded ? 30 : 8,
@@ -293,10 +331,18 @@ class Player extends StatelessWidget {
                 right: (equipment.length - 1) * 54 - 54 * i.toDouble() + 5,
                 child: Transform.rotate(
                   angle: (pi / 180) * (random.nextInt(7) - 3),
-                  child: PlayableCard(
-                    card: equipment[i],
-                    scale: 0.55,
-                    highlightMultiplier: 6.3 / 5,
+                  child: DragTarget(
+                    onWillAccept: (_) =>
+                        dragOnEquipmentWillAccept?.call(equipment[i].id) ??
+                        false,
+                    onAccept: (data) =>
+                        dragOnEquipmentAccept?.call(equipment[i].id),
+                    builder: (context, candidateData, rejectedData) =>
+                        PlayableCard(
+                      card: equipment[i],
+                      scale: 0.55,
+                      highlightMultiplier: 6.3 / 5,
+                    ),
                   ),
                 ),
               )

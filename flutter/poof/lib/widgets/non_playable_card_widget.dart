@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/models/cards/non_playable_cards/non_playable_card_base.dart';
+import 'package:bang/models/role_type.dart';
 import 'package:flutter/material.dart';
 
 class NonPlayableCard extends StatefulWidget {
@@ -16,13 +17,19 @@ class NonPlayableCard extends StatefulWidget {
   final bool showBackPermanently;
   final bool Function(String?)? dragOnWillAccept;
   final void Function(String?)? dragOnAccept;
+  final bool isEnemyPlayer;
+  final RoleType? role;
+  final bool isDead;
   const NonPlayableCard({
     Key? key,
     required this.card,
     this.dragOnWillAccept,
+    this.role,
     this.dragOnAccept,
     this.canBeFocused = true,
     this.onTapCallback,
+    this.isDead = false,
+    this.isEnemyPlayer = false,
     this.scale = 1.0,
     this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
@@ -46,8 +53,8 @@ class _BangCardWidgetState extends State<NonPlayableCard>
   final _cardFlipDuration = Duration(milliseconds: 300);
   final _cardFocusingDuration = Duration(milliseconds: 100);
   bool isElevated = false;
-
   double angle = 0;
+  String? assetName;
 
   void _toggleCardFocus() => setState(() {
         if (isElevated) {
@@ -111,6 +118,7 @@ class _BangCardWidgetState extends State<NonPlayableCard>
 
   @override
   Widget build(BuildContext context) {
+    angle = widget.isDead ? pi : 0;
     return GestureDetector(
       onTap: widget.onTapCallback,
       onLongPressStart: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
@@ -181,15 +189,22 @@ class _BangCardWidgetState extends State<NonPlayableCard>
     }
     if (val >= (pi / 2)) {
       showBack = false;
+      assetName = widget.card.name;
     } else {
       showBack = true;
+      assetName = widget.role?.asString;
     }
   }
 
   Widget render({bool showBack = false}) {
-    return !showBack
-        ? CardHelpers.getAsset(
-            name: widget.card.name, type: widget.card.type, scale: widget.scale)
+    return !widget.showBackPermanently
+        ? (!showBack
+            ? CardHelpers.getAsset(
+                name: widget.card.name,
+                type: widget.card.type,
+              )
+            : CardHelpers.getAsset(
+                name: widget.role?.asString ?? 'sheriff', type: CardType.Role))
         : CardHelpers.getCardBack(widget.card.type, widget.scale);
   }
 }

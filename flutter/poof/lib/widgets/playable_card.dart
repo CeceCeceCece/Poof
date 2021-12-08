@@ -27,7 +27,9 @@ class PlayableCard extends StatefulWidget {
   final bool shadowed;
   late final List<String> possibleTargets;
   final bool Function(String?)? dragOnWillAccept;
+  final void Function(String?)? reactionCallback;
   final void Function(String)? dragOnAccept;
+  final bool isDragTarget;
 
   PlayableCard({
     Key? key,
@@ -41,12 +43,14 @@ class PlayableCard extends StatefulWidget {
     this.handCallback,
     this.extraElevation = 0,
     this.scale = 1.0,
+    this.reactionCallback,
     this.drawPileGlow = false,
     this.highlightMultiplier = 1.0,
     this.showBackPermanently = false,
     this.handCallbackInverse,
     this.onDragStartedCallback,
     this.onDragEndedCallback,
+    this.isDragTarget = false,
     List<String>? targets,
     this.targetGlow = false,
   }) : super(key: key) {
@@ -98,6 +102,20 @@ class _PlayableCardState extends State<PlayableCard>
 
   List<BoxShadow> _setGlow() {
     if (isElevated) return [];
+
+    if (widget.reactionCallback != null)
+      return [
+        BoxShadow(
+          color: Colors.amber.shade500,
+          spreadRadius: 1,
+          blurRadius: 5,
+        ),
+        BoxShadow(
+          color: Colors.amber.shade500,
+          spreadRadius: -1,
+          blurRadius: 5,
+        )
+      ];
     if (widget.targetGlow)
       return [
         BoxShadow(
@@ -111,6 +129,7 @@ class _PlayableCardState extends State<PlayableCard>
           blurRadius: 5,
         )
       ];
+
     if (widget.drawPileGlow)
       return [
         BoxShadow(
@@ -163,7 +182,7 @@ class _PlayableCardState extends State<PlayableCard>
     return GestureDetector(
       onLongPressStart: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
       onLongPressEnd: (_) => widget.canBeFocused ? _toggleCardFocus() : {},
-      //onDoubleTap: _flipCard,
+      onTap: () => widget.reactionCallback?.call(widget.card.id),
       child: TweenAnimationBuilder(
         tween: Tween<double>(begin: 0, end: angle),
         duration: _cardFlipDuration,
@@ -268,19 +287,21 @@ class _PlayableCardState extends State<PlayableCard>
                     ),
                     child: card,
                   )
-                : DragTarget(
-                    builder: (
-                      BuildContext context,
-                      List<dynamic> accepted,
-                      List<dynamic> rejected,
-                    ) {
-                      return card;
-                    },
-                    onWillAccept: (_) =>
-                        widget.dragOnWillAccept?.call(null) ?? false,
-                    onAccept: (data) =>
-                        widget.dragOnAccept?.call(widget.card.id),
-                  ),
+                : (widget.isDragTarget
+                    ? DragTarget(
+                        builder: (
+                          BuildContext context,
+                          List<dynamic> accepted,
+                          List<dynamic> rejected,
+                        ) {
+                          return card;
+                        },
+                        onWillAccept: (_) =>
+                            widget.dragOnWillAccept?.call(null) ?? false,
+                        onAccept: (data) =>
+                            widget.dragOnAccept?.call(widget.card.id),
+                      )
+                    : card),
           );
         },
       ),

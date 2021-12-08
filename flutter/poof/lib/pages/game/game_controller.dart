@@ -48,6 +48,7 @@ class GameController extends GetxController {
   RxList<String> targetableCardIds = <String>[].obs;
 
   late RxString currentlyHasRound;
+
   Rx<String?> nextActionPlayerId = Rx(null);
 
   @override
@@ -62,16 +63,44 @@ class GameController extends GetxController {
     targetableCardIds = gameService.targetableCardIds;
     discardedPileTop = gameService.discardPileTop;
     discardPileGlow = gameService.discardPileGlow;
+
     super.onInit();
   }
 
-  void targetSelected(String targetedCardId) {
-    Dev.log(
-        'TARGET:  $targetedCardId, CARD PLAYED: ${currentlyDraggedCardId()}');
+  void targetSelected({String? targetedCardId, String? targetedUserId}) {
+    if (targetedCardId == null && targetedUserId == null) return;
+    if (targetedUserId == null) {
+      enemyPlayers().forEach((player) {
+        if (player.equipment.map((e) => e.id).contains(targetedCardId!) ||
+            player.temporaryEffects.map((t) => t.id).contains(targetedCardId))
+          targetedUserId = player.playerId;
+      });
+    }
+    if (targetedCardId == null && targetedUserId != myPlayer().id) {
+      var cardsToSelectFrom = enemyPlayers()
+          .firstWhere((player) => player.playerId == targetedUserId!)
+          .cardIds;
+      if (cardsToSelectFrom.isNotEmpty) {
+        targetedCardId =
+            cardsToSelectFrom[Random().nextInt(cardsToSelectFrom.length)];
+      } else
+        targetedCardId = '';
+    }
 
+    Dev.log(
+        'TARGET:  $targetedCardId, TARGETED USER: $targetedUserId, PLAYED: ${currentlyDraggedCardId()}');
     gameService.playCard(
-        option: OptionCommand(cardIds: [], userId: myPlayer().id),
+        option: OptionCommand(
+            cardIds: targetedCardId == null ? [] : [targetedCardId],
+            userId: targetedUserId!),
         playedCardId: currentlyDraggedCardId());
+  }
+
+  void answerWithCard(String? cardId) {
+    Dev.log('REACTION: $cardId');
+    gameService.answerCard(
+        option: OptionCommand(
+            userId: myPlayer().id, cardIds: cardId == null ? [] : [cardId]));
   }
 
   void sendMessage() {
