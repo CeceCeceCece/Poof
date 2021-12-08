@@ -236,9 +236,7 @@ class Player extends StatelessWidget {
                 ? _buildEquipmentViewTogglerButton()
                 : Container(),
             _buildDiscardButton(),
-            isHandViewExpanded && reactionCallback != null
-                ? _buildReactionButton()
-                : Container(),
+            reactionCallback != null ? _buildReactionButton() : Container(),
           ],
         ),
         flex: isHandViewExpanded ? 30 : 8,

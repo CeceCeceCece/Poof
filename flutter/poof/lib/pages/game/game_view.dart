@@ -36,6 +36,7 @@ class GameView extends GetView<GameController> {
             ..._buildLayout(height, width),
             _buildChatButton(context),
             _buildCloseButton(),
+            _buildShowCard(),
           ],
         ),
       ),
@@ -65,6 +66,30 @@ class GameView extends GetView<GameController> {
               isDrawPile: true, extraElevation: 3, canBeTargeted: false),
         ),
       );
+  Widget _buildShowCard() {
+    return Container();
+    /*return Positioned(
+      child: AnimatedContainer(
+          duration: Duration(
+            milliseconds: 500,
+          ),
+          child: PlayableCard(
+            extraElevation: 3,
+            card: ActionCard(
+              range: 0,
+              background: 'bang',
+              name: 'bang',
+              value: CardValue.Five,
+              type: CardType.Action,
+              suit: CardSuit.Diamonds,
+            ),
+            canBeFocused: true,
+            scale: 0.5,
+            
+          ),
+          color: Colors.red),
+    );*/
+  }
 
   Widget _buildDiscardPile(double height) => Positioned(
         bottom: height / 2 - 35,
@@ -601,6 +626,7 @@ class GameView extends GetView<GameController> {
     return Obx(() {
       var isTakingNextAction =
           controller.nextActionPlayerId() == controller.myPlayer().id;
+      var cards = _mapCards(isTakingNextAction);
       return Align(
         alignment: Alignment.bottomCenter,
         child: Player(
@@ -621,11 +647,13 @@ class GameView extends GetView<GameController> {
               health: controller.myPlayer().health,
               name: controller.myPlayer().characterName),
           roleCard: RoleCard(role: controller.myPlayer().role),
-          cardsInHand: _mapCards(isTakingNextAction),
+          cardsInHand: cards,
           handDoubleTap: controller.toggleExpandedHand,
           highlightedIndexInHand: controller.highlightedIndex(),
           isEquipmentViewExpanded: controller.isEquipmentViewExpanded(),
-          isHandViewExpanded: controller.isHandExpanded() || isTakingNextAction,
+          isHandViewExpanded:
+              (controller.isHandExpanded() || isTakingNextAction) &&
+                  cards.length > 0,
           reactionCallback:
               isTakingNextAction ? controller.answerWithCard : null,
           equipment: controller.myPlayer().equipment,

@@ -36,6 +36,7 @@ class GameController extends GetxController {
   late String playerName;
 
   Rx<String?> currentlyDraggedCardId = Rx(null);
+  Rx<PlayableCardBase?> currentlyShowedCard = Rx(null);
 
   RxBool drawPileGlow = true.obs;
   RxBool discardPileGlow = false.obs;
@@ -63,6 +64,7 @@ class GameController extends GetxController {
     targetableCardIds = gameService.targetableCardIds;
     discardedPileTop = gameService.discardPileTop;
     discardPileGlow = gameService.discardPileGlow;
+    currentlyShowedCard = gameService.cardToShow;
 
     super.onInit();
   }

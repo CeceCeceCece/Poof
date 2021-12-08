@@ -87,10 +87,20 @@ class LobbyView extends GetView<LobbyController> {
           decoration: AppTheme.whiteBackgroundAndBorder,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              AppStrings.wait_for_room_admin.tr,
-              style: AppTheme.smallBrown,
-              textAlign: TextAlign.center,
+            child: Column(
+              children: [
+                Text(
+                  AppStrings.wait_for_room_admin.tr,
+                  style: AppTheme.smallBrown,
+                  textAlign: TextAlign.center,
+                ),
+                BangButton(
+                  width: 160,
+                  height: 40,
+                  onPressed: controller.showQR,
+                  text: AppStrings.show_qr_code.tr,
+                ),
+              ],
             ),
           ),
         ),

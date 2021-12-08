@@ -41,6 +41,7 @@ class GameService extends ServiceBase {
   RxList<String> targetableCardIds = <String>[].obs;
   Rx<CardDto?> discardPileTop = Rx(null);
   var discardPileGlow = false.obs;
+  Rx<PlayableCardBase?> cardToShow = Rx(null);
 
   var myPlayer = MyPlayer(
     id: '',
@@ -470,6 +471,7 @@ class GameService extends ServiceBase {
 
   void _showCard(CardDto card) {
     log('${card.name} ${card.suite} ${card.value}');
+    cardToShow.value = mapCards([card]).first;
   }
 
   void _setGameEvent(GameEventDto gameEvent) {
@@ -501,12 +503,14 @@ class GameService extends ServiceBase {
             player.cardIds.where((cardId) => possibleTargets.contains(cardId)))
         .expand((i) => i);
 
-    targetableCardIds.value = [
-      ...possiblePlayers,
-      ...possibleCards,
-    ];
-    if (targetableCardIds().contains(myPlayer().id))
-      discardPileGlow.value = true;
+    if (Get.find<GameController>().currentlyDraggedCardId() != null) {
+      targetableCardIds.value = [
+        ...possiblePlayers,
+        ...possibleCards,
+      ];
+      if (targetableCardIds().contains(myPlayer().id))
+        discardPileGlow.value = true;
+    }
   }
 
   void _cardsReceived(List<CardDto> cards) {
@@ -679,7 +683,7 @@ class GameService extends ServiceBase {
         Duration(
           seconds: 3,
         ), () async {
-      await disconnect();
+      disconnect();
       Get.offAndToNamed(Routes.HOME);
     });
   }
