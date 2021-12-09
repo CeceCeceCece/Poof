@@ -9,21 +9,7 @@ namespace UnitTests.ServiceTests.Helpers
     {
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        public PoofDbContext CreateContextForInMemory()
-        {
-            var option = new DbContextOptionsBuilder<PoofDbContext>().UseInMemoryDatabase(databaseName: "Test_Database").Options;
-
-            var context = new PoofDbContext(option);
-            if (context != null)
-            {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-            }
-
-            return context;
-        }
+        private bool disposedValue = false;
 
         public PoofDbContext CreateContextForSQLite()
         {

@@ -1,7 +1,6 @@
 ﻿using Application.Constants;
 using Application.Exceptions;
 using Application.Models.DTOs;
-using Application.Services;
 using Application.SignalR;
 using Application.ViewModels;
 using Domain.Constants.Enums;
@@ -10,11 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Domain.Entities 
+namespace Domain.Entities
 {
     public static class GameExtension
     {
-        public static Character GetCharacterById(this Game game, string userId) 
+        public static Character GetCharacterById(this Game game, string userId)
         {
             var character = game.Characters.SingleOrDefault(x => x.Id == userId);
             if (character is null)
@@ -112,11 +111,11 @@ namespace Domain.Entities
 
         public static async Task SetAllReactAsync(this Game game, string currentUserId, PoofGameHub hub, GameCard card, bool currentStart = false)
         {
-            if (currentStart) 
+            if (currentStart)
             {
                 game.NextUserId = currentUserId;
             }
-            else 
+            else
             {
                 var index = game.Characters.IndexOf(game.Characters.SingleOrDefault(x => x.Id == currentUserId));
                 if (index + 1 >= game.Characters.Count)
@@ -136,7 +135,7 @@ namespace Domain.Entities
 
             //Értesíteni hogy válaszolni kell
             if (hub is not null)
-                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel( game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.NextUserId, game.NextCard == null ? null : new CardViewModel(game.NextCard.Id, game.NextCard.Card.Name, game.NextCard.Card.Type, game.NextCard.Card.Suite, game.NextCard.Card.Value)));
         }
 
         public static async Task AllReactNextAsync(this Game game, PoofGameHub hub)
@@ -177,7 +176,7 @@ namespace Domain.Entities
 
             //Értesíteni hogy válaszolni kell
             if (hub is not null)
-                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel( game.CurrentUserId, null));
+                await hub.Clients.Group(game.Name).SetGameEvent(new GameEventViewModel(game.CurrentUserId, null));
         }
 
         public static Character GetReactionCharacter(this Game game) => game.Event switch
@@ -190,7 +189,7 @@ namespace Domain.Entities
             _ => null
         };
 
-        public static Character GetNextCharacter(this Game game) 
+        public static Character GetNextCharacter(this Game game)
         {
             var index = game.Characters.IndexOf(game.GetCurrentCharacter()) + 1;
             if (index >= game.Characters.Count)
@@ -208,18 +207,18 @@ namespace Domain.Entities
 
             List<string> result = new List<string>();
 
-            for (int i = 0; i < count; i++) 
+            for (int i = 0; i < count; i++)
             {
-                if(i != indx) 
+                if (i != indx)
                 {
                     int next;
                     int previous;
-                    if(i < indx) 
+                    if (i < indx)
                     {
                         next = indx - i;
                         previous = count - indx + i;
                     }
-                    else 
+                    else
                     {
                         next = i - indx;
                         previous = count - i + indx;
@@ -231,7 +230,7 @@ namespace Domain.Entities
 
                     min += target.DistanceFromOthers - 1;
 
-                    if(min <= weaponCount + character.AimDistance) 
+                    if (min <= weaponCount + character.AimDistance)
                     {
                         result.Add(target.Id);
                     }
@@ -253,14 +252,14 @@ namespace Domain.Entities
 
         public static async Task ShowRactOptionAsync(this Game game, OptionViewModel option, PoofGameHub hub)
         {
-            if(hub != null)
+            if (hub != null)
                 await hub.Clients.Client(game.GetReactionCharacter().ConnectionId).ShowOption(option);
         }
 
-        public static async Task CheckWinAsync(this Game game, PoofGameHub hub) 
+        public static async Task CheckWinAsync(this Game game, PoofGameHub hub)
         {
             var winLogic = game.Win.GetWinLogic();
-            if(await winLogic.CheckWinAsync(game, out var winner)) 
+            if (await winLogic.CheckWinAsync(game, out var winner))
             {
                 if (hub is not null)
                     await hub.Clients.Group(game.Name).WinnerIs(new WinnerIsViewModel(winner));
@@ -272,7 +271,7 @@ namespace Domain.Entities
         public static async Task AddToDiscardPileAsync(this Game game, PoofGameHub hub, GameCard card)
         {
             game.DiscardPile.Add(card);
-            if(hub is not null)
+            if (hub is not null)
                 await hub.Clients.Group(game.Name).SetDiscardPile(new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value));
         }
 
@@ -286,7 +285,7 @@ namespace Domain.Entities
             current.BangState = current.BangState == BangState.None ? BangState.One : current.BangState;
 
             var next = game.GetNextCharacter().Map(hub);
-            
+
             game.CurrentUserId = next.Character.Id;
             game.Event = GameEvent.Draw;
 
@@ -300,11 +299,11 @@ namespace Domain.Entities
                 await card.Map().OnActiveAsync(next);
             }
 
-            if(game.CurrentUserId == next.Character.Id) 
+            if (game.CurrentUserId == next.Character.Id)
             {
                 await next.DrawAsync();
             }
-                
+
         }
     }
 }

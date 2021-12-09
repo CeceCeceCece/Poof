@@ -145,7 +145,7 @@ namespace Web
                 options.Map<PoofException>(
                   (ctx, ex) =>
                   {
-                      var pd = StatusCodeProblemDetails.Create(StatusCodes.Status500InternalServerError);
+                      var pd = StatusCodeProblemDetails.Create(StatusCodes.Status400BadRequest);
                       pd.Title = ex.Message;
                       return pd;
                   }
