@@ -29,11 +29,11 @@ namespace Application.Models.CharacterLogic
 
         public override async Task DrawReactAsync(OptionDto option)
         {
-            if (option.CardIds is null || option.CardIds.Count == 0) 
+            if (option.CardIds is null || option.CardIds.Count == 0)
             {
                 await base.DrawReactAsync(null);
             }
-            else 
+            else
             {
                 var cards = Character.Game.GetAndRemoveCards(1);
                 var card = Character.Game.DiscardPile.Last();
@@ -47,6 +47,7 @@ namespace Application.Models.CharacterLogic
 
                 var last = Character.Game.DiscardPile.LastOrDefault();
                 await Hub.Clients.Group(Character.Game.Name).SetDiscardPile(last is null ? null : new CardViewModel(last.Id, last.Card.Name, last.Card.Type, last.Card.Suite, last.Card.Value));
+                Character.Game.Event = GameEvent.None;
             }
         }
     }

@@ -8,7 +8,7 @@ namespace UnitTests
 {
     public class TestInstanceCreator
     {
-        public Game GetGame(string name) 
+        public Game GetGame(string name)
         {
             var game = new Game
             {
@@ -37,7 +37,7 @@ namespace UnitTests
             game.CurrentUserId = game.Characters.First().Id;
             return game;
         }
-        public Character GetCharacter(string name, Game game) 
+        public Character GetCharacter(string name, Game game)
         {
             return new Character
             {
@@ -68,7 +68,7 @@ namespace UnitTests
             };
         }
 
-        public GameCard GetCard(string name, CardSuits suit = CardSuits.Clubs, CardType type = CardType.Action, CardValues value = CardValues.Ace) 
+        public GameCard GetCard(string name, CardSuits suit = CardSuits.Clubs, CardType type = CardType.Action, CardValues value = CardValues.Ace)
         {
             return new GameCard(Guid.NewGuid().ToString(), new Card
             {

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.SignalR
@@ -10,9 +8,9 @@ namespace Application.SignalR
     {
         private static readonly Dictionary<string, List<string>> ConnectedPlayers = new Dictionary<string, List<string>>();
 
-        public Task UserConnected(string userName, string connectionId) 
+        public Task UserConnected(string userName, string connectionId)
         {
-            lock (ConnectedPlayers) 
+            lock (ConnectedPlayers)
             {
                 if (ConnectedPlayers.ContainsKey(userName))
                 {
@@ -34,29 +32,29 @@ namespace Application.SignalR
                     return Task.CompletedTask;
 
                 ConnectedPlayers[userName].Remove(connectionId);
-                if (ConnectedPlayers[userName].Count == 0) 
+                if (ConnectedPlayers[userName].Count == 0)
                 {
                     ConnectedPlayers.Remove(userName);
                 }
- 
+
             }
             return Task.CompletedTask;
         }
 
-        public Task<string[]> GetOnlineUsers() 
+        public Task<string[]> GetOnlineUsers()
         {
             string[] connectedPlayers;
-            lock (ConnectedPlayers) 
+            lock (ConnectedPlayers)
             {
                 connectedPlayers = ConnectedPlayers.OrderBy(k => k.Key).Select(k => k.Key).ToArray();
             }
             return Task.FromResult(connectedPlayers);
         }
 
-        public Task<List<string>> GetConnections(string userName) 
+        public Task<List<string>> GetConnections(string userName)
         {
             List<string> connectionIds;
-            lock (ConnectedPlayers) 
+            lock (ConnectedPlayers)
             {
                 connectionIds = ConnectedPlayers.GetValueOrDefault(userName);
             }

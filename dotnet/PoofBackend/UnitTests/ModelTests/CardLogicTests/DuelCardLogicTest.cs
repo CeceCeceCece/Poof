@@ -1,9 +1,6 @@
-using Application.Models.CardLogic;
-using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,7 +26,7 @@ namespace UnitTests
 
             int currentPlayerDeck = character.Character.Deck.Count;
 
-            await cardLogic.ActivateAsync(character, new OptionDto 
+            await cardLogic.ActivateAsync(character, new OptionDto
             {
                 UserId = target.Character.Id,
                 CardIds = null

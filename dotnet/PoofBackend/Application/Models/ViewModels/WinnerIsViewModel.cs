@@ -9,6 +9,6 @@ namespace Application.ViewModels
             Winner = winner;
         }
 
-        public RoleType Winner{ get; set; }
+        public RoleType Winner { get; set; }
     }
 }

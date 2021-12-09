@@ -1,5 +1,4 @@
-﻿using Application.Models;
-using Application.Models.DTOs;
+﻿using Application.Models.DTOs;
 using Application.SignalR;
 using Domain.Entities;
 using System.Collections.Generic;

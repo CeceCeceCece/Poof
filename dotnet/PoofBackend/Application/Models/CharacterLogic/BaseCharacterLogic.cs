@@ -22,17 +22,17 @@ namespace Application.Models.CharacterLogic
             this.Character = character;
             this.Hub = hub;
         }
-        public virtual async Task DrawAsync() 
+        public virtual async Task DrawAsync()
         {
             Character.Game.Event = GameEvent.Draw;
             await Hub.Clients.Client(Character.ConnectionId).DrawOption(new DrawOptionViewModel(false, new List<CardViewModel>()));
         }
 
-        public async Task DrawAsync(List<GameCard> cards) 
+        public async Task DrawAsync(List<GameCard> cards)
         {
             Character.Deck.AddRange(cards);
 
-            if(Hub is not null) 
+            if (Hub is not null)
             {
                 //Értesítés mindenkinek hogy hány lapot kapott
                 await Hub.Clients.Group(Character.Game.Name).CardsAdded(
@@ -44,7 +44,7 @@ namespace Application.Models.CharacterLogic
                         cards.Select(x => new CardViewModel(x.Id, x.Card.Name, x.Card.Type, x.Card.Suite, x.Card.Value)).ToList()
                     );
             }
-               
+
         }
 
         public virtual async Task<GameCard> LeaveCardAsync(string cardId, bool inEquiped = false)
@@ -52,7 +52,7 @@ namespace Application.Models.CharacterLogic
             if (inEquiped)
             {
                 var equiped = Character.EquipedCards.SingleOrDefault(x => x.Id == cardId);
-                if(equiped is not null) 
+                if (equiped is not null)
                 {
                     await equiped.Map().DeactivateAsync(this);
                     Character.EquipedCards.Remove(equiped);
@@ -62,9 +62,9 @@ namespace Application.Models.CharacterLogic
 
                     return equiped;
                 }
-                else if(Character.Weapon is not null && Character.Weapon.Id == cardId) 
+                else if (Character.Weapon is not null && Character.Weapon.Id == cardId)
                 {
-                    await Character .Weapon.Map().DeactivateAsync(this);
+                    await Character.Weapon.Map().DeactivateAsync(this);
                     var weapon = Character.Weapon;
                     Character.Weapon = null;
 
@@ -90,7 +90,7 @@ namespace Application.Models.CharacterLogic
             return await LeaveCardAsync(Character.Deck.ElementAt(rand).Id);
         }
 
-        public virtual async Task DropCardsFromDeckAsync(List<string> cardIds) 
+        public virtual async Task DropCardsFromDeckAsync(List<string> cardIds)
         {
             var cards = Character.Deck.Where(x => cardIds.Contains(x.Id)).ToList();
             if (cards.Count != cardIds.Count)
@@ -105,15 +105,15 @@ namespace Application.Models.CharacterLogic
 
             Character.Game.DiscardPile.AddRange(cards);
 
-            if (Hub is not null) 
+            if (Hub is not null)
             {
                 var last = Character.Game.DiscardPile.Last();
                 await Hub.Clients.Group(Character.Game.Name).SetDiscardPile(new CardViewModel(last.Id, last.Card.Name, last.Card.Type, last.Card.Suite, last.Card.Value));
             }
-          
+
         }
 
-        public virtual async Task DrawReactAsync(OptionDto option) 
+        public virtual async Task DrawReactAsync(OptionDto option)
         {
             await DrawAsync(Character.Game.GetAndRemoveCards(2));
             Character.Game.Event = GameEvent.None;
@@ -122,17 +122,17 @@ namespace Application.Models.CharacterLogic
         public virtual async Task DecreaseLifepointAsync(int point)
         {
             Character.LifePoint -= point;
-            if(Character.LifePoint <= 0) 
+            if (Character.LifePoint <= 0)
             {
                 var beers = Character.Deck.Where(x => x.Card.Name == "Beer").ToList();
-                if(beers.Count >= point) 
+                if (beers.Count >= point)
                 {
                     foreach (var beer in beers)
                     {
                         await ActivateCardAsync(beer.Id, null);
                     }
                 }
-                else 
+                else
                 {
                     await DeadAsync();
                 }
@@ -178,7 +178,7 @@ namespace Application.Models.CharacterLogic
                 await Hub.Clients.Group(Character.Game.Name).SetLifePoint(new LifePointViewModel(Character.Id, Character.LifePoint));
         }
 
-        public virtual async Task<bool> TryHasCardAsync(string cardId, string cardName) 
+        public virtual async Task<bool> TryHasCardAsync(string cardId, string cardName)
         {
             var card = Character.Deck.SingleOrDefault(x => x.Id == cardId && x.Card.Name == cardName);
             if (card is null)
@@ -188,11 +188,11 @@ namespace Application.Models.CharacterLogic
             return true;
         }
 
-        public virtual async Task DropCardAsync(string cardId) 
+        public virtual async Task DropCardAsync(string cardId)
         {
             var deckCard = Character.Deck.SingleOrDefault(x => x.Id == cardId);
             var game = Character.Game;
-            if(deckCard is not null) 
+            if (deckCard is not null)
             {
                 Character.Deck.Remove(deckCard);
                 await game.AddToDiscardPileAsync(Hub, deckCard);
@@ -200,17 +200,17 @@ namespace Application.Models.CharacterLogic
                 if (Hub is not null)
                     await Hub.Clients.Group(Character.Game.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
             }
-            else if(Character.Weapon != null && Character.Weapon.Id == cardId) 
+            else if (Character.Weapon != null && Character.Weapon.Id == cardId)
             {
                 await Character.Weapon.Map().DeactivateAsync(this);
                 await game.AddToDiscardPileAsync(Hub, Character.Weapon);
                 Character.Weapon = null;
-                if (Hub is not null) 
+                if (Hub is not null)
                 {
                     await Hub.Clients.Group(Character.Game.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
                 }
             }
-            else 
+            else
             {
                 var equipedCard = Character.EquipedCards.SingleOrDefault(x => x.Id == cardId) ?? throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
                 await equipedCard.Map().DeactivateAsync(this);
@@ -222,7 +222,7 @@ namespace Application.Models.CharacterLogic
             }
         }
 
-        public virtual async Task UnequipeCard(string cardId) 
+        public virtual async Task UnequipeCard(string cardId)
         {
             var equipedCard = Character.EquipedCards.SingleOrDefault(x => x.Id == cardId) ?? throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
             await equipedCard.Map().DeactivateAsync(this);
@@ -232,11 +232,11 @@ namespace Application.Models.CharacterLogic
                 await Hub.Clients.Group(Character.Name).CardsDroped(new List<CardIdViewModel> { new CardIdViewModel(cardId, Character.Id) });
         }
 
-        public virtual async Task EquipeCardAsync(string cardId) 
+        public virtual async Task EquipeCardAsync(string cardId)
         {
             var card = Character.Deck.SingleOrDefault(x => x.Id == cardId) ?? throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
-            
-            if(Character.EquipedCards.Any(x => x.Card.Name == card.Card.Name))
+
+            if (Character.EquipedCards.Any(x => x.Card.Name == card.Card.Name))
                 throw new PoofException(CharacterMessages.ILYEN_LAPPAL_MAR_RENDELKEZIK);
             Character.EquipedCards.Add(card);
             await LeaveCardAsync(cardId);
@@ -258,7 +258,7 @@ namespace Application.Models.CharacterLogic
 
         public virtual async Task EquipeCardAsync(GameCard card)
         {
-            if(card is null) 
+            if (card is null)
                 throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
             Character.EquipedCards.Add(card);
 
@@ -266,7 +266,7 @@ namespace Application.Models.CharacterLogic
                 await Hub.Clients.Group(Character.Game.Name).CardEquiped(Character.Id, new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value));
         }
 
-        public virtual async Task CardOptionAsync(string cardId) 
+        public virtual async Task CardOptionAsync(string cardId)
         {
             var card = Character.Deck.SingleOrDefault(x => x.Id == cardId) ?? throw new PoofException(CharacterMessages.JATEKOS_ILYEN_LAPPAL_NEM_RENDELKEZIK);
             await card.Map().OptionAsync(this);
@@ -280,27 +280,27 @@ namespace Application.Models.CharacterLogic
             var logic = card.Map();
             await logic.ActivateAsync(this, option);
         }
-        public virtual async Task CheckAnswearCardAsync(OptionDto dto) 
+        public virtual async Task CheckAnswearCardAsync(OptionDto dto)
         {
             await Character.Game.NextCard.Map().AnswearAsync(this, dto);
         }
-        
-        public virtual async Task AnswearCardAsync(OptionDto dto) 
+
+        public virtual async Task AnswearCardAsync(OptionDto dto)
         {
             await Character.Game.AnswearCardAsync(Hub, dto);
         }
 
-        public virtual List<string> GetNeighbours(bool withWeapon) 
+        public virtual List<string> GetNeighbours(bool withWeapon)
         {
             return Character.Game.Neigbours(withWeapon);
         }
 
         public virtual async Task GetCardFromGameAsync(string cardId)
         {
-            await DrawAsync(new List<GameCard> {Character.Game.GetCard(cardId)});
+            await DrawAsync(new List<GameCard> { Character.Game.GetCard(cardId) });
         }
 
-        public virtual async Task ShowOptionAsync(OptionViewModel option) 
+        public virtual async Task ShowOptionAsync(OptionViewModel option)
         {
             if (Hub != null)
                 await Hub.Clients.Client(Character.ConnectionId).ShowOption(option);

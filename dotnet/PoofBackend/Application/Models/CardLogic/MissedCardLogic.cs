@@ -16,7 +16,7 @@ namespace Application.Models.CardLogic
         }
 
         public override async Task OptionAsync(BaseCharacterLogic character)
-        {   
+        {
             var option = new OptionViewModel
             {
                 Description = CardMessages.MISSED_OPTION,

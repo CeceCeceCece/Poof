@@ -10,7 +10,7 @@ namespace Application.ViewModels
         public RoleType Role { get; set; }
         public int LifePoint { get; set; }
         public string SheriffId { get; set; }
-        public List<CardViewModel> Cards{ get; set; }
+        public List<CardViewModel> Cards { get; set; }
         public List<CharacterViewModel> Characters { get; set; }
     }
 }

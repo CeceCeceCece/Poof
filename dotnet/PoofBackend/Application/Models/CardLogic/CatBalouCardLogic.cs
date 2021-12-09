@@ -16,7 +16,7 @@ namespace Application.Models.CardLogic
 
         public override async Task OptionAsync(BaseCharacterLogic character)
         {
-            var option =  new OptionViewModel
+            var option = new OptionViewModel
             {
                 Description = CardMessages.CHOOSE_ONE_CARD,
                 RequireCards = true,

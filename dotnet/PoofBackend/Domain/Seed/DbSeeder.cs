@@ -2,8 +2,6 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +49,6 @@ namespace Domain.Seed
             {
                 user.PasswordHash = passwordHasher.HashPassword(user, "admin");
                 user.NormalizedUserName = user.UserName.ToUpper();
-                //user.NormalizedEmail = user.Email.ToUpper();
                 user.SecurityStamp = Guid.NewGuid().ToString();
                 user.EmailConfirmed = false;
             }

@@ -1,7 +1,6 @@
 ﻿using Domain.Configuration.EntityConfiguration;
 using Domain.Entities;
 using Domain.Entities.Characters;
-using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

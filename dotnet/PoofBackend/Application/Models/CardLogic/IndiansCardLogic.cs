@@ -36,7 +36,7 @@ namespace Application.Models.CardLogic
         public override async Task AnswearAsync(BaseCharacterLogic character, OptionDto dto)
         {
             var target = character.Character.Game.GetReactionCharacter().Map(character.Hub);
-            if(dto.CardIds is null || dto.CardIds.Count <= 0 || !await target.TryHasCardAsync(dto.CardIds.First(), "Bang!")) 
+            if (dto.CardIds is null || dto.CardIds.Count <= 0 || !await target.TryHasCardAsync(dto.CardIds.First(), "Bang!"))
             {
                 await target.DecreaseLifepointAsync(1);
             }

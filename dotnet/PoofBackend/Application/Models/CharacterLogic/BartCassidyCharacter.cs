@@ -13,7 +13,7 @@ namespace Application.Models.CharacterLogics
 
         public override async Task DecreaseLifepointAsync(int point)
         {
-            if(point == 1) 
+            if (point == 1)
             {
                 await DrawAsync(Character.Game.GetAndRemoveCards(1));
             }

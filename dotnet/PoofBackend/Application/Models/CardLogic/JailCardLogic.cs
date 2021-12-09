@@ -2,7 +2,6 @@
 using Application.Exceptions;
 using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
-using Application.Services;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
@@ -39,15 +38,15 @@ namespace Application.Models.CardLogic
         }
         public override async Task OnActiveAsync(BaseCharacterLogic character)
         {
-            if(character.Character.Game.Event == GameEvent.Draw) 
+            if (character.Character.Game.Event == GameEvent.Draw)
             {
                 var card = character.Character.Game.GetAndRemoveCards(1).First();
                 await character.Character.Game.AddToDiscardPileAsync(character.Hub, card);
                 await character.Hub.Clients.Group(character.Character.Game.Name).ShowCard(new CardViewModel(card.Id, card.Card.Name, card.Card.Type, card.Card.Suite, card.Card.Value));
                 await character.DropCardAsync(Card.Id);
-                if(card.Card.Suite != CardSuits.Hearths) 
+                if (card.Card.Suite != CardSuits.Hearths)
                 {
-                    await character.Character.Game.EndTurnAsync(character.Hub, true);                   
+                    await character.Character.Game.EndTurnAsync(character.Hub, true);
                 }
             }
 

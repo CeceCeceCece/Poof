@@ -1,11 +1,9 @@
 ﻿using Application.Services;
-using Domain;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using UnitTests.ServiceTests.Helpers;
 using Xunit;
@@ -56,7 +54,7 @@ namespace UnitTests.ServiceTests
 
             var lobby = await service.GetLobbyAsync("Test");
             var connection = lobby.Connections.FirstOrDefault();
-            
+
             //Result
             Assert.Single(lobby.Connections);
             Assert.NotNull(connection);

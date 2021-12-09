@@ -1,6 +1,4 @@
-﻿using Domain.Constants.Enums;
-
-namespace Application.ViewModels
+﻿namespace Application.ViewModels
 {
     public class GameEventViewModel
     {

@@ -26,17 +26,17 @@ namespace Application.Services
         }
         public PoofGameHub Hub { get; set; }
 
-        public async Task JoinGameAsync(string gameId, string userId, CancellationToken cancellationToken = default) 
+        public async Task JoinGameAsync(string gameId, string userId, CancellationToken cancellationToken = default)
         {
             var game = await GetGameAsync(gameId, cancellationToken);
             var character = game.Characters.SingleOrDefault(x => x.Id == userId) ?? throw new PoofException(GameMessages.FELHASZNALO_NEM_A_JATEK_RESZE);
             character.ConnectionId = Hub.Context.ConnectionId;
             await context.SaveChangesAsync(cancellationToken);
-     
-            if(Hub is not null) 
+
+            if (Hub is not null)
             {
                 await Hub.Groups.AddToGroupAsync(Hub.Context.ConnectionId, game.Name);
-                await Hub.Clients.Client(Hub.Context.ConnectionId).GameJoined(new GameStartViewModel 
+                await Hub.Clients.Client(Hub.Context.ConnectionId).GameJoined(new GameStartViewModel
                 {
                     SelfId = character.Id,
                     Name = character.PersonalCard.Name,
@@ -44,7 +44,7 @@ namespace Application.Services
                     LifePoint = character.LifePoint,
                     SheriffId = game.Characters.Where(x => x.Role == RoleType.Sheriff).Select(x => x.Id).SingleOrDefault(),
                     Cards = character.Deck.Select(x => new CardViewModel(x.Id, x.Card.Name, x.Card.Type, x.Card.Suite, x.Card.Value)).ToList(),
-                    Characters = game.Characters.Select(x => new CharacterViewModel 
+                    Characters = game.Characters.Select(x => new CharacterViewModel
                     {
                         UserId = x.Id,
                         UserName = x.Name,
@@ -70,7 +70,7 @@ namespace Application.Services
 
             foreach (var character in characters)
             {
-                character.Deck.AddRange(cards.GetRange(0,character.LifePoint));
+                character.Deck.AddRange(cards.GetRange(0, character.LifePoint));
                 cards.RemoveRange(0, character.LifePoint);
             }
 
@@ -92,7 +92,7 @@ namespace Application.Services
             context.Games.Add(game);
             await context.SaveChangesAsync(cancellationToken);
 
-            if(lobbyHub is not null)
+            if (lobbyHub is not null)
                 await lobbyHub.Clients.Group(lobby.Name).GameCreated(game.Id);
         }
 
@@ -101,7 +101,7 @@ namespace Application.Services
             return await context.Cards.Select(x => new GameCard(Guid.NewGuid().ToString(), x)).ToListAsync(cancellationToken);
         }
 
-        private async Task<List<Character>> CreateCharactersAsync(List<Connection> connections, CancellationToken cancellationToken = default) 
+        private async Task<List<Character>> CreateCharactersAsync(List<Connection> connections, CancellationToken cancellationToken = default)
         {
             var characterCards = await context.CharacterCards.ToListAsync(cancellationToken);
             var indexes = GenerateNumbers(connections.Count, connections.Count);
@@ -122,9 +122,9 @@ namespace Application.Services
                 {
                     result.Add(characterCards.ElementAt(characterIndexes[i]).ToCharacter(connections.ElementAt(indexes[i]), RoleType.Renegade));
                 }
-                else 
+                else
                 {
-                    if(i % 2 == 0 )
+                    if (i % 2 == 0)
                         result.Add(characterCards.ElementAt(characterIndexes[i]).ToCharacter(connections.ElementAt(indexes[i]), RoleType.Outlaw));
                     else
                         result.Add(characterCards.ElementAt(characterIndexes[i]).ToCharacter(connections.ElementAt(indexes[i]), RoleType.DeputySheriff));
@@ -193,7 +193,7 @@ namespace Application.Services
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task SendMessageAsync(string gameId, string playerId , Message message, CancellationToken cancellationToken = default)
+        public async Task SendMessageAsync(string gameId, string playerId, Message message, CancellationToken cancellationToken = default)
         {
             var game = await context.Games.Where(x => x.Characters.Any(c => c.Id == playerId) && x.Id == gameId).Include(x => x.Messages).SingleOrDefaultAsync(cancellationToken);
             if (game is null)
@@ -217,7 +217,7 @@ namespace Application.Services
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task CardOptionAsync(string gameId, string playerId, string cardId, CancellationToken cancellationToken = default) 
+        public async Task CardOptionAsync(string gameId, string playerId, string cardId, CancellationToken cancellationToken = default)
         {
             var game = await GetGameAsync(gameId, cancellationToken);
 
@@ -252,9 +252,9 @@ namespace Application.Services
             await CheckGameEnd(game);
         }
 
-        public async Task CheckGameEnd(Game game) 
+        public async Task CheckGameEnd(Game game)
         {
-            if(game.Win == WinType.None) 
+            if (game.Win == WinType.None)
             {
                 await RemoveGameAsync(game.Id);
             }
@@ -273,7 +273,7 @@ namespace Application.Services
         public async Task DiscardAsync(string gameId, string playerId, List<string> cardIds, CancellationToken cancellationToken = default)
         {
             var game = await GetGameAsync(gameId, cancellationToken);
-            if(game.CurrentUserId != playerId)
+            if (game.CurrentUserId != playerId)
                 throw new PoofException(GameMessages.NEM_DOHATSZ_EL_KARTYAT);
             await game.GetCurrentCharacter().Map(Hub).DropCardsFromDeckAsync(cardIds);
             await context.SaveChangesAsync(cancellationToken);

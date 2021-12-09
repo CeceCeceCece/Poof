@@ -3,7 +3,6 @@ using Application.Models.CharacterLogic;
 using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

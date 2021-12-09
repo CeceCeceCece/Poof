@@ -37,7 +37,7 @@ namespace Application.SignalR
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task CreateLobby(string name) 
+        public async Task CreateLobby(string name)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             var lobby = new Lobby(name, currentPlayerService.Player.Name);
@@ -53,15 +53,15 @@ namespace Application.SignalR
             if (lobby.Vezeto != currentPlayerService.Player.Name)
                 throw new PoofException(LobbyMessages.ERRE_CSAK_A_SZOBA_TULAJDONOSA_JOGOSULT);
 
-            if(lobby.Connections.Count >= 1) 
+            if (lobby.Connections.Count >= 1)
             {
                 await gameService.CreateGameAsync(lobby, this);
                 await lobbyService.DeleteLobbyAsync(lobbyName, currentPlayerService.Player.Name, null);
             }
-                
+
         }
 
-        public async Task JoinLobby(string name) 
+        public async Task JoinLobby(string name)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await lobbyService.AddConnectionAsync(name, new Connection(Context.ConnectionId, currentPlayerService.Player.Name, currentPlayerService.Player.Id), this);
@@ -73,25 +73,25 @@ namespace Application.SignalR
             await lobbyService.RemoveConnectionAsync(currentPlayerService.Player.Id, this);
         }
 
-        public async Task SendMessage(string message, string name) 
+        public async Task SendMessage(string message, string name)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             var messageInstance = new Message(Guid.NewGuid().ToString(), currentPlayerService.Player.Name, message, DateTime.Now);
             await lobbyService.SendMessageAsync(name, currentPlayerService.Player.Id, messageInstance, this);
         }
 
-        public async Task DeletePlayer(string userId) 
+        public async Task DeletePlayer(string userId)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await lobbyService.DeletePlayerAsync(currentPlayerService.Player.Name, userId, this);
         }
-        
-        public async Task DeleteLobby(string name) 
+
+        public async Task DeleteLobby(string name)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await lobbyService.DeleteLobbyAsync(name, currentPlayerService.Player.Name, this);
         }
-        public async Task Status(string name) 
+        public async Task Status(string name)
         {
             await Clients.Group(name).OnStatus();
         }

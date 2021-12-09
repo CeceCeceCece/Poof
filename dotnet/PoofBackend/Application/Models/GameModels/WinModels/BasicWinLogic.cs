@@ -13,20 +13,20 @@ namespace Application.Models.GameModels.WinModels
             var outlaws = game.Characters.Where(x => x.Role == RoleType.Outlaw).ToList();
             var deputySheriffs = game.Characters.Where(x => x.Role == RoleType.DeputySheriff).ToList();
             var Sheriff = game.Characters.SingleOrDefault(x => x.Role == RoleType.Sheriff);
-            
-            if(Sheriff is null && outlaws.Count == 0 && deputySheriffs.Count == 0) 
+
+            if (Sheriff is null && outlaws.Count == 0 && deputySheriffs.Count == 0)
             {
                 winner = RoleType.Renegade;
                 return Task.FromResult(true);
             }
-            
-            if(Sheriff is null) 
+
+            if (Sheriff is null)
             {
                 winner = RoleType.Outlaw;
                 return Task.FromResult(true);
             }
-            
-            if(outlaws.Count == 0 && renegate is null) 
+
+            if (outlaws.Count == 0 && renegate is null)
             {
                 winner = RoleType.Sheriff;
                 return Task.FromResult(true);

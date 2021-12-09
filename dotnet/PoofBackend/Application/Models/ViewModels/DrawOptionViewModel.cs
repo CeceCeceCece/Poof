@@ -11,6 +11,6 @@ namespace Application.ViewModels
         }
 
         public bool UserIdRequired { get; set; }
-        public List<CardViewModel> Cards{ get; set; }
+        public List<CardViewModel> Cards { get; set; }
     }
 }

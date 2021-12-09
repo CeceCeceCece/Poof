@@ -11,7 +11,7 @@ namespace Application.Models.CharacterLogic
         public override async Task DropCardAsync(string cardId)
         {
             await base.DropCardAsync(cardId);
-            if(Character.Deck.Count <= 0) 
+            if (Character.Deck.Count <= 0)
             {
                 await DrawAsync(Character.Game.GetAndRemoveCards(1));
             }

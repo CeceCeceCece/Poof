@@ -28,7 +28,7 @@ namespace Application.Models.CardLogic
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            foreach(var target in character.Character.Game.Characters) 
+            foreach (var target in character.Character.Game.Characters)
             {
                 await target.Map(character.Hub).IncreaseLifePontAsync(1);
             }

@@ -12,7 +12,7 @@ namespace Application.Models.CharacterLogic
         public override async Task DropCardsFromDeckAsync(List<string> cardIds)
         {
             await base.DropCardsFromDeckAsync(cardIds);
-            if(cardIds.Count >= 2) 
+            if (cardIds.Count >= 2)
             {
                 await IncreaseLifePontAsync(1);
             }

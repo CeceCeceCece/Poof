@@ -1,11 +1,5 @@
-using Application.Models.CardLogic;
-using Application.Models.CharacterLogic;
-using Application.Models.DTOs;
-using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -41,7 +35,7 @@ namespace UnitTests
             //Result
             Assert.Single(game.DiscardPile);
             Assert.Equal(currentPlayerDeck - 1 + 3, character.Character.Deck.Count);
-            Assert.Equal(gameDeck - 3, game.Deck.Count);   
+            Assert.Equal(gameDeck - 3, game.Deck.Count);
         }
     }
 }

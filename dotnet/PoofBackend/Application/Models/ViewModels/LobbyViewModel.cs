@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Application.Models.ViewModels
 {
@@ -17,8 +13,8 @@ namespace Application.Models.ViewModels
             Owner = owner;
         }
 
-        public string Name{ get; set; }
-        public string Owner{ get; set; }
+        public string Name { get; set; }
+        public string Owner { get; set; }
         public List<UserViewModel> Users { get; set; } = new List<UserViewModel>();
     }
 }

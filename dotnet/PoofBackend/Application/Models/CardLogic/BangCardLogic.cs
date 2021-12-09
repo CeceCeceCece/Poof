@@ -12,7 +12,7 @@ namespace Application.Models.CardLogic
 {
     public class BangCardLogic : CardLogic
     {
-        public BangCardLogic(GameCard card) : base(card){}
+        public BangCardLogic(GameCard card) : base(card) { }
 
         public override async Task OptionAsync(BaseCharacterLogic character)
         {
@@ -27,7 +27,7 @@ namespace Application.Models.CardLogic
 
         public override async Task ActivateAsync(BaseCharacterLogic character, OptionDto dto)
         {
-            if(character.Character.BangState == BangState.None)
+            if (character.Character.BangState == BangState.None)
                 throw new PoofException(CardMessages.BANG_USING_AGAIN);
 
             if (string.IsNullOrEmpty(dto.UserId))

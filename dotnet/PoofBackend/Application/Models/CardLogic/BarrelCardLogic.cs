@@ -4,10 +4,7 @@ using Application.Models.DTOs;
 using Application.ViewModels;
 using Domain.Constants.Enums;
 using Domain.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Models.CardLogic
@@ -24,7 +21,7 @@ namespace Application.Models.CardLogic
             {
                 Description = CardMessages.BARREL_OPTION,
                 RequireCards = false,
-                PossibleTargets = new List<string> {character.Character.Id},
+                PossibleTargets = new List<string> { character.Character.Id },
             };
 
             await character.ShowOptionAsync(option);
@@ -40,7 +37,7 @@ namespace Application.Models.CardLogic
             if (character.Character.Game.Event != GameEvent.SingleReact || character.Character.Game.NextCard is null)
                 return;
 
-            if(character.Character.Game.NextCard.Card.Name == "Bang!" && await character.Character.Game.CheckNextCardAsync(CardSuits.Hearths, null, character.Hub)) 
+            if (character.Character.Game.NextCard.Card.Name == "Bang!" && await character.Character.Game.CheckNextCardAsync(CardSuits.Hearths, null, character.Hub))
             {
                 await character.Character.Game.EndReactionAsync(character.Hub);
             }

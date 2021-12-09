@@ -1,9 +1,4 @@
 ﻿using Domain.Constants.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.ViewModels
 {
@@ -22,6 +17,6 @@ namespace Application.ViewModels
         public string Name { get; set; }
         public CardType Type { get; set; }
         public CardSuits Suite { get; set; }
-        public CardValues Value{ get; set; }
+        public CardValues Value { get; set; }
     }
 }

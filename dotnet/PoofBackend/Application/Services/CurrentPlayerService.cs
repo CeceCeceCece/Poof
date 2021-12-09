@@ -1,14 +1,8 @@
 ﻿using Application.Interfaces;
 using Application.Models;
-using Domain.Constants;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {

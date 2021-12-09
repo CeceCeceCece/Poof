@@ -37,7 +37,7 @@ namespace Application.SignalR
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await GameService.SendMessageAsync(gameId, currentPlayerService.Player.Id, new Message(Guid.NewGuid().ToString(), currentPlayerService.Player.Name, message, DateTime.Now));
         }
-        
+
         public async Task DrawReact(string gameId, OptionDto option)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
@@ -55,7 +55,7 @@ namespace Application.SignalR
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());
             await GameService.CardActivateAsync(gameId, currentPlayerService.Player.Id, cardId, option);
         }
-        
+
         public async Task AnswearCard(string gameId, OptionDto option)
         {
             currentPlayerService = new CurrentPlayerService(Context.GetHttpContext());

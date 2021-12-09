@@ -38,12 +38,12 @@ namespace Application.Models.CardLogic
                 return;
 
             List<CardValues> values = new List<CardValues> { CardValues.Two, CardValues.Three, CardValues.Four, CardValues.Five, CardValues.Six, CardValues.Seven, CardValues.Eight, CardValues.Nine };
-            if (await character.Character.Game.CheckNextCardAsync(CardSuits.Spades, values, character.Hub)) 
+            if (await character.Character.Game.CheckNextCardAsync(CardSuits.Spades, values, character.Hub))
             {
                 await character.DecreaseLifepointAsync(3);
                 await character.DropCardAsync(Card.Id);
             }
-            else 
+            else
             {
                 await character.Character.Game.GetNextCharacter().Map(character.Hub).EquipeCardAsync(Card);
                 await character.LeaveCardAsync(Card.Id, true);

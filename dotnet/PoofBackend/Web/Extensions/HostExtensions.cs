@@ -6,10 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
-using Web;
 
 namespace Veterinary.Api.Extensions
 {
@@ -20,8 +17,6 @@ namespace Veterinary.Api.Extensions
             using (var scope = host.Services.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
-                //dgfagsg
-                var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
                 var context = serviceProvider.GetRequiredService<TContext>();
             }
 

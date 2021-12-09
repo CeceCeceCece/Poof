@@ -1,5 +1,4 @@
-﻿using Domain.Constants.Enums;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Application.ViewModels
 {

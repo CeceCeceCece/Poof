@@ -60,7 +60,7 @@ namespace UnitTests.ServiceTests
             var service = new GameService(context);
 
             var game = await SeedDatabase(context, "Bang!");
-            
+
             //Act
             await service.CardActivateAsync(game.Id, game.CurrentUserId, "tesztgamecardid", new OptionDto
             {
@@ -95,7 +95,7 @@ namespace UnitTests.ServiceTests
 
             var nextLife = game.GetNextCharacter().LifePoint;
 
-            await service.CardAnswearAsync(game.Id, game.NextUserId, new OptionDto { CardIds = null});
+            await service.CardAnswearAsync(game.Id, game.NextUserId, new OptionDto { CardIds = null });
 
             var result = await service.GetGameAsync(game.Id);
             //Result
@@ -168,7 +168,7 @@ namespace UnitTests.ServiceTests
             Assert.Equal("tesztgamecardid", current.EquipedCards.First().Id);
         }
 
-        public async Task<Game> SeedDatabase(PoofDbContext context, string cardName) 
+        public async Task<Game> SeedDatabase(PoofDbContext context, string cardName)
         {
             var service = new GameService(context);
 
