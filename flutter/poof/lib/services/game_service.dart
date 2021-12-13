@@ -36,6 +36,7 @@ class GameService extends ServiceBase {
   String? gameId;
   Rx<String?> nextActionPlayerId = Rx(null);
   String? gameName;
+  Rx<int> myIndex = 0.obs;
   var playerAmount = 1.obs;
   RxString currentlyHasRound = ''.obs;
   RxList<String> targetableCardIds = <String>[].obs;
@@ -388,7 +389,21 @@ class GameService extends ServiceBase {
     playerAmount.value = gameStartDto.characters.length;
     currentlyHasRound.value = gameStartDto.sheriffId;
 
-    enemyPlayers.value = gameStartDto.characters
+    var sheriffIndex = gameStartDto.characters
+        .indexWhere((character) => character.userId == gameStartDto.sheriffId);
+    var playersBeforeSheriff = gameStartDto.characters.sublist(0, sheriffIndex);
+    var playersAfterAndIncludingSheriff =
+        gameStartDto.characters.sublist(sheriffIndex);
+
+    myIndex.value = gameStartDto.characters
+        .indexWhere((character) => character.userId == gameStartDto.selfId);
+
+    var allPlayers = [
+      ...playersAfterAndIncludingSheriff,
+      ...playersBeforeSheriff
+    ];
+
+    enemyPlayers.value = allPlayers
         .where((character) => character.userId != gameStartDto.selfId)
         .map((e) => EnemyPlayerDto(
               equipment: [],

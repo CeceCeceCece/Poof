@@ -173,6 +173,100 @@ class GameView extends GetView<GameController> {
         ),
       );
 
+  Widget _buildEnemyPlayer(
+          {required EnemyPlayerDto enemy,
+          bool? isTop,
+          bool? isRight,
+          bool? isLeft,
+          double? leftPixels,
+          double? rightPixels,
+          required double topPixels}) =>
+      Obx(
+        () => Positioned(
+            child: EnemyPlayer(
+              top: isTop ?? false,
+              left: isLeft ?? false,
+              right: isRight ?? false,
+              dragOnCharacterWillAccept: (id) {
+                Dev.log(
+                    'ID: $id, TARGETABLE: ${controller.targetableCardIds()}');
+                return controller.targetableCardIds().contains(id);
+              },
+              dragOnCharacterAccept: (id) =>
+                  controller.targetSelected(targetedUserId: id),
+              cardIds: enemy.cardIds,
+              cardAmount: enemy.cardIds.length,
+              characterName: enemy.characterName,
+              isDead: enemy.isDead,
+              role: enemy.role,
+              equipment: controller
+                  .enemyPlayers()[0]
+                  .equipment
+                  .map((e) => PlayableCard(
+                        isDragTarget: true,
+                        dragOnWillAccept: (_) {
+                          Dev.log(
+                              'ID: ${e.id}, TARGETABLE: ${controller.targetableCardIds()}');
+                          var enemy = controller.enemyPlayers().firstWhere(
+                              (player) => player.equipment
+                                  .map((e) => e.id)
+                                  .contains(e.id),
+                              orElse: () => EnemyPlayerDto.dummy);
+                          return controller
+                              .targetableCardIds()
+                              .contains(enemy.playerId);
+                        },
+                        dragOnAccept: (id) =>
+                            controller.targetSelected(targetedCardId: id),
+                        card: e,
+                        canBeFocused: true,
+                        scale: 0.25,
+                        highlightMultiplier: 1.5,
+                      ))
+                  .toList(),
+              health: enemy.health,
+              playerName: enemy.playerName,
+              isSheriff: enemy.isSheriff,
+              playerId: enemy.playerId,
+              temporaryEffects: enemy.temporaryEffects
+                  .map((e) => PlayableCard(
+                        isDragTarget: true,
+                        dragOnWillAccept: (id) {
+                          Dev.log(
+                              'ID: ${e.id}, TARGETABLE: ${controller.targetableCardIds()}');
+                          var enemyPlayer = controller
+                              .enemyPlayers()
+                              .firstWhere(
+                                  (player) => player.temporaryEffects
+                                      .map((e) => e.id)
+                                      .contains(e.id),
+                                  orElse: () => EnemyPlayerDto.dummy);
+                          return controller
+                              .targetableCardIds()
+                              .contains(enemyPlayer.playerId);
+                        },
+                        dragOnAccept: (id) =>
+                            controller.targetSelected(targetedCardId: id),
+                        card: e,
+                        canBeFocused: true,
+                        scale: 0.25,
+                        highlightMultiplier: 1.5,
+                      ))
+                  .toList(),
+              isTakingNextAction:
+                  controller.nextActionPlayerId() == enemy.playerId,
+              canBeTargeted:
+                  controller.targetableCardIds().contains(enemy.playerId),
+              currentlyHasRound:
+                  controller.currentlyHasRound() == enemy.playerId,
+              hasTargetableCard: enemy.cardIds
+                  .any((id) => controller.targetableCardIds().contains(id)),
+            ),
+            top: topPixels,
+            right: rightPixels,
+            left: leftPixels),
+      );
+
   List<Widget> _buildLayout(double height, double width) {
     switch (controller.playerNumber()) {
       case 1:
@@ -181,181 +275,27 @@ class GameView extends GetView<GameController> {
         ];
       case 2:
         return [
-          Obx(() => Positioned(
-              child: EnemyPlayer(
-                top: true, left: true,
-                dragOnCharacterWillAccept: (id) {
-                  Dev.log(
-                      'ID: $id, TARGETABLE: ${controller.targetableCardIds()}');
-                  return controller.targetableCardIds().contains(id);
-                },
-                dragOnCharacterAccept: (id) =>
-                    controller.targetSelected(targetedUserId: id),
-                cardIds: controller.enemyPlayers()[0].cardIds,
-                cardAmount: controller.enemyPlayers()[0].cardIds.length,
-                characterName: controller.enemyPlayers()[0].characterName,
-                isDead: controller.enemyPlayers()[0].isDead,
-                role: controller.enemyPlayers()[0].role,
-                equipment: controller
-                    .enemyPlayers()[0]
-                    .equipment
-                    .map((e) => PlayableCard(
-                          isDragTarget: true,
-                          dragOnWillAccept: (_) {
-                            Dev.log(
-                                'ID: ${e.id}, TARGETABLE: ${controller.targetableCardIds()}');
-                            var enemy = controller.enemyPlayers().firstWhere(
-                                (player) => player.equipment
-                                    .map((e) => e.id)
-                                    .contains(e.id),
-                                orElse: () => EnemyPlayerDto(
-                                      cardIds: [],
-                                      characterName: '',
-                                      equipment: [],
-                                      health: 0,
-                                      isSheriff: false,
-                                      playerId: '',
-                                      playerName: '',
-                                      temporaryEffects: [],
-                                    ));
-                            return controller
-                                .targetableCardIds()
-                                .contains(enemy.playerId);
-                          },
-                          dragOnAccept: (id) =>
-                              controller.targetSelected(targetedCardId: id),
-                          card: e,
-                          canBeFocused: true,
-                          scale: 0.25,
-                          highlightMultiplier: 1.5,
-                        ))
-                    .toList(), //controller.equipmentCards,
-                health: controller.enemyPlayers()[0].health,
-                playerName: controller.enemyPlayers()[0].playerName,
-                isSheriff: controller.enemyPlayers()[0].isSheriff,
-                playerId: controller.enemyPlayers()[0].playerId,
-
-                temporaryEffects: controller
-                    .enemyPlayers()[0]
-                    .temporaryEffects
-                    .map((e) => PlayableCard(
-                          isDragTarget: true,
-                          dragOnWillAccept: (id) {
-                            Dev.log(
-                                'ID: ${e.id}, TARGETABLE: ${controller.targetableCardIds()}');
-                            var enemy = controller.enemyPlayers().firstWhere(
-                                (player) => player.temporaryEffects
-                                    .map((e) => e.id)
-                                    .contains(e.id),
-                                orElse: () => EnemyPlayerDto(
-                                      cardIds: [],
-                                      characterName: '',
-                                      equipment: [],
-                                      health: 0,
-                                      isSheriff: false,
-                                      playerId: '',
-                                      playerName: '',
-                                      temporaryEffects: [],
-                                    ));
-                            return controller
-                                .targetableCardIds()
-                                .contains(enemy.playerId);
-                          },
-                          dragOnAccept: (id) =>
-                              controller.targetSelected(targetedCardId: id),
-                          card: e,
-                          canBeFocused: true,
-                          scale: 0.25,
-                          highlightMultiplier: 1.5,
-                        ))
-                    .toList(),
-                isTakingNextAction: controller.nextActionPlayerId() ==
-                    controller.enemyPlayers()[0].playerId,
-                canBeTargeted: controller
-                    .targetableCardIds()
-                    .contains(controller.enemyPlayers()[0].playerId),
-                currentlyHasRound: controller.currentlyHasRound() ==
-                    controller.enemyPlayers()[0].playerId,
-                hasTargetableCard: controller
-                    .enemyPlayers()[0]
-                    .cardIds
-                    .any((id) => controller.targetableCardIds().contains(id)),
-              ),
-              top: 40,
-              left: width / 2 - 100)),
+          _buildEnemyPlayer(
+              enemy: controller.enemyPlayers()[0],
+              isTop: true,
+              isLeft: true,
+              leftPixels: width / 2 - 100,
+              topPixels: 40),
           _buildPlayer(),
         ];
+
       case 3:
         return [
-          Positioned(
-              child: EnemyPlayer(
-                left: true,
-                cardIds: controller.enemyPlayers()[0].cardIds,
-
-                cardAmount: controller.enemyPlayers()[0].cardIds.length,
-                characterName: controller.enemyPlayers()[0].characterName,
-                equipment: controller
-                    .enemyPlayers()[0]
-                    .equipment
-                    .map((e) => PlayableCard(
-                          card: e,
-                          canBeFocused: true,
-                          scale: 0.25,
-                          highlightMultiplier: 1.5,
-                        ))
-                    .toList(), //controller.equipmentCards,
-
-                health: controller.enemyPlayers()[0].health,
-                playerName: controller.enemyPlayers()[0].playerName,
-                isSheriff: controller.enemyPlayers()[0].isSheriff,
-                playerId: controller.enemyPlayers()[0].playerId,
-                temporaryEffects: controller
-                    .enemyPlayers()[0]
-                    .temporaryEffects
-                    .map((e) => PlayableCard(
-                          card: e,
-                          canBeFocused: true,
-                          scale: 0.25,
-                          highlightMultiplier: 1.5,
-                        ))
-                    .toList(),
-              ),
-              top: height * 0.38,
-              left: 10),
-          Positioned(
-              child: EnemyPlayer(
-                right: true,
-                cardIds: controller.enemyPlayers()[1].cardIds,
-                cardAmount: controller.enemyPlayers()[1].cardIds.length,
-                characterName: controller.enemyPlayers()[1].characterName,
-
-                equipment: controller
-                    .enemyPlayers()[1]
-                    .equipment
-                    .map((e) => PlayableCard(
-                          card: e,
-                          canBeFocused: true,
-                          scale: 0.25,
-                          highlightMultiplier: 1.5,
-                        ))
-                    .toList(), //controller.equipmentCards,
-                health: controller.enemyPlayers()[1].health,
-                playerName: controller.enemyPlayers()[1].playerName,
-                isSheriff: controller.enemyPlayers()[1].isSheriff,
-                playerId: controller.enemyPlayers()[1].playerId,
-                temporaryEffects: controller
-                    .enemyPlayers()[1]
-                    .temporaryEffects
-                    .map((e) => PlayableCard(
-                          card: e,
-                          canBeFocused: true,
-                          scale: 0.25,
-                          highlightMultiplier: 1.5,
-                        ))
-                    .toList(),
-              ),
-              top: height * 0.38,
-              right: 10),
+          _buildEnemyPlayer(
+              enemy: getPlayer(1),
+              isLeft: true,
+              leftPixels: 10,
+              topPixels: height * 0.38),
+          _buildEnemyPlayer(
+              enemy: getPlayer(-1),
+              isRight: true,
+              rightPixels: 10,
+              topPixels: height * 0.38),
           _buildPlayer(),
         ];
       case 4:
@@ -376,251 +316,129 @@ class GameView extends GetView<GameController> {
   List<Widget> _buildFourPlayerLayout(
           {required double width, required double height}) =>
       [
-        Positioned(
-            child: EnemyPlayer(
-              top: true,
-              left: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: 40,
-            left: width / 2 - 100),
-        Positioned(
-          child: EnemyPlayer(
-            left: true,
-            cardAmount: 4,
-            characterName: 'willythekid',
-            equipment: controller.equipmentCards,
-            health: 4,
-            playerName: 'Bonjour',
-            temporaryEffects: controller.temporaryEffectCards,
-          ),
-          top: height * 0.37,
-          left: 10,
-        ),
-        Positioned(
-          child: EnemyPlayer(
-            right: true,
-            cardAmount: 4,
-            characterName: 'willythekid',
-            equipment: controller.equipmentCards,
-            health: 4,
-            playerName: 'Bonjour',
-            temporaryEffects: controller.temporaryEffectCards,
-          ),
-          top: height * 0.37,
-          right: 10,
-        ),
+        _buildEnemyPlayer(
+            enemy: getPlayer(2),
+            isLeft: true,
+            isTop: true,
+            leftPixels: width / 2 - 100,
+            topPixels: 40),
+        _buildEnemyPlayer(
+            enemy: getPlayer(1),
+            isLeft: true,
+            leftPixels: 10,
+            topPixels: height * 0.37),
+        _buildEnemyPlayer(
+            enemy: getPlayer(-1),
+            isRight: true,
+            rightPixels: 10,
+            topPixels: height * 0.37),
         _buildPlayer(),
       ];
   List<Widget> _buildFivePlayerLayout(
           {required double width, required double height}) =>
       [
-        Positioned(
-            child: EnemyPlayer(
-              left: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.38,
-            left: 10),
-        Positioned(
-            child: EnemyPlayer(
-              right: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.38,
-            right: 10),
-        Positioned(
-          child: EnemyPlayer(
-            top: true,
-            right: true,
-            cardAmount: 4,
-            characterName: 'willythekid',
-            equipment: controller.equipmentCards,
-            health: 4,
-            playerName: 'Bonjour',
-            temporaryEffects: controller.temporaryEffectCards,
-          ),
-          top: height * 0.1,
-          left: width * 0.76 - 100,
-        ),
-        Positioned(
-            child: EnemyPlayer(
-              top: true,
-              left: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.1,
-            left: width * 0.24 - 100),
+        _buildEnemyPlayer(
+            enemy: getPlayer(2),
+            isLeft: true,
+            leftPixels: 10,
+            topPixels: height * 0.38),
+        _buildEnemyPlayer(
+            enemy: getPlayer(-2),
+            isRight: true,
+            rightPixels: 10,
+            topPixels: height * 0.38),
+        _buildEnemyPlayer(
+            enemy: getPlayer(-1),
+            isRight: true,
+            isTop: true,
+            leftPixels: width * 0.76 - 100,
+            topPixels: height * 0.1),
+        _buildEnemyPlayer(
+            enemy: getPlayer(1),
+            isLeft: true,
+            isTop: true,
+            leftPixels: width * 0.24 - 100,
+            topPixels: height * 0.1),
         _buildPlayer(),
       ];
   List<Widget> _buildSixPlayerLayout(
           {required double width, required double height}) =>
       [
-        Positioned(
-            child: EnemyPlayer(
-              left: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.45,
-            left: 5),
-        Positioned(
-            child: EnemyPlayer(
-              right: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.45,
-            right: 5),
-        Positioned(
-            child: EnemyPlayer(
-              right: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.24,
-            right: 20),
-        Positioned(
-            child: EnemyPlayer(
-              left: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.24,
-            left: 20),
-        Positioned(
-          child: EnemyPlayer(
-            top: true,
-            left: true,
-            cardAmount: 4,
-            characterName: 'willythekid',
-            equipment: controller.equipmentCards,
-            health: 4,
-            playerName: 'Bonjour',
-            temporaryEffects: controller.temporaryEffectCards,
-          ),
-          top: height * 0.05,
-          left: width / 2 - 100,
-        ),
+        _buildEnemyPlayer(
+            enemy: getPlayer(1),
+            isLeft: true,
+            leftPixels: 5,
+            topPixels: height * 0.45),
+        _buildEnemyPlayer(
+            enemy: getPlayer(-1),
+            isRight: true,
+            rightPixels: 5,
+            topPixels: height * 0.45),
+        _buildEnemyPlayer(
+            enemy: getPlayer(-2),
+            isRight: true,
+            rightPixels: 20,
+            topPixels: height * 0.24),
+        _buildEnemyPlayer(
+            enemy: getPlayer(2),
+            isLeft: true,
+            leftPixels: 20,
+            topPixels: height * 0.24),
+        _buildEnemyPlayer(
+            enemy: getPlayer(3),
+            isLeft: true,
+            isTop: true,
+            leftPixels: width / 2 - 100,
+            topPixels: height * 0.05),
         _buildPlayer(),
       ];
   List<Widget> _buildSevenPlayerLayout(
           {required double width, required double height}) =>
       [
-        Positioned(
-            child: EnemyPlayer(
-              left: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.48,
-            left: 5),
-        Positioned(
-            child: EnemyPlayer(
-              right: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.48,
-            right: 5),
-        Positioned(
-            child: EnemyPlayer(
-              right: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.27,
-            right: 20),
-        Positioned(
-            child: EnemyPlayer(
-              left: true,
-              cardAmount: 4,
-              characterName: 'willythekid',
-              equipment: controller.equipmentCards,
-              health: 4,
-              playerName: 'Bonjour',
-              temporaryEffects: controller.temporaryEffectCards,
-            ),
-            top: height * 0.27,
-            left: 20),
-        Positioned(
-          child: EnemyPlayer(
-            top: true,
-            right: true,
-            cardAmount: 4,
-            characterName: 'willythekid',
-            equipment: controller.equipmentCards,
-            health: 4,
-            playerName: 'Bonjour',
-            temporaryEffects: controller.temporaryEffectCards,
-          ),
-          top: height * 0.07,
-          right: width / 3 - 125,
-        ),
-        Positioned(
-          child: EnemyPlayer(
-            top: true,
-            left: true,
-            cardAmount: 4,
-            characterName: 'willythekid',
-            equipment: controller.equipmentCards,
-            health: 4,
-            playerName: 'Bonjour',
-            temporaryEffects: controller.temporaryEffectCards,
-          ),
-          top: height * 0.07,
-          left: width / 3 - 125,
-        ),
+        _buildEnemyPlayer(
+            enemy: getPlayer(1),
+            isLeft: true,
+            leftPixels: 5,
+            topPixels: height * 0.48),
+        _buildEnemyPlayer(
+            enemy: getPlayer(-1),
+            isRight: true,
+            rightPixels: 5,
+            topPixels: height * 0.48),
+        _buildEnemyPlayer(
+            enemy: getPlayer(-2),
+            isRight: true,
+            rightPixels: 20,
+            topPixels: height * 0.27),
+        _buildEnemyPlayer(
+            enemy: getPlayer(2),
+            isLeft: true,
+            leftPixels: 20,
+            topPixels: height * 0.27),
+        _buildEnemyPlayer(
+            enemy: getPlayer(-3),
+            isRight: true,
+            isTop: true,
+            rightPixels: width / 3 - 125,
+            topPixels: height * 0.07),
+        _buildEnemyPlayer(
+            enemy: getPlayer(3),
+            isLeft: true,
+            isTop: true,
+            leftPixels: width / 3 - 125,
+            topPixels: height * 0.07),
         _buildPlayer(),
       ];
+
+  EnemyPlayerDto getPlayer(
+    int offset,
+  ) {
+    var index =
+        (controller.myIndex() + offset + controller.enemyPlayers.length) %
+            controller.enemyPlayers.length;
+    if (offset < 0) --index;
+    return controller.enemyPlayers()[index];
+  }
 
   Widget _buildPlayer() {
     return Obx(() {
@@ -694,7 +512,7 @@ class GameView extends GetView<GameController> {
           onDragEndedCallback: () => controller.highlightTargets(-1),
           onDragSuccessCallback: () {
             Dev.log('onSuccessCalled');
-          }, //=> controller.targetSelected(cards[i].id),
+          },
           handCallback: () => controller.highlight(i),
           handCallbackInverse: () => controller.highlight(-1),
           targetGlow: controller.targetableCardIds().contains(cards[i].id),

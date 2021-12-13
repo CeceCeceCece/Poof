@@ -24,4 +24,15 @@ class EnemyPlayerDto {
   String characterName;
   List<EquipmentCard> equipment;
   List<EquipmentCard> temporaryEffects;
+
+  static EnemyPlayerDto get dummy => EnemyPlayerDto(
+        cardIds: [],
+        characterName: '',
+        equipment: [],
+        health: 0,
+        isSheriff: false,
+        playerId: '',
+        playerName: '',
+        temporaryEffects: [],
+      );
 }

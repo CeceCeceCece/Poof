@@ -49,6 +49,7 @@ class GameController extends GetxController {
   RxList<String> targetableCardIds = <String>[].obs;
 
   late RxString currentlyHasRound;
+  late Rx<int> myIndex;
 
   Rx<String?> nextActionPlayerId = Rx(null);
 
@@ -65,6 +66,7 @@ class GameController extends GetxController {
     discardedPileTop = gameService.discardPileTop;
     discardPileGlow = gameService.discardPileGlow;
     currentlyShowedCard = gameService.cardToShow;
+    myIndex = gameService.myIndex;
 
     super.onInit();
   }
