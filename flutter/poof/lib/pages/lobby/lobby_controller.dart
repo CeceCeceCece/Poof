@@ -99,8 +99,7 @@ class LobbyController extends GetxController {
 
   Future<GameService> _initalizeGameService() async {
     var service = Get.put(GameService());
-    await service.disconnect();
-    await service.initWebsocket();
+    await service.reconnect();
     return service;
   }
 
