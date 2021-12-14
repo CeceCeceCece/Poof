@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bang/core/helpers/card_helpers.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/models/card_dto.dart';
 import 'package:bang/models/card_id_dto.dart';
 import 'package:bang/models/cards/playable_card_base.dart';
@@ -18,6 +19,7 @@ import 'package:bang/models/my_player.dart';
 import 'package:bang/models/option_command.dart';
 import 'package:bang/models/option_dto.dart';
 import 'package:bang/models/player_died_dto.dart';
+import 'package:bang/models/role_type.dart';
 import 'package:bang/models/winner_is_dto.dart';
 import 'package:bang/network/websocket/game_provider.dart';
 import 'package:bang/pages/game/game_controller.dart';
@@ -261,7 +263,8 @@ class GameService extends ServiceBase {
     nextActionPlayerId.value = gameEvent.characterId;
     if (gameEvent.characterId == myPlayer().id)
       Fluttertoast.showToast(
-          msg: 'Az alábbi lapra kell reagálnod: ${gameEvent.card!.name}');
+          msg: AppStrings.card_needs_reaction
+              .trParams({'cardName': gameEvent.card!.name}));
 
     log('GAME EVENT, CARD: ${gameEvent.card?.name}, , ID: ${gameEvent.characterId}');
   }
@@ -300,13 +303,9 @@ class GameService extends ServiceBase {
 
   void sendMessage({required String message}) async {
     if (message.isNotEmpty) {
-      await provider
-          .sendMessage(
-            message: message,
-          )
-          .then(
-            (value) => print('MESSAGE SENT!'),
-          );
+      await provider.sendMessage(
+        message: message,
+      );
     }
   }
 
@@ -422,7 +421,9 @@ class GameService extends ServiceBase {
 
   void onWinnerIs(WinnerIsDto winnerIs) async {
     log('winner is ${winnerIs.winner.toString()}');
-    Fluttertoast.showToast(msg: 'Győztek a ${winnerIs.winner.toString()}');
+    Fluttertoast.showToast(
+        msg: AppStrings.victory
+            .trParams({'roleName': winnerIs.winner.victoryString}));
     Future.delayed(
         Duration(
           seconds: 3,

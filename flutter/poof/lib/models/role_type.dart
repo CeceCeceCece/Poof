@@ -1,3 +1,5 @@
+import 'package:bang/core/lang/app_strings.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 enum RoleType {
@@ -24,6 +26,21 @@ extension RoleString on RoleType {
         return 'sheriff';
       case RoleType.Renegade:
         return 'renegade';
+      case RoleType.None:
+        return 'roleback';
+    }
+  }
+
+  String get victoryString {
+    switch (this) {
+      case RoleType.DeputySheriff:
+        return AppStrings.sheriffs.tr;
+      case RoleType.Outlaw:
+        return AppStrings.outlaws.tr;
+      case RoleType.Sheriff:
+        return AppStrings.sheriffs.tr;
+      case RoleType.Renegade:
+        return AppStrings.renegade.tr;
       case RoleType.None:
         return 'roleback';
     }

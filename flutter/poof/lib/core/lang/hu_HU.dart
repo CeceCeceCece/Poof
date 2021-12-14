@@ -46,4 +46,10 @@ const Map<String, String> hu_HU = {
   AppStrings.user_connected: '@userName csatlakozott a szobához!',
   AppStrings.room_name_with_code: 'Szobanév: @lobbyName',
   AppStrings.not_valid_target: 'Nem megfelelő célpont!',
+  AppStrings.card_needs_reaction:
+      'Reagálnod kell a kijátszott @cardName kártyára!',
+  AppStrings.victory: 'Győzött a @roleName csapat!',
+  AppStrings.renegade: 'Renegát',
+  AppStrings.sheriffs: 'Sheriff',
+  AppStrings.outlaws: 'Bandita',
 };
