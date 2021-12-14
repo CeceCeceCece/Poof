@@ -1,13 +1,9 @@
 import 'dart:developer' as Dev;
 import 'dart:math';
 
-import 'package:bang/core/helpers/card_helpers.dart';
 import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/models/card_dto.dart';
 import 'package:bang/models/cards/playable_card_base.dart';
-import 'package:bang/models/cards/playable_cards/action_card.dart';
-import 'package:bang/models/cards/playable_cards/equipment_card.dart';
-import 'package:bang/models/cards/playable_cards/weapon_card.dart';
 import 'package:bang/models/enemy_player_dto.dart';
 import 'package:bang/models/message_dto.dart';
 import 'package:bang/models/my_player.dart';
@@ -16,7 +12,6 @@ import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/auth_service.dart';
 import 'package:bang/services/game_service.dart';
 import 'package:bang/widgets/bang_button.dart';
-import 'package:bang/widgets/playable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -49,6 +44,7 @@ class GameController extends GetxController {
   RxList<String> targetableCardIds = <String>[].obs;
 
   late RxString currentlyHasRound;
+  late Rx<int> myIndex;
 
   Rx<String?> nextActionPlayerId = Rx(null);
 
@@ -65,6 +61,7 @@ class GameController extends GetxController {
     discardedPileTop = gameService.discardPileTop;
     discardPileGlow = gameService.discardPileGlow;
     currentlyShowedCard = gameService.cardToShow;
+    myIndex = gameService.myIndex;
 
     super.onInit();
   }
@@ -158,11 +155,6 @@ class GameController extends GetxController {
     );
   }
 
-  /*void removeCard(int idx) async {
-    handWidgets().removeAt(idx);
-    handWidgets.refresh();
-  }*/
-
   Future<bool> showBackPopupForResult() async {
     await Get.defaultDialog<bool>(
       title: AppStrings.assert_required.tr,
@@ -199,227 +191,6 @@ class GameController extends GetxController {
   }
 
   void _exitDone() => _exitConfirmed = false;
-
-  final RxList hand = [
-    ActionCard(
-      range: 0,
-      background: 'beer',
-      name: 'beer',
-      suit: CardSuit.Clubs,
-      value: CardValue.Ten,
-      type: CardType.Action,
-    ),
-    WeaponCard(
-      background: 'remington',
-      name: 'remington',
-      suit: CardSuit.Clubs,
-      value: CardValue.Six,
-      type: CardType.Weapon,
-      range: 3,
-    ),
-    EquipmentCard(
-      background: 'barrel',
-      name: 'barrel',
-      suit: CardSuit.Clubs,
-      value: CardValue.Seven,
-      type: CardType.Equipment,
-    ),
-    WeaponCard(
-        background: 'volcanic',
-        name: 'volcanic',
-        suit: CardSuit.Clubs,
-        value: CardValue.Eight,
-        type: CardType.Weapon,
-        range: 1),
-    WeaponCard(
-      background: 'remington',
-      name: 'remington',
-      suit: CardSuit.Clubs,
-      value: CardValue.Six,
-      range: 3,
-      type: CardType.Weapon,
-    ),
-    EquipmentCard(
-      background: 'barrel',
-      name: 'barrel',
-      suit: CardSuit.Clubs,
-      value: CardValue.Seven,
-      type: CardType.Equipment,
-    ),
-    WeaponCard(
-        background: 'volcanic',
-        name: 'volcanic',
-        suit: CardSuit.Clubs,
-        value: CardValue.Eight,
-        type: CardType.Weapon,
-        range: 1),
-    ActionCard(
-      background: 'stagecoach',
-      name: 'stagecoach',
-      suit: CardSuit.Clubs,
-      value: CardValue.Nine,
-      type: CardType.Action,
-      range: 0,
-    ),
-    WeaponCard(
-        background: 'volcanic',
-        name: 'volcanic',
-        suit: CardSuit.Clubs,
-        value: CardValue.Eight,
-        type: CardType.Weapon,
-        range: 1),
-    WeaponCard(
-        background: 'remington',
-        name: 'remington',
-        suit: CardSuit.Clubs,
-        value: CardValue.Six,
-        type: CardType.Equipment,
-        range: 3),
-    EquipmentCard(
-      background: 'barrel',
-      name: 'barrel',
-      suit: CardSuit.Clubs,
-      value: CardValue.Seven,
-      type: CardType.Equipment,
-    ),
-    WeaponCard(
-        background: 'volcanic',
-        name: 'volcanic',
-        suit: CardSuit.Clubs,
-        value: CardValue.Eight,
-        type: CardType.Weapon,
-        range: 1),
-    ActionCard(
-      background: 'stagecoach',
-      name: 'stagecoach',
-      suit: CardSuit.Clubs,
-      value: CardValue.Nine,
-      type: CardType.Action,
-      range: 0,
-    ),
-  ].obs;
-
-  final equipmentCards = [
-    PlayableCard(
-      card: EquipmentCard(
-          background: 'barrel',
-          name: 'barrel',
-          value: CardValue.Ten,
-          type: CardType.Equipment,
-          suit: CardSuit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-    PlayableCard(
-      card: EquipmentCard(
-          background: 'barrel',
-          name: 'barrel',
-          value: CardValue.Ten,
-          type: CardType.Equipment,
-          suit: CardSuit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-    PlayableCard(
-      card: EquipmentCard(
-          background: 'barrel',
-          name: 'barrel',
-          value: CardValue.Ten,
-          type: CardType.Equipment,
-          suit: CardSuit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-    PlayableCard(
-      card: EquipmentCard(
-          background: 'barrel',
-          name: 'barrel',
-          value: CardValue.Ten,
-          type: CardType.Equipment,
-          suit: CardSuit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-  ];
-  final temporaryEffectCards = [
-    PlayableCard(
-      card: EquipmentCard(
-          background: 'dynamite',
-          name: 'dynamite',
-          value: CardValue.Ten,
-          type: CardType.Equipment,
-          suit: CardSuit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-    PlayableCard(
-      card: EquipmentCard(
-          background: 'jail',
-          name: 'jail',
-          value: CardValue.Ten,
-          type: CardType.Equipment,
-          suit: CardSuit.Diamonds),
-      canBeFocused: true,
-      scale: 0.25,
-      highlightMultiplier: 1.5,
-    ),
-  ];
-
-  var equipmentList = <PlayableCardBase>[
-    WeaponCard(
-      background: 'remington',
-      name: 'remington',
-      suit: CardSuit.Clubs,
-      value: CardValue.Six,
-      range: 3,
-      type: CardType.Weapon,
-    ),
-    WeaponCard(
-      background: 'remington',
-      name: 'remington',
-      suit: CardSuit.Clubs,
-      value: CardValue.Six,
-      range: 3,
-      type: CardType.Weapon,
-    ),
-    WeaponCard(
-      background: 'remington',
-      name: 'remington',
-      suit: CardSuit.Clubs,
-      value: CardValue.Six,
-      range: 3,
-      type: CardType.Weapon,
-    ),
-    WeaponCard(
-      background: 'remington',
-      name: 'remington',
-      suit: CardSuit.Clubs,
-      value: CardValue.Six,
-      range: 3,
-      type: CardType.Weapon,
-    ),
-  ].obs;
-  var temporaryEffectList = <PlayableCardBase>[
-    EquipmentCard(
-      background: 'jail',
-      name: 'jail',
-      suit: CardSuit.Clubs,
-      value: CardValue.Seven,
-      type: CardType.Equipment,
-    ),
-    EquipmentCard(
-      background: 'dynamite',
-      name: 'dynamite',
-      suit: CardSuit.Clubs,
-      value: CardValue.Eight,
-      type: CardType.Equipment,
-    ),
-  ].obs;
 
   void nextTurn() => gameService.nextTurn();
 

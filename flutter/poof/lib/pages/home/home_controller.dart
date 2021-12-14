@@ -18,9 +18,8 @@ class HomeController extends GetxController {
       .then((service) => service.joinLobby(lobbyName: roomId));
 
   Future<LobbyService> _initalizeLobbyService() async {
-    var service = Get.find<LobbyService>();
-    await service.disconnect();
-    await service.initWebsocket();
+    var service = Get.put(LobbyService());
+    await service.reconnect();
     return service;
   }
 

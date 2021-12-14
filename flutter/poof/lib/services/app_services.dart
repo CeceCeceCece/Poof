@@ -1,7 +1,6 @@
 import 'package:bang/network/user_provider.dart';
 import 'package:bang/services/audio_service.dart';
 import 'package:bang/services/auth_service.dart';
-import 'package:bang/services/lobby_service.dart';
 import 'package:bang/services/shared_preference_service.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +13,6 @@ abstract class AppServices {
     await Future.delayed(Duration(milliseconds: 100));
     Get.put(ConnectivityService()).init();
     Get.put(SharedPreferenceService()).init();
-    Get.put(LobbyService());
     Get.put(AuthService()).init();
   }
 }

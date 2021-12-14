@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bang/core/app_constants.dart';
 import 'package:bang/core/helpers/card_helpers.dart';
+import 'package:bang/core/lang/app_strings.dart';
 import 'package:bang/models/card_dto.dart';
 import 'package:bang/models/card_id_dto.dart';
 import 'package:bang/models/cards/playable_card_base.dart';
@@ -21,277 +21,53 @@ import 'package:bang/models/option_dto.dart';
 import 'package:bang/models/player_died_dto.dart';
 import 'package:bang/models/role_type.dart';
 import 'package:bang/models/winner_is_dto.dart';
+import 'package:bang/network/websocket/game_provider.dart';
 import 'package:bang/pages/game/game_controller.dart';
 import 'package:bang/routes/routes.dart';
 import 'package:bang/services/lobby_service.dart';
 import 'package:bang/services/service_base.dart';
-import 'package:bang/services/shared_preference_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:signalr_core/signalr_core.dart';
 
 class GameService extends ServiceBase {
   Rx<String?> roomId = Rx(null);
   String? gameId;
   Rx<String?> nextActionPlayerId = Rx(null);
   String? gameName;
+  Rx<int> myIndex = 0.obs;
   var playerAmount = 1.obs;
   RxString currentlyHasRound = ''.obs;
   RxList<String> targetableCardIds = <String>[].obs;
   Rx<CardDto?> discardPileTop = Rx(null);
   var discardPileGlow = false.obs;
   Rx<PlayableCardBase?> cardToShow = Rx(null);
+  late GameProvider provider;
+  var messages = <MessageDto>[].obs;
+  bool connectionInitialized = false;
 
-  var myPlayer = MyPlayer(
-    id: '',
-    cards: [],
-    equipment: [],
-    temporaryEffects: [],
-    role: RoleType.Renegade,
-    health: 0,
-    characterName: 'kitcarlson',
-  ).obs;
+  @override
+  void onInit() async {
+    provider = Get.put(GameProvider());
+    await provider.initWebsocket();
+    super.onInit();
+  }
+
+  late Rx<MyPlayer> myPlayer;
+
   var enemyPlayers = <EnemyPlayerDto>[].obs;
 
-  var statusInterval = Duration(seconds: 6);
+  void onNextTurn(String currentUserId) =>
+      currentlyHasRound.value = currentUserId;
 
-  Timer? statusTimer;
-  var messages = <MessageDto>[].obs;
-  var _connectionInitialized = false;
-  late HubConnection _connection;
+  void onDrawOption(DrawOptionDto drawOption) =>
+      drawReact(option: OptionCommand(cardIds: [], userId: myPlayer().id));
 
-  Future<void> initWebsocket() async {
-    _connection = HubConnectionBuilder()
-        .withUrl(
-          AppConstants.BASE_URL + AppConstants.GAME_HUB,
-          HttpConnectionOptions(
-            transport: HttpTransportType.longPolling,
-            logging: (level, message) => print('GAME SIGNALR ---- $message'),
-            accessTokenFactory: () async => SharedPreferenceService.token,
-          ),
-        )
-        .withHubProtocol(JsonHubProtocol())
-        .withAutomaticReconnect(
-          DefaultReconnectPolicy(
-            retryDelays: [
-              0,
-              2000,
-              10000,
-              30000,
-              60000,
-              60000,
-              60000,
-              null,
-            ],
-          ),
-        )
-        .build();
-    _connectionInitialized = true;
-    try {
-      await _connection.start()?.then((value) {
-        log(_connection.state.toString());
-      });
-    } catch (error) {
-      log('$error');
-      _connection.start();
-    }
-    _connection.onreconnected((connectionId) {
-      log('RECONNECTED');
-      //statusTimer = Timer.periodic(statusInterval, (_) => _status());
-    });
-    _connection.onreconnecting((exception) {
-      log(exception.toString());
-    });
-    _connection.onclose((exception) {
-      log('$exception');
-      statusTimer?.cancel();
-    });
+  void onSetDiscardPile(CardDto card) => discardPileTop.value = card;
 
-    _connection.on(
-      'SetDeck',
-      (cards) => _setDeck(
-        cards?[0].map((e) => CardDto.fromJson(e)).toList() ?? [],
-      ),
-    );
+  void discard(List<String> discardedIds) => provider.discard(discardedIds);
 
-    _connection.on(
-      'SetEquipedDeck',
-      (cards) => _setEquippedDeck(
-        cards?[0].map((e) => CardDto.fromJson(e)).toList() ?? [],
-      ),
-    );
-
-    _connection.on(
-      'SetDiscardPile',
-      (card) => _setDiscardPile(
-        CardDto.fromJson(card?[0]),
-      ),
-    );
-
-    _connection.on(
-      'SetWeapon',
-      (weaponData) => _setWeapon(
-        weaponData![0] as String,
-        CardDto.fromJson(
-          weaponData[1],
-        ),
-      ),
-    );
-
-    _connection.on(
-      'SetLifePoint',
-      (lifePoint) => _setLifePoint(
-        LifePointDto.fromJson(lifePoint?[0]),
-      ),
-    );
-
-    _connection.on(
-      'CardsDroped',
-      (cards) => _cardsDropped(
-        (cards?[0] as List).map((e) => CardIdDto.fromJson(e)).toList(),
-      ),
-    );
-
-    _connection.on(
-      'CardUnequiped',
-      (card) => _cardUnequipped(
-        CardIdDto.fromJson(
-          card?[0],
-        ),
-      ),
-    );
-
-    _connection.on(
-      'CardEquiped',
-      (card) => _cardsEquipped(
-        card![0] as String,
-        CardDto.fromJson(
-          card[1],
-        ),
-      ),
-    );
-    _connection.on(
-      'ShowCard',
-      (card) => _showCard(
-        CardDto.fromJson(card?[0]),
-      ),
-    );
-
-    _connection.on(
-      'TurnStarted',
-      (userId) => _nextTurn(
-        userId?[0],
-      ),
-    );
-
-    _connection.on(
-      'CardsReceieved',
-      (cards) {
-        log('${cards.toString()}');
-        _cardsReceived(
-          (cards?.first as List).map((e) => CardDto.fromJson(e)).toList(),
-        );
-      },
-    );
-    _connection.on(
-      'CardsAdded',
-      (cards) {
-        log('${cards.toString()}');
-        _cardsAdded(
-            (cards?.first as List).map((e) => CardIdDto.fromJson(e)).toList());
-      },
-    );
-    _connection.on(
-      'SetGameEvent',
-      (gameEvent) => _setGameEvent(
-        GameEventDto.fromJson(gameEvent?[0]),
-      ),
-    );
-    _connection.on(
-      'OnStatus',
-      (_) => _onStatus(),
-    );
-
-    _connection.on(
-      'MessageRecieved',
-      (message) => _recieveMessage(
-        MessageDto.fromJson(
-          message?[0],
-        ),
-      ),
-    );
-
-    _connection.on(
-      'ShowOption',
-      (option) => _showOption(
-        OptionDto.fromJson(
-          option?[0],
-        ),
-      ),
-    );
-
-    _connection.on(
-      'DrawOption',
-      (option) => _drawOption(
-        DrawOptionDto.fromJson(
-          option?[0],
-        ),
-      ),
-    );
-
-    _connection.on(
-      'GameJoined',
-      (gameStartDto) => _onGameJoined(
-        GameStartDto.fromJson(
-          gameStartDto?[0],
-        ),
-      ),
-    );
-    _connection.on(
-      'PlayerDied',
-      (playerDiedDto) => _onPlayerDied(
-        PlayerDiedDto.fromJson(
-          playerDiedDto?[0],
-        ),
-      ),
-    );
-
-    _connection.on(
-      'WinnerIs',
-      (winnerIs) => _onWinnerIs(
-        WinnerIsDto.fromJson(
-          winnerIs?[0],
-        ),
-      ),
-    );
-  }
-
-  void _nextTurn(String currentUserId) {
-    currentlyHasRound.value = currentUserId;
-    log('Turn Changed');
-  }
-
-  void _drawOption(DrawOptionDto drawOption) {
-    log('draw option arrived');
-    log('${drawOption.cards.toString()}');
-    drawReact(option: OptionCommand(cardIds: [], userId: myPlayer().id)) /*)*/;
-  }
-
-  void _setDiscardPile(CardDto card) {
-    log(card.toString());
-    discardPileTop.value = card;
-  }
-
-  void discard(List<String> discardedIds) {
-    _connection.invoke('Discard', args: [gameId, discardedIds]);
-  }
-
-  void _setDeck(List<CardDto> cards) {}
-
-  void _setEquippedDeck(List<CardDto> cards) {}
-
-  void _setWeapon(String characterId, CardDto card) {
+  void onSetWeapon(String characterId, CardDto card) {
     var name =
         card.name.removeAllWhitespace.toLowerCase().replaceAll(RegExp('!'), '');
     if (characterId == myPlayer().id) {
@@ -320,7 +96,7 @@ class GameService extends ServiceBase {
     }
   }
 
-  void _setLifePoint(LifePointDto lifePoint) {
+  void onSetLifePoint(LifePointDto lifePoint) {
     if (lifePoint.characterId == myPlayer().id) {
       myPlayer().health = lifePoint.lifePoint;
       myPlayer.refresh();
@@ -332,15 +108,7 @@ class GameService extends ServiceBase {
     }
   }
 
-  void _status() {
-    _connection.invoke('Status', args: [gameName]);
-  }
-
-  void _onStatus() {
-    log('SIGNALR Status recieved -- GAME');
-  }
-
-  void _cardsDropped(List<CardIdDto> cards) {
+  void onCardsDropped(List<CardIdDto> cards) {
     log('cards dropped' + cards.toString());
     cards.forEach((card) {
       if (card.characterId == myPlayer().id) {
@@ -361,7 +129,7 @@ class GameService extends ServiceBase {
     });
   }
 
-  void _cardUnequipped(CardIdDto card) {
+  void onCardUnequipped(CardIdDto card) {
     if (card.characterId == myPlayer().id) {
       myPlayer().equipment.removeWhere((eq) => eq.id == card.cardId);
       myPlayer().temporaryEffects.removeWhere((temp) => temp.id == card.cardId);
@@ -375,7 +143,7 @@ class GameService extends ServiceBase {
     }
   }
 
-  void _onGameJoined(GameStartDto gameStartDto) {
+  void onGameJoined(GameStartDto gameStartDto) {
     Get.offAndToNamed(Routes.GAME);
     myPlayer.value = MyPlayer(
         equipment: [],
@@ -388,7 +156,21 @@ class GameService extends ServiceBase {
     playerAmount.value = gameStartDto.characters.length;
     currentlyHasRound.value = gameStartDto.sheriffId;
 
-    enemyPlayers.value = gameStartDto.characters
+    var sheriffIndex = gameStartDto.characters
+        .indexWhere((character) => character.userId == gameStartDto.sheriffId);
+    var playersBeforeSheriff = gameStartDto.characters.sublist(0, sheriffIndex);
+    var playersAfterAndIncludingSheriff =
+        gameStartDto.characters.sublist(sheriffIndex);
+
+    myIndex.value = gameStartDto.characters
+        .indexWhere((character) => character.userId == gameStartDto.selfId);
+
+    var allPlayers = [
+      ...playersAfterAndIncludingSheriff,
+      ...playersBeforeSheriff
+    ];
+
+    enemyPlayers.value = allPlayers
         .where((character) => character.userId != gameStartDto.selfId)
         .map((e) => EnemyPlayerDto(
               equipment: [],
@@ -403,14 +185,13 @@ class GameService extends ServiceBase {
         .toList();
   }
 
-  void _recieveMessage(MessageDto message) {
+  void onRecieveMessage(MessageDto message) {
     log('Arrived:$message');
     messages.add(message);
     Get.find<GameController>().scrollToBottom();
   }
 
-  void _cardsEquipped(String characterId, CardDto card) {
-    log('cards equipped');
+  void onCardsEquipped(String characterId, CardDto card) {
     var name =
         card.name.removeAllWhitespace.toLowerCase().replaceAll(RegExp('!'), '');
 
@@ -457,7 +238,7 @@ class GameService extends ServiceBase {
     }
   }
 
-  void _cardsAdded(List<CardIdDto> cards) {
+  void onCardsAdded(List<CardIdDto> cards) {
     log('ARRIVED: ${cards.toString()}');
     cards.forEach((card) {
       if (card.characterId != myPlayer().id)
@@ -469,12 +250,12 @@ class GameService extends ServiceBase {
     enemyPlayers.refresh();
   }
 
-  void _showCard(CardDto card) {
+  void onShowCard(CardDto card) {
     log('${card.name} ${card.suite} ${card.value}');
     cardToShow.value = mapCards([card]).first;
   }
 
-  void _setGameEvent(GameEventDto gameEvent) {
+  void onSetGameEvent(GameEventDto gameEvent) {
     if (gameEvent.card == null) {
       nextActionPlayerId.value = null;
       return;
@@ -482,12 +263,13 @@ class GameService extends ServiceBase {
     nextActionPlayerId.value = gameEvent.characterId;
     if (gameEvent.characterId == myPlayer().id)
       Fluttertoast.showToast(
-          msg: 'Az alábbi lapra kell reagálnod: ${gameEvent.card!.name}');
+          msg: AppStrings.card_needs_reaction
+              .trParams({'cardName': gameEvent.card!.name}));
 
     log('GAME EVENT, CARD: ${gameEvent.card?.name}, , ID: ${gameEvent.characterId}');
   }
 
-  void _showOption(OptionDto optionDto) {
+  void onShowOption(OptionDto optionDto) {
     log('${optionDto.possibleTargets.toString()}');
     var possibleTargets = optionDto.possibleTargets;
 
@@ -513,7 +295,7 @@ class GameService extends ServiceBase {
     }
   }
 
-  void _cardsReceived(List<CardDto> cards) {
+  void onCardsReceived(List<CardDto> cards) {
     log('ARRIVED: ${cards.toString()}');
     myPlayer().cards.addAll(mapCards(cards));
     myPlayer.refresh();
@@ -521,74 +303,31 @@ class GameService extends ServiceBase {
 
   void sendMessage({required String message}) async {
     if (message.isNotEmpty) {
-      await _connection.invoke('SendMessage', args: [
-        gameId,
-        message,
-      ]).then(
-        (value) => print('MESSAGE SENT!'),
+      await provider.sendMessage(
+        message: message,
       );
     }
   }
 
-  void cardOption(String cardId) async {
-    await _connection.invoke('CardOption', args: [cardId, gameId]);
-  }
+  void cardOption(String cardId) async => await provider.cardOption(cardId);
 
   void joinGame({required String gameId, required String gameName}) async {
     this.gameId = gameId;
     this.gameName = gameName;
-    log('joining game ${_connection.state.toString()}');
-    _status();
-    statusTimer = Timer.periodic(statusInterval, (_) => _status());
     Get.find<LobbyService>().notInGame = false;
-    await _connection.invoke('JoinGame', args: [gameId]);
+    provider.joinGame();
   }
 
-  void answerCard({required OptionCommand option}) async {
-    await _connection.invoke('AnswearCard', args: [
-      gameId,
-      option.toJson(),
-    ]).then(
-      (value) => print('CARD ANSWER SENT!'),
-    );
-  }
+  void answerCard({required OptionCommand option}) async =>
+      provider.answerCard(option);
 
-  void drawReact({required OptionCommand option}) async {
-    await _connection.invoke('DrawReact', args: [
-      gameId,
-      option.toJson(),
-    ]).then(
-      (value) => print('DRAW REACT SENT!'),
-    );
-  }
+  void drawReact({required OptionCommand option}) async =>
+      provider.drawReact(option);
 
-  void nextTurn() async {
-    await _connection.invoke('NextTurn', args: [gameId]);
-  }
+  void nextTurn() async => provider.nextTurn();
 
   void playCard({required OptionCommand option, String? playedCardId}) async {
-    if (playedCardId == null) return;
-    await _connection.invoke('ActiveCard', args: [
-      gameId,
-      playedCardId,
-      option.toJson(),
-    ]).then(
-      (value) => print('Card played'),
-    );
-  }
-
-  Future<void> disconnect() async {
-    statusTimer?.cancel();
-    if (_connectionInitialized) {
-      await _connection.stop();
-      _connectionInitialized = false;
-    }
-  }
-
-  @override
-  void onClose() async {
-    disconnect();
-    super.onClose();
+    if (playedCardId != null) provider.playCard(option, playedCardId);
   }
 
   List<PlayableCardBase> mapCards(List<CardDto> cards) {
@@ -654,8 +393,7 @@ class GameService extends ServiceBase {
     }).toList();
   }
 
-  void _onPlayerDied(PlayerDiedDto playerDied) {
-    log('player died');
+  void onPlayerDied(PlayerDiedDto playerDied) {
     if (playerDied.userId == myPlayer().id) {
       myPlayer().health = 0;
       myPlayer().equipment.clear();
@@ -676,14 +414,21 @@ class GameService extends ServiceBase {
     }
   }
 
-  void _onWinnerIs(WinnerIsDto winnerIs) async {
+  Future<void> reconnect() async {
+    await provider.disconnect();
+    await provider.initWebsocket();
+  }
+
+  void onWinnerIs(WinnerIsDto winnerIs) async {
     log('winner is ${winnerIs.winner.toString()}');
-    Fluttertoast.showToast(msg: 'Győztek a ${winnerIs.winner.toString()}');
+    Fluttertoast.showToast(
+        msg: AppStrings.victory
+            .trParams({'roleName': winnerIs.winner.victoryString}));
     Future.delayed(
         Duration(
           seconds: 3,
         ), () async {
-      disconnect();
+      provider.disconnect();
       Get.offAndToNamed(Routes.HOME);
     });
   }

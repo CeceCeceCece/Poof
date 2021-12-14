@@ -43,4 +43,9 @@ abstract class AppStrings {
   static const room_deleted = 'room_deleted';
   static const user_connected = 'user_connected';
   static const not_valid_target = 'not_valid_target';
+  static const card_needs_reaction = 'card_needs_reaction';
+  static const victory = 'victory';
+  static const sheriffs = 'sheriff';
+  static const outlaws = 'outlaw';
+  static const renegade = 'renegade';
 }
